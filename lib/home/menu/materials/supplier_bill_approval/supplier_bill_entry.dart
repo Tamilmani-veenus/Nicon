@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/supplier_bill_approval_controller.dart';
+import 'package:nicon/home/menu/materials/supplier_bill_approval/supplier_bill_itemlist.dart';
 
 import '../../../../app_theme/app_colors.dart';
 import '../../../../utilities/baseutitiles.dart';
@@ -31,7 +32,6 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
   SupplierBillApprovalController supplierBillApprovalController = Get.put(SupplierBillApprovalController());
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  SupplierBillApprovalController supplierBillApprovalController = Get.put(SupplierBillApprovalController());
 
   @override
   void initState() {
@@ -82,103 +82,38 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
               backgroundColor: Setmybackground,
               bottomNavigationBar: Container(
                 height: BaseUtitiles.getheightofPercentage(context, 4),
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // Visibility(
-                    //   visible:
-                    //   mrn_request_controller.saveButton.value != RequestConstant.VERIFY || mrn_request_controller.saveButton.value != RequestConstant.RESUBMIT
-                    //       ? true
-                    //       : false,
-                    //   child: Expanded(
-                    //     child: InkWell(
-                    //       child: Container(
-                    //         margin: const EdgeInsets.only(left: 20, right: 20),
-                    //         height:
-                    //         BaseUtitiles.getheightofPercentage(context, 4),
-                    //         decoration: BoxDecoration(
-                    //           borderRadius:
-                    //           const BorderRadius.all(Radius.circular(10)),
-                    //           color: Colors.white,
-                    //         ),
-                    //         alignment: Alignment.center,
-                    //         child: Text(
-                    //           "Reset",
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: RequestConstant.Lable_Font_SIZE,
-                    //               color: Theme.of(context).primaryColor
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       onTap: () {
-                    //         setState(() {
-                    //           ResetAlert(context);
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    // Expanded(
-                    //   child: InkWell(
-                    //     child: Container(
-                    //         margin: const EdgeInsets.only(left: 20, right: 20),
-                    //         height:
-                    //         BaseUtitiles.getheightofPercentage(context, 4),
-                    //         decoration: BoxDecoration(
-                    //             borderRadius:
-                    //             const BorderRadius.all(Radius.circular(10)),
-                    //             color: Theme.of(context).primaryColor
-                    //
-                    //         ),
-                    //         alignment: Alignment.center,
-                    //         child: Obx(() => Text(
-                    //           mrn_request_controller.saveButton.value,
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: RequestConstant.Lable_Font_SIZE,
-                    //               color: Colors.white
-                    //           ),
-                    //         ))),
-                    //     onTap: () async {
-                    //       if (_formKey.currentState!.validate()) {
-                    //         _formKey.currentState!.save();
-                    //         if (mrn_request_controller
-                    //             .Material_itemview_GetDbList.value.isEmpty) {
-                    //           BaseUtitiles.showToast("Please select item list");
-                    //         } else if (mrn_request_controller.ReqType.value ==
-                    //             "0") {
-                    //           Fluttertoast.showToast(
-                    //               msg: "Please select request type");
-                    //         } else {
-                    //           bool hasInvalid = false;
-                    //           for (int i = 0; i < mrn_request_controller.Material_itemview_GetDbList.length; i++) {
-                    //             final controller = mrn_request_controller.Addwork_qtyControllers[i];
-                    //             final text = controller.text.trim();
-                    //
-                    //             if (text.isEmpty) {
-                    //               hasInvalid = true;
-                    //               break;
-                    //             }
-                    //
-                    //             final value = double.tryParse(text);
-                    //             if (value == null || value <= 0) {
-                    //               hasInvalid = true;
-                    //               break;
-                    //             }
-                    //           }
-                    //           if (hasInvalid) {
-                    //             BaseUtitiles.showToast("Qty Should Not be Zero or Empty");
-                    //           } else {
-                    //             SubmitAlert(context);
-                    //           }
-                    //         }
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
+                    InkWell(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 20, right: 20),
+                        width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                        height: BaseUtitiles.getheightofPercentage(context, 4),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Theme.of(context).primaryColor
+
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "NEXT",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: RequestConstant.Lable_Font_SIZE,
+                              color: Colors.white
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SupplierBillItemList()));
+
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -310,6 +245,75 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                     ],
                   ),
                 ),
+                
+                    SizedBox(
+                  height:
+                  BaseUtitiles.getheightofPercentage(context, 100),
+                  child: DraggableScrollableSheet(
+                    minChildSize: 0.1,
+                    maxChildSize: 0.9,
+                    initialChildSize: 0.3,
+                    builder: (BuildContext context,
+                        ScrollController scrollController) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Setmybackground,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40.0),
+                            topRight: Radius.circular(40.0),
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height *
+                                    0.9,
+                                width: MediaQuery.of(context).size.width,
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(height: 10),
+                                       ListDetails(
+                                          context,
+                                          scrollController)
+                                    ],
+                                  ),
+                                )),
+                            IgnorePointer(
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(40.0),
+                                    topRight: Radius.circular(40.0),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 20, bottom: 20),
+                                      height: 5,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                          color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ])),
         ),
       ),
@@ -325,7 +329,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.zero,
+            padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 10)),
             itemCount: 1,
             itemBuilder: (BuildContext context, int index) {
               // dailyEntriesController.textControllersInitiate();
@@ -348,7 +352,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               margin: const EdgeInsets.only(
                                   top: 5, left: 10, right: 25),
                               child: Text(
-                                'Material Name',
+                                'Material Name ( Scale )',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold),
@@ -660,7 +664,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       ),
                       Container(
                         margin:
-                        const EdgeInsets.only(top: 10, left: 5, right: 3),
+                        const EdgeInsets.only(top: 10, left: 5, right: 3,bottom: 10),
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -688,7 +692,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               ),
                             ),
                             Expanded(
-                                flex: 4,
+                                flex: 6,
                                 child: Container(
                                   margin: const EdgeInsets.only(right: 11),
                                   height: BaseUtitiles.getheightofPercentage(
@@ -735,88 +739,38 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                       ),
                                      ),
                                 )),
+                            InkWell(
+                              onTap: () => showAmountDetailsDialog(context),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.remove_red_eye_outlined,color: Theme.of(context).primaryColor,size: 16,),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      'View Details',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(Icons.arrow_forward_rounded,
+                                        size: 14, color: Theme.of(context).primaryColor),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
-
-                      // Container(
-                      //   margin: const EdgeInsets.only(
-                      //       top: 10, left: 5, right: 3, bottom: 8),
-                      //   child: Row(
-                      //     children: <Widget>[
-                      //       Expanded(
-                      //         flex: 2,
-                      //         child: RichText(
-                      //           text: const TextSpan(
-                      //               style: TextStyle(
-                      //                 fontSize: 12.0,
-                      //                 fontWeight: FontWeight.normal,
-                      //                 color: Colors.black,
-                      //               ),
-                      //               children: <TextSpan>[
-                      //                 TextSpan(
-                      //                   text: "Remarks",
-                      //                 ),
-                      //                 TextSpan(
-                      //                   text: "",
-                      //                   style: TextStyle(
-                      //                     color: Colors.white,
-                      //                     fontSize: 12.0,
-                      //                     fontWeight: FontWeight.bold,
-                      //                   ),
-                      //                 ),
-                      //               ]),
-                      //         ),
-                      //
-                      //         // Text(
-                      //         //   "Remarks",
-                      //         //   style: TextStyle(color: Colors.black),
-                      //         // ),
-                      //       ),
-                      //       Expanded(
-                      //           flex: 10,
-                      //           child: Container(
-                      //             margin: const EdgeInsets.only(left: 0),
-                      //             height: BaseUtitiles.getheightofPercentage(
-                      //                 context, 4),
-                      //             child: TextFormField(
-                      //               onTap: () {
-                      //                 dailyEntriesController
-                      //                     .RemarksControllers[index].text = "";
-                      //               },
-                      //               textAlign: TextAlign.center,
-                      //               controller: dailyEntriesController
-                      //                   .RemarksControllers[index],
-                      //               style: const TextStyle(color: Colors.black),
-                      //               cursorColor: Colors.black,
-                      //               keyboardType: TextInputType.name,
-                      //               decoration: InputDecoration(
-                      //                 contentPadding: const EdgeInsets.fromLTRB(
-                      //                     8.0, 0.0, 8.0, 0.0),
-                      //                 focusedBorder: OutlineInputBorder(
-                      //                     borderSide: BorderSide(
-                      //                         color: Theme.of(context)
-                      //                             .primaryColor),
-                      //                     borderRadius: const BorderRadius.all(
-                      //                         Radius.circular(10))),
-                      //                 enabledBorder: OutlineInputBorder(
-                      //                     borderSide: BorderSide(
-                      //                         color: Theme.of(context)
-                      //                             .primaryColor),
-                      //                     borderRadius: const BorderRadius.all(
-                      //                         Radius.circular(10))),
-                      //               ),
-                      //               onChanged: (value) {
-                      //                 setState(() {
-                      //                   dailyEntriesController
-                      //                       .updateSubcontDetValue();
-                      //                 });
-                      //               },
-                      //             ),
-                      //           )),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -826,6 +780,144 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
         ),
         SizedBox(height: BaseUtitiles.getheightofPercentage(context, 4)),
       ],
+    );
+  }
+
+  void showAmountDetailsDialog(BuildContext context) {
+    final Color primaryColor = Theme.of(context).primaryColor;
+
+    final List<Map<String, String>> details = [
+      {'label': 'Disc %', 'value': '5.00%'},
+      {'label': 'Disc Amt', 'value': '500.00'},
+      {'label': 'SGST %', 'value': '9.00%'},
+      {'label': 'SGST Amt', 'value': '540.00'},
+      {'label': 'CGST %', 'value': '9.00%'},
+      {'label': 'CGST Amt', 'value': '540.00'},
+      {'label': 'IGST %', 'value': '0.00%'},
+      {'label': 'IGST Amt', 'value': '0.00'},
+    ];
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          titlePadding: const EdgeInsets.fromLTRB(18, 10, 12, 4),
+          contentPadding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
+          title: Row(
+            children: [
+              Icon(
+                Icons.receipt_long_rounded,
+                color: primaryColor,
+              ),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Amount Details',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                icon: const Icon(Icons.close_rounded),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: details.length,
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.9,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = details[index];
+
+                      return Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: primaryColor.withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: primaryColor.withOpacity(0.15),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              item['label']!,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                item['value']!,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: primaryColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Net Amount',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          '₹ 12,500.00',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
