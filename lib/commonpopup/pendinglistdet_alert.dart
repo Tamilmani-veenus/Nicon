@@ -2035,6 +2035,7 @@ class _PendingList_PoPopupState extends State<PendingList_PoPopup> {
         padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 15)),
         itemCount: pendingListController.onclickPendingListDet.length,
         itemBuilder: (BuildContext context, int index) {
+          print("XXXXXXXXXXXX...${pendingListController.onclickPendingListDet[index].stockQty}");
           return Container(
             margin: EdgeInsets.only(left: 3, right: 3),
             child: Card(
@@ -2101,6 +2102,29 @@ class _PendingList_PoPopupState extends State<PendingList_PoPopup> {
                         Expanded(
                             flex: 4,
                             child: Text( pendingListController.onclickPendingListDet[index].BalQty.toString())),
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text("Stk Qty" + ":  ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 4,
+                            child: Text( pendingListController.onclickPendingListDet[index].stockqty.toString())),
+                        Expanded(
+                          flex: 2,
+                          child: Text("",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 4,
+                            child: Text("")),
                       ],
                     ),
                     if(AppClient.isAnusamm)
@@ -2892,7 +2916,7 @@ class _PendingPo_Approval_PopupState extends State<PendingPo_Approval_Popup> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: SizedBox(
-                          width: AppClient.isAnusamm?960:875,
+                          width: AppClient.isAnusamm?960:960,
                           child: Column(
                             children: [
                               /// HEADER
@@ -2903,6 +2927,7 @@ class _PendingPo_Approval_PopupState extends State<PendingPo_Approval_Popup> {
                                   children: [
 
                                     headerCell("Qty"),
+                                    headerCell("Stock\nQty"),
                                     if(AppClient.isAnusamm)headerCell("Data\nRate"),
                                     headerCell("PO\nRate"),
                                     headerCell("PO\nAmt"),
@@ -2941,6 +2966,9 @@ class _PendingPo_Approval_PopupState extends State<PendingPo_Approval_Popup> {
 
                                           dataCell(
                                             item.Poqty.toString(),
+                                          ),
+                                          dataCell(
+                                            item.StockQty.toString(),
                                           ),
                                           // dataCell("0.0"),
                                           if(AppClient.isAnusamm)
