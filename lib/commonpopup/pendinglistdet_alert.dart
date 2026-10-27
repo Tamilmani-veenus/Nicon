@@ -2916,7 +2916,7 @@ class _PendingPo_Approval_PopupState extends State<PendingPo_Approval_Popup> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: SizedBox(
-                          width: AppClient.isAnusamm?960:960,
+                          width: AppClient.isAnusamm ? 1045 : 960,
                           child: Column(
                             children: [
                               /// HEADER
