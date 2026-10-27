@@ -1,0 +1,70 @@
+class SupplierBillAppDet {
+  int? id;
+  int? detId;
+  int? materialInwarddetid;
+  int? purOrdMasId;
+  int? purOrdDetId;
+  int? workOrdDetId;
+  int? reqOrdDetId;
+  int? materialId;
+  String? materialName;
+  int? scaleID;
+  String? scaleName;
+  double? inwardQty;
+  double? billQty;
+  double? balInwQty;
+  double? balQty;
+  String? description;
+  double? rate;
+  double? poRate;
+  double? disc_Per;
+  double? disc_Amt;
+  String? remarks;
+  double? sgstPer;
+  double? sgstAmt;
+  double? cgstPer;
+  double? cgstAmt;
+  double? igstPer;
+  double? igstAmt;
+  int? vat_Type;
+  double? amount;
+  double? netAmount;
+  int? status;
+
+  SupplierBillAppDetmodelmap() {
+    var mapping = Map<String, dynamic>();
+    mapping['id'] = id;
+    mapping['detId'] = detId;
+    mapping['materialInwarddetid'] = materialInwarddetid;
+    mapping['purOrdMasId'] = purOrdMasId;
+    mapping['purOrdDetId'] = purOrdDetId;
+    mapping['workOrdDetId'] = workOrdDetId;
+    mapping['reqOrdDetId'] = reqOrdDetId;
+    mapping['materialId'] = materialId;
+    mapping['materialName'] = materialName;
+    mapping['scaleID'] = scaleID;
+    mapping['scaleName'] = scaleName;
+    mapping['inwardQty'] = inwardQty;
+    mapping['billQty'] = billQty;
+    mapping['balInwQty'] = balInwQty;
+    mapping['balQty'] = balQty;
+    mapping['description'] = description;
+    mapping['rate'] = rate;
+    mapping['poRate'] = poRate;
+    mapping['disc_Per'] = disc_Per;
+    mapping['disc_Amt'] = disc_Amt;
+    mapping['remarks'] = remarks;
+    mapping['sgstPer'] = sgstPer;
+    mapping['sgstAmt'] = sgstAmt;
+    mapping['cgstPer'] = cgstPer;
+    mapping['cgstAmt'] = cgstAmt;
+    mapping['igstPer'] = igstPer;
+    mapping['igstAmt'] = igstAmt;
+    mapping['vat_Type'] = vat_Type;
+    mapping['amount'] = amount;
+    mapping['netAmount'] = netAmount;
+    mapping['status'] = status;
+
+    return mapping;
+  }
+}

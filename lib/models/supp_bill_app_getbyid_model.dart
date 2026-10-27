@@ -11,22 +11,26 @@ String suppBillAppGetByIdToJson(SuppBillAppGetById data) => json.encode(data.toJ
 class SuppBillAppGetById {
   bool? success;
   Result? result;
+  String ? message;
   List<MaterialPurOrdBilldetLink>? materialPurOrdBilldetLink;
 
   SuppBillAppGetById({
     this.success,
     this.result,
+    this.message,
     this.materialPurOrdBilldetLink,
   });
 
   factory SuppBillAppGetById.fromJson(Map<String, dynamic> json) => SuppBillAppGetById(
     success: json["success"],
+    message: json["message"],
     result: Result.fromJson(json["result"]),
     materialPurOrdBilldetLink: List<MaterialPurOrdBilldetLink>.from(json["materialPurOrdBilldetLink"].map((x) => MaterialPurOrdBilldetLink.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
+    "message": message,
     "result": result?.toJson(),
     "materialPurOrdBilldetLink": List<dynamic>.from(materialPurOrdBilldetLink!.map((x) => x.toJson())),
   };
@@ -50,26 +54,26 @@ class Result {
   int? purOrdMasId;
   int? workOrdMasId;
   int? reqOrdMasId;
-  int? frieghtCharges;
-  int? labourCharges;
-  int? otherCharges;
-  int? roundOff;
-  int? sgstPercentage;
-  int? sgstAmount;
+  double? frieghtCharges;
+  double? labourCharges;
+  double? otherCharges;
+  double? roundOff;
+  double? sgstPercentage;
+  double? sgstAmount;
   double? netSgstAmount;
-  int? cgstPercentage;
-  int? cgstAmount;
+  double? cgstPercentage;
+  double? cgstAmount;
   double? netCgstAmount;
-  int? igstPercentage;
-  int? igstAmount;
-  int? netIgstAmount;
-  int? tdsPercentage;
-  int? tdsAmount;
-  int? tcsPercentage;
-  int? tcsAmount;
-  int? totalAmount;
-  int? discntAmount;
-  int? advanceAmount;
+  double? igstPercentage;
+  double? igstAmount;
+  double? netIgstAmount;
+  double? tdsPercentage;
+  double? tdsAmount;
+  double? tcsPercentage;
+  double? tcsAmount;
+  double? totalAmount;
+  double? discntAmount;
+  double? advanceAmount;
   double? netAmount;
   double? netPayAmount;
   String? remarks;
@@ -93,7 +97,7 @@ class Result {
   String? createdName;
   String? verifyName;
   String? approvedName;
-  int? debitNoteAmt;
+  double? debitNoteAmt;
   String? debitNoteRemarks;
   String? debitNoteType;
   bool? eWayBill;
@@ -105,7 +109,7 @@ class Result {
   String? materialInwMasId;
   int? companyId;
   String? companyName;
-  int? advanceAmountEdit;
+  double? advanceAmountEdit;
   dynamic hasImage;
   int? workOrderId;
   dynamic billTypeDesc;
@@ -359,24 +363,24 @@ class MaterialPurOrdBilldetLink {
   String? materialName;
   int? scaleId;
   String? scaleName;
-  int? inwardQty;
-  int? billQty;
-  int? balInwQty;
-  int? balQty;
+  double? inwardQty;
+  double? billQty;
+  double? balInwQty;
+  double? balQty;
   String? description;
-  int? rate;
-  int? poRate;
-  int? discPer;
-  int? discAmt;
+  double? rate;
+  double? poRate;
+  double? discPer;
+  double? discAmt;
   String? remarks;
-  int? sgstPer;
+  double? sgstPer;
   double? sgstAmt;
-  int? cgstPer;
+  double? cgstPer;
   double? cgstAmt;
-  int?igstPer;
-  int?igstAmt;
+  double?igstPer;
+  double?igstAmt;
   int?vatType;
-  int?amount;
+  double?amount;
   double? netAmount;
   int? status;
 
