@@ -8,6 +8,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/supplier_bill_approval_controller.dart';
 
 import '../../../../app_theme/app_colors.dart';
+import '../../../../controller/projectcontroller.dart';
+import '../../../../controller/sitecontroller.dart';
 import '../../../../utilities/baseutitiles.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -29,9 +31,10 @@ class SupplierBillEntry extends StatefulWidget {
 class _SupplierBillEntryState extends State<SupplierBillEntry> {
 
   SupplierBillApprovalController supplierBillApprovalController = Get.put(SupplierBillApprovalController());
+  ProjectController projectController = Get.put(ProjectController());
+  SiteController siteController = Get.put(SiteController());
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  SupplierBillApprovalController supplierBillApprovalController = Get.put(SupplierBillApprovalController());
 
   @override
   void initState() {
@@ -43,17 +46,19 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       supplierBillApprovalController.autoYearWiseNoController.text = result.billNo;
       supplierBillApprovalController.RequestDateController.text = result.entrydate;
       supplierBillApprovalController.billingTypeController.text = result.billType == "C" ? "Company" : "Client";
+      projectController.selectedProjectId.value = result.projectId;
+      siteController.selectedsiteId.value = result.siteId;
+      projectController.projectname.text = result.projectName;
+      siteController.Sitename.text = result.siteName;
+      supplierBillApprovalController.selectedSupplierId.value = result.supplierId;
+      supplierBillApprovalController.supplierNameController.text = result.supplierName;
+      supplierBillApprovalController.dcNoController.text = result.dcNo;
+      supplierBillApprovalController.dcDateController.text = result.dcDate;
+      supplierBillApprovalController.invoiceNoController.text = result.invoiceNo;
+      supplierBillApprovalController.invoiceDateController.text = result.billDate;
+      supplierBillApprovalController.inwardNoController.text = result.billDate;
+      supplierBillApprovalController.againstTypeController.text = result.poBillDesc;
 
-
-      // mrn_request_controller.DuedateController.text = element.reqDueDate;
-          // projectController.selectedProjectId.value = element.projectId;
-          // siteController.selectedsiteId.value = element.siteId;
-          // projectController.projectname.text = element.projectName;
-          // siteController.Sitename.text = element.siteName;
-          // mrn_request_controller.preparedbyController.text = element.preparedbyName;
-          // mrn_request_controller.ReqTypeController.text = element.purchaseType=="PO"?"General Items":"Asset Materials";
-          // mrn_request_controller.ReqType.value = element.purchaseVal.toString();
-          // mrn_request_controller.RemarksController.text = element.reqRemarks;
 
 
       if (!mounted) return;
@@ -239,7 +244,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 border: InputBorder.none,
-                                labelText: "Request No",
+                                labelText: "Bill No",
                                 labelStyle: TextStyle(
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
@@ -261,6 +266,257 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           controller: supplierBillApprovalController.RequestDateController,
                           selectable: false,
                           initialDate: DateTime.tryParse(supplierBillApprovalController.RequestDateController.text) ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller: projectController.projectname,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Project Name",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.projectName),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value == "--Select--" ||
+                                    value == "--SELECT--") {
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller: siteController.Sitename,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Site Name",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.siteName),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value == "--Select--" ||
+                                    value == "--SELECT--") {
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller: supplierBillApprovalController.supplierNameController,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Supplier Name",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.supplierName),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value == "--Select--" ||
+                                    value == "--SELECT--") {
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller: supplierBillApprovalController.dcNoController,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "DC No",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.dcNo),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value == "--Select--" ||
+                                    value == "--SELECT--") {
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      CommonDateFields(
+                        date1: CommonDateFieldConfig(
+                          title: "DC Date",
+                          value: supplierBillApprovalController.dcDateController.text,
+                          controller: supplierBillApprovalController.dcDateController,
+                          selectable: false,
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.dcDateController.text) ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller: supplierBillApprovalController.invoiceNoController,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Invoice No",
+                                labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.dcNo),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    value == "--Select--" ||
+                                    value == "--SELECT--") {
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      CommonDateFields(
+                        date1: CommonDateFieldConfig(
+                          title: "Invoice Date",
+                          value: supplierBillApprovalController.invoiceDateController.text,
+                          controller: supplierBillApprovalController.invoiceDateController,
+                          selectable: false,
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.invoiceDateController.text) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -300,6 +556,88 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 8),
                                   child: ConstIcons.types,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller:
+                              supplierBillApprovalController.againstTypeController,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Against Type",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: RequestConstant.Lable_Font_SIZE,
+                                ),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 8),
+                                  child: ConstIcons.preparedBy,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                        const EdgeInsets.only(top: 2, left: 10, right: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                                color: Colors.white70, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 3, left: 10, bottom: 5),
+                            child: TextFormField(
+                              autovalidateMode:
+                              AutovalidateMode.always,
+                              readOnly: true,
+                              controller:
+                              supplierBillApprovalController.againstTypeController,
+                              cursorColor: Colors.black,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                labelText: "Inward No",
+                                labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: RequestConstant.Lable_Font_SIZE,
+                                ),
+                                prefixIconConstraints:
+                                BoxConstraints(minWidth: 0, minHeight: 0),
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 8),
+                                  child: ConstIcons.preparedBy,
                                 ),
                               ),
                             ),

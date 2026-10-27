@@ -18,7 +18,16 @@ class SupplierBillApprovalController extends GetxController {
   final autoYearWiseNoController = TextEditingController();
   final RequestDateController = TextEditingController();
   final billingTypeController = TextEditingController();
+  final againstTypeController = TextEditingController();
+  final supplierNameController = TextEditingController();
+  final inwardNoController = TextEditingController();
+  final dcNoController = TextEditingController();
+  final invoiceNoController = TextEditingController();
+  final dcDateController = TextEditingController();
+  final invoiceDateController = TextEditingController();
   int reqId = 0;
+  RxInt selectedSupplierId = 0.obs;
+  RxInt inwardMasId = 0.obs;
 
 
   var suppBillAppService = SuppBillAppService();
@@ -38,6 +47,13 @@ class SupplierBillApprovalController extends GetxController {
           if (suppBillAppEditListValue.isNotEmpty) {
             await supplierBillSaveDetTable();
             await getSupplierBillSaveDetData();
+            if(suppBillAppEditListValue[0].result.poBillType=="P"){
+              final value = await SupplierBillAppProvider.SupplierBillInwNoAPI(suppBillAppEditListValue[0].result.purOrdMasId);
+              inwardNoController.text = value["grnNo"].toString();
+              inwardMasId.value = value["inwardMasId"];
+              print("eeeeeee...${inwardNoController.text}");
+              print("eeeeeee...${inwardMasId.value}");
+            }
 
             await Navigator.pushReplacement(
               context,

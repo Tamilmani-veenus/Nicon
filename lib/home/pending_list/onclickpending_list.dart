@@ -10816,6 +10816,36 @@ class _SupplierBillApprovalState extends State<SupplierBillApproval> {
                                               )),
                                         ],
                                       ),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 8, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Bill Type",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 8,
+                                              child: Text(
+                                                pendingListController
+                                                    .mainlist
+                                                    .value[index]
+                                                    .PoBillTypename
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
                                       SizedBox(height: 5),
                                       Row(
                                         children: <Widget>[
