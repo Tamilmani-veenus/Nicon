@@ -122,5 +122,9 @@ class DatabaseConnection {
     String materialTransReqDetTable = "CREATE TABLE materialTransReqDet (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,materialId INTEGER,materialName TEXT,scale TEXT,stockQty REAL,Qty REAL,trQty REAL,detRemarks TEXT)";
     await database.execute(materialTransReqDetTable);
 
+    String supplierBillAppDetTable = "CREATE TABLE supplierBillAppDetTable (id INTEGER PRIMARY KEY AUTOINCREMENT, detId INTEGER, materialInwarddetid INTEGER, purOrdMasId INTEGER, purOrdDetId INTEGER, workOrdDetId INTEGER, reqOrdDetId INTEGER, materialId INTEGER, materialName TEXT, scaleID INTEGER, scaleName TEXT, inwardQty REAL, billQty REAL, balInwQty REAL, balQty REAL, description TEXT, rate REAL, poRate REAL, disc_Per REAL, disc_Amt REAL, remarks TEXT, sgstPer REAL, sgstAmt REAL, cgstPer REAL, cgstAmt REAL, igstPer REAL, igstAmt REAL, vat_Type INTEGER, amount REAL, netAmount REAL, status INTEGER)";
+    await database.execute(supplierBillAppDetTable);
+
+
   }
 }

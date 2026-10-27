@@ -34,6 +34,7 @@ import '../../controller/reports_controller.dart';
 import '../../controller/requisitionslip_controller.dart';
 import '../../controller/requisitionslip_controller_new.dart';
 import '../../controller/sitevoucher_controller.dart';
+import '../../controller/supplier_bill_approval_controller.dart';
 import '../../controller/transfer_acknowledgment_pending_controller.dart';
 import '../../controller/transferbw_site_controller.dart';
 import '../../controller/workOrderBoq_Controller.dart';
@@ -10624,8 +10625,8 @@ class SupplierBillApproval extends StatefulWidget {
 }
 
 class _SupplierBillApprovalState extends State<SupplierBillApproval> {
-  TransferBW_project_Controller transferBW_project_Controller =
-  Get.put(TransferBW_project_Controller());
+  SupplierBillApprovalController supplierBillApprovalController =
+  Get.put(SupplierBillApprovalController());
   PendingListController pendingListController =
   Get.put(PendingListController());
   TextEditingController editingController = TextEditingController();
@@ -10745,17 +10746,10 @@ class _SupplierBillApprovalState extends State<SupplierBillApproval> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              transferBW_project_Controller
-                                  .itemlistTable_Delete();
-                              transferBW_project_Controller
-                                  .ItemGetTableListdata.value = [];
-                                transferBW_project_Controller.type.value =
-                                "Against Mrn Approval";
-                                transferBW_project_Controller
-                                    .getTransferProject_Alldatas(
+                              supplierBillApprovalController
+                                    .suppBillApprovalEditApi(
                                     pendingListController
-                                        .mainlist.value[index].reqMasId!,
-                                    widget.heading,
+                                        .mainlist.value[index].id!,
                                     context);
 
                             },
