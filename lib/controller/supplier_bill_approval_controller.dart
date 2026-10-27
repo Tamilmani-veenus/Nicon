@@ -15,6 +15,11 @@ class SupplierBillApprovalController extends GetxController {
   late List<SupplierBillAppDet> deleteModelList = <SupplierBillAppDet>[];
   var supplierBillAppDetModel = SupplierBillAppDet();
   List<TextEditingController> Itemlist_qtyControllers = [];
+  final autoYearWiseNoController = TextEditingController();
+  final RequestDateController = TextEditingController();
+  final billingTypeController = TextEditingController();
+  int reqId = 0;
+
 
   var suppBillAppService = SuppBillAppService();
 
