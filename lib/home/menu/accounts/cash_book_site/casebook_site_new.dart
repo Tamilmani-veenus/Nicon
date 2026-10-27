@@ -1,0 +1,555 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import '../../../../app_theme/app_colors.dart';
+import '../../../../constants/ui_constant/icons_const.dart';
+import '../../../../controller/attendancecontroller.dart';
+import '../../../../controller/bottomsheet_Controllers.dart';
+import '../../../../controller/cashbook_site_controller.dart';
+import '../../../../controller/expensencecontroller.dart';
+import '../../../../controller/projectcontroller.dart';
+import '../../../../controller/reports_controller.dart';
+import '../../../../utilities/baseutitiles.dart';
+import '../../../../utilities/common_date_fields.dart';
+import '../../../../utilities/requestconstant.dart';
+
+class CashBook_Site extends StatefulWidget {
+  final String heading;
+  const CashBook_Site({Key? key,required this.heading}) : super(key: key);
+
+  @override
+  State<CashBook_Site> createState() => _CashBook_SiteState();
+}
+
+class _CashBook_SiteState extends State<CashBook_Site> {
+
+  final ProjectController projectController=Get.put(ProjectController());
+
+  final AttendanceController attendanceController=Get.put(AttendanceController());
+
+  final ExpensesController expensesController=Get.put(ExpensesController());
+
+  CashBookSiteController cashBookSiteController=Get.put(CashBookSiteController());
+
+  BottomsheetControllers bottomsheetControllers = Get.put(BottomsheetControllers());
+
+  ReportsController reportsController = Get.put(ReportsController());
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    DateTime currentDate = DateTime.now();
+    DateTime firstDayOfMonth =
+    DateTime(currentDate.year, currentDate.month, 1);
+
+    cashBookSiteController.cashbooksite_frdateController.text =
+        firstDayOfMonth.toString().substring(0, 10);
+
+    cashBookSiteController.cashbooksite_todateController.text =
+        currentDate.toString().substring(0, 10);
+    reportsController.companyName.text = "--ALL--";
+    reportsController.selectedCompanyId.value = 0;
+    reportsController.projectname.text = "--SELECT--";
+    reportsController.selectedProjectId.value = 0;
+    cashBookSiteController.cashsiteDatas.clear();
+    cashBookSiteController.totalDebit.text = "0.0";
+    cashBookSiteController.totalCredit.text ="0.0";
+    cashBookSiteController.closingDebit.text = "0.0";
+    cashBookSiteController.closingCredit.text ="0.0";
+    super.initState();
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: Setmybackground,
+          bottomNavigationBar: bouttomNavigation(),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(height: 40),
+                    Container(
+                      margin: EdgeInsets.only(left: 15, right: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.heading,
+                              style: TextStyle(
+                                  fontSize: RequestConstant.Heading_Font_SIZE,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Back",
+                                style: TextStyle(color: Colors.grey, fontSize: 18),
+                              ))
+                        ],
+                      ),
+                    ),
+                    CommonDateFields(
+                      date1: CommonDateFieldConfig(
+                        title: "From Date",
+                        value:cashBookSiteController.cashbooksite_frdateController.text,
+                        controller: cashBookSiteController.cashbooksite_frdateController,
+                        selectable: true,
+                        initialDate: DateTime.tryParse(
+                            cashBookSiteController.cashbooksite_frdateController.text) ??
+                            DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                        onChanged: (date) {
+                          setState(() {
+                            cashBookSiteController.cashbooksite_frdateController.text =
+                                CommonDateUtils.formatApiDate(date);
+                          });
+                        },
+                      ),
+                      date2: CommonDateFieldConfig(
+                        title: "To Date",
+                        value:cashBookSiteController.cashbooksite_todateController.text,
+                        controller: cashBookSiteController.cashbooksite_todateController,
+                        selectable: true,
+                        initialDate: DateTime.tryParse(
+                            cashBookSiteController.cashbooksite_todateController.text) ??
+                            DateTime.now(),
+                        firstDate: DateTime.tryParse(
+                            cashBookSiteController.cashbooksite_frdateController.text) ??
+                            DateTime.now(),
+                        lastDate: DateTime.now(),
+                        onChanged: (date) {
+                          setState(() {
+                            cashBookSiteController.cashbooksite_todateController.text =
+                                CommonDateUtils.formatApiDate(date);
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 5, left: 10, right: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white70, width: 1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 3,
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(top: 3, left: 10, bottom: 5),
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: reportsController.companyName,
+                            cursorColor: Colors.black,
+                            style: const TextStyle(color: Colors.black),
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              labelText: "Company Name",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: RequestConstant.Lable_Font_SIZE),
+                              prefixIconConstraints:
+                              BoxConstraints(minWidth: 0, minHeight: 0),
+                              prefixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 8),
+                                  child: ConstIcons.billType
+
+                              ),
+                            ),
+                            onTap: () async {
+                              await reportsController.getCompanyReportList(type: "MRNReqTracker");
+                              bottomsheetControllers.CompanyName(context, reportsController.getCompanyDropDownvalue.value,type: "cashbook");
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.only(top: 5, left: 10, right: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white70, width: 1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 3,
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(top: 3, left: 10, bottom: 5),
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: reportsController.projectname,
+                            cursorColor: Colors.black,
+                            style: const TextStyle(color: Colors.black),
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              labelText: "Project Name",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: RequestConstant.Lable_Font_SIZE),
+                              prefixIconConstraints:
+                              BoxConstraints(minWidth: 0, minHeight: 0),
+                              prefixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 8),
+                                  child: ConstIcons.projectName
+
+                              ),
+                            ),
+                            onTap: () async {
+                              await reportsController.getReportProjectList(type: "cashbook");
+                              bottomsheetControllers.projectNameReport(context, reportsController.getProjectdropDownvalue.value);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: BaseUtitiles.getheightofPercentage(context, 1),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                            height: BaseUtitiles.getheightofPercentage(context, 4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Theme.of(context).primaryColor
+                              ,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              RequestConstant.SUBMIT,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: RequestConstant.Lable_Font_SIZE,
+                                  color: Colors.white
+                                      ),
+                            ),
+                          ),
+                          onTap: () async {
+                            if(_formKey.currentState!.validate()){
+                              _formKey.currentState!.save();
+                              cashBookSiteController.getcashbooksitedetails();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: BaseUtitiles.getheightofPercentage(context, 2),),
+                    list(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget bouttomNavigation() {
+    return Card(
+      child: Container(
+        height: BaseUtitiles.getheightofPercentage(context, 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Total   ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  Container(
+                    height: BaseUtitiles.getheightofPercentage(context, 4),
+                    width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                    child: TextField(
+                      readOnly: true,
+                      cursorColor: Theme.of(context).primaryColor,
+                      textAlign: TextAlign.center,
+                      controller: cashBookSiteController.totalDebit,
+                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                              ? newValue
+                              : oldValue;
+                        }),
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                    height: BaseUtitiles.getheightofPercentage(context, 4),
+                    width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                    child: TextField(
+                      readOnly: true,
+                      cursorColor: Theme.of(context).primaryColor,
+                      textAlign: TextAlign.center,
+                      controller: cashBookSiteController.totalCredit,
+                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                              ? newValue
+                              : oldValue;
+                        }),
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Closing",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  Container(
+                    height: BaseUtitiles.getheightofPercentage(context, 4),
+                    width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                    child: TextField(
+                      readOnly: true,
+                      cursorColor: Theme.of(context).primaryColor,
+                      textAlign: TextAlign.center,
+                      controller: cashBookSiteController.closingDebit,
+                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                              ? newValue
+                              : oldValue;
+                        }),
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                    height: BaseUtitiles.getheightofPercentage(context, 4),
+                    width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                    child: TextField(
+                      readOnly: true,
+                      cursorColor: Theme.of(context).primaryColor,
+                      textAlign: TextAlign.center,
+                      controller: cashBookSiteController.closingCredit,
+                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                              ? newValue
+                              : oldValue;
+                        }),
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget list() {
+    return Container(
+      height: BaseUtitiles.getheightofPercentage(context, 54),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+                margin: EdgeInsets.only(top: 5),
+                height: BaseUtitiles.getheightofPercentage(context, 52),
+                child: Obx(
+                      () => ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: cashBookSiteController.cashsiteDatas.value.length,
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: EdgeInsets.only(left: 5, right: 5),
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 5,
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    // Left side (date)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        cashBookSiteController.cashsiteDatas.value[index].vocDate.toString(),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+
+                                    // Right side (amount + arrow)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end, // push to right
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "₹ ${cashBookSiteController.cashsiteDatas.value[index].depitAmount.toString() == "0.0"
+                                                  ? cashBookSiteController.cashsiteDatas.value[index].creditAmount.toString()
+                                                  : cashBookSiteController.cashsiteDatas.value[index].depitAmount.toString()} ",
+                                              textAlign: TextAlign.right, // right-align within Expanded
+                                              style: TextStyle(
+                                                color: cashBookSiteController.cashsiteDatas.value[index].depitAmount.toString() == "0.0"
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(
+                                            cashBookSiteController.cashsiteDatas.value[index].creditAmount.toString() == "0.0"
+                                                ? Icons.north_east
+                                                : Icons.south_west,
+                                            size: 15,
+                                            color:  Colors.black, // match text color
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          cashBookSiteController.cashsiteDatas
+                                              .value[index].descriptions
+                                              .toString(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                  ],
+                                ),
+
+                                SizedBox(height: 10,),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text("Remarks:",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))),
+                                    Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          cashBookSiteController.cashsiteDatas.value[index].remarks.toString(),
+                                          textAlign: TextAlign.left,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+

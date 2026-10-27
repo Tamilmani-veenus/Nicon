@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "276803030872",
+    "project_id": "nicon-f0715",
+    "storage_bucket": "nicon-f0715.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276803030872:android:4383eafa3b8874ceec5f2d",
+        "android_client_info": {
+          "package_name": "com.veenus.nicon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArn8kR15lI9BYLSUs5v6OgUWHYHdXVNyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
