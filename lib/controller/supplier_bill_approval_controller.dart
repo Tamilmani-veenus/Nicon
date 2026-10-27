@@ -3,6 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../db_model/supp_bill_app_model.dart';
 import '../db_services/supplier_bill_app_service.dart';
+import '../home/menu/materials/supplier_bill_approval/supplier_bill_entry.dart';
 import '../provider/supplier_bill_approval_provider.dart';
 import '../utilities/baseutitiles.dart';
 
@@ -17,7 +18,7 @@ class SupplierBillApprovalController extends GetxController {
 
   var suppBillAppService = SuppBillAppService();
 
-  Future suppBillApprovalEditApi(int reqId, context) async {
+  Future suppBillApprovalEditApi(int reqId, context,MenuName) async {
     await ClickUtils.run(() async {
       final value =
       await SupplierBillAppProvider.SupplierBillGetByIdAPI(reqId);
@@ -33,13 +34,13 @@ class SupplierBillApprovalController extends GetxController {
             await supplierBillSaveDetTable();
             await getSupplierBillSaveDetData();
 
-            // await Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) =>
-            //         MRNRequest_Indent_Entry(heading: MenuName),
-            //   ),
-            // );
+            await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    SupplierBillEntry(heading: MenuName),
+              ),
+            );
           } else {
             BaseUtitiles.showToast("No Data Found");
           }
