@@ -4,7 +4,7 @@ import '../db_model/supp_bill_app_model.dart';
 class SuppBillAppService {
   late DBManager _dbManager;
 
-  MateriallistService() {
+  SuppBillAppService() {
     _dbManager = DBManager();
   }
 
@@ -20,6 +20,6 @@ class SuppBillAppService {
   }
 
   suppBillApplist_table_readAll() async {
-    return _dbManager.readData('supplierBillAppDetTable');
+    return  _dbManager.readData('supplierBillAppDetTable');
   }
 }
