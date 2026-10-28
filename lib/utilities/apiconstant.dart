@@ -292,6 +292,8 @@ class ApiConstant{
   static String GET_PURCHASE_ORDER_NO_API = BASE_URL_CORE + "api/GenericMaster/GetAutoNoBasedOnEntryDate";
   static String GET_PURCHASE_ORDER_NO_COMPANYWISE_API = BASE_URL_CORE + "api/GenericMaster/GetAutoNoCompanyWiseWithYearPo";
   static String GET_SUP_BILL_INWARDNO_API = BASE_URL_CORE + "api/MaterialPurOrdBill/GetGRNDd";
+  static String GET_SUP_BILL_INWIMAGE_API = BASE_URL_CORE + "api/MaterialInward/GetInwardImageList";
+  static String GET_SUP_BILL_POIMAGE_API = BASE_URL_CORE + "api/MaterialPurOrdBillDirect/GetPurOrdBillImageList";
 
   static String GET_PENDING_QUOTE_LIST = BASE_URL_CORE + "api/MaterialQuote/GetPendingQuote";
   static String GET_VERIFY_QUOTE_LIST = BASE_URL_CORE + "api/MaterialQuote/GetQuoteVerificationPending";
