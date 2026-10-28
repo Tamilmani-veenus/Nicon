@@ -188,12 +188,18 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: primaryColor.withOpacity(0.25),
-          width: 1.2,
+          color: const Color(0xFFE8E7F5),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: primaryColor.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,68 +284,102 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     final bool isEditable = editableFields.contains(label);
     final bool isNetPay = label == 'Net Pay Amount';
 
-    return Card(
-      margin: EdgeInsets.zero,
-      color: Colors.white,
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(
-          color: Colors.white70,
-          width: 1,
+    final Color fieldColor = isEditable
+        ? primaryColor.withOpacity(0.06)
+        : isNetPay
+        ? primaryColor.withOpacity(0.10)
+        : const Color(0xFFF5F6FA);
+
+    final Color borderColor = isEditable
+        ? primaryColor.withOpacity(0.45)
+        : isNetPay
+        ? primaryColor.withOpacity(0.30)
+        : const Color(0xFFE8EAF0);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: fieldColor,
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(
+          color: borderColor,
+          width: isEditable ? 1.3 : 1,
         ),
-        borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 3,
-          left: 10,
-          right: 8,
-          bottom: 5,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
         ),
         child: TextFormField(
           controller: controllers[label],
           readOnly: !isEditable,
-          autovalidateMode: AutovalidateMode.always,
           keyboardType: Platform.isAndroid
               ? const TextInputType.numberWithOptions(
             signed: true,
             decimal: true,
           )
               : TextInputType.text,
-          cursorColor: Colors.black,
+          cursorColor: primaryColor,
           style: TextStyle(
-            color: isNetPay ? primaryColor : Colors.black,
+            color: isNetPay
+                ? primaryColor
+                : isEditable
+                ? const Color(0xFF29234D)
+                : const Color(0xFF4B5060),
             fontSize: 13,
-            fontWeight:
-            isNetPay ? FontWeight.w700 : FontWeight.normal,
+            fontWeight: isNetPay || isEditable
+                ? FontWeight.w600
+                : FontWeight.w500,
           ),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.zero,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8),
             border: InputBorder.none,
             labelText: label,
             labelStyle: TextStyle(
-              color: Colors.grey,
+              color: isEditable
+                  ? primaryColor
+                  : Colors.grey.shade600,
               fontSize: 11,
+              fontWeight:
+              isEditable ? FontWeight.w600 : FontWeight.normal,
             ),
             floatingLabelStyle: TextStyle(
-              color: Colors.grey,
+              color: primaryColor,
               fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
             prefixIconConstraints: const BoxConstraints(
-              minWidth: 0,
-              minHeight: 0,
+              minWidth: 30,
+              minHeight: 30,
             ),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 8,
-              ),
+            prefixIcon: Icon(
+              fieldIcons[label] ?? Icons.edit_outlined,
+              size: 17,
+              color: isEditable || isNetPay
+                  ? primaryColor
+                  : Colors.grey.shade500,
+            ),
+            suffixIconConstraints: const BoxConstraints(
+              minWidth: 20,
+              minHeight: 25,
+            ),
+            suffixIcon: isEditable
+                ? Padding(
+              padding: const EdgeInsets.only(left: 4),
               child: Icon(
-                fieldIcons[label] ?? Icons.edit_outlined,
-                size: 18,
-                color:  primaryColor,
+                Icons.edit_rounded,
+                size: 14,
+                color: primaryColor.withOpacity(0.8),
               ),
-            ),
+            )
+                : isNetPay
+                ? Icon(
+              Icons.check_circle_rounded,
+              size: 17,
+              color: primaryColor,
+            )
+                : null,
           ),
         ),
       ),

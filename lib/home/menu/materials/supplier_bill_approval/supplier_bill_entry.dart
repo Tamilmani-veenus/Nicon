@@ -101,7 +101,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          "NEXT",
+                          "Next",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: RequestConstant.Lable_Font_SIZE,
@@ -778,27 +778,41 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
   Widget _supplierInput(
       BuildContext context, {
         String? initialValue,
+        TextEditingController? controller,
         bool readOnly = false,
         bool validateNumber = true,
         EdgeInsets margin = const EdgeInsets.only(right: 11),
         ValueChanged<String>? onChanged,
+        VoidCallback? onTap
       }) {
     return Container(
       margin: margin,
       height: BaseUtitiles.getheightofPercentage(context, 4),
       child: TextFormField(
-        initialValue: initialValue,
+        controller: controller,
+        initialValue: controller == null ? initialValue : null,
         readOnly: readOnly,
         onChanged: onChanged,
-        style: const TextStyle(color: Colors.black),
+        onTap: onTap,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 14,
+          fontWeight:  FontWeight.w500 ,
+        ),
         cursorColor: Colors.black,
+        cursorWidth: 1,
         keyboardType: Platform.isAndroid
             ? const TextInputType.numberWithOptions(decimal: true)
             : TextInputType.text,
         inputFormatters:
         validateNumber ? _supplierNumberFormatters() : null,
         textAlign: TextAlign.center,
-        decoration: _supplierInputDecoration(context),
+        decoration: _supplierInputDecoration(context).copyWith(
+          filled: true,
+          fillColor: readOnly
+              ? Theme.of(context).primaryColor.withOpacity(0.05)
+              : Colors.white,
+        ),
       ),
     );
   }
@@ -978,8 +992,18 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                         leftField: _supplierInput(
                             context,
                           initialValue: item.billQty.toString(),
+                          controller:
+                          supplierBillApprovalController.Itemlist_qtyControllers[index],
                           onChanged: (value) {
                             supplierBillApprovalController.updateBillQty(index, value);
+                          },
+                          onTap: () {
+                            final controller =
+                            supplierBillApprovalController.Itemlist_qtyControllers[index];
+
+                            if (controller.text == '0.0' || controller.text =="0") {
+                              controller.clear();
+                            }
                           },
                         ),
                         rightLabel: 'Rate',
@@ -1077,12 +1101,11 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: details.length,
-                    gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 1.9,
+                      childAspectRatio: 2.2,
                     ),
                     itemBuilder: (context, index) {
                       final item = details[index];
@@ -1102,21 +1125,26 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           children: [
                             Text(
                               item['label']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: Colors.grey.shade700,
                               ),
                             ),
                             const SizedBox(height: 5),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                item['value']!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  item['value']!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
                                 ),
                               ),
                             ),

@@ -179,8 +179,17 @@ class SupplierBillApprovalController extends GetxController {
 
     if (qty == null) return;
 
-    final item = suppBillAppEditListValue[0]
-        .materialPurOrdBilldetLink[index];
+    final item =
+    suppBillAppEditListValue[0].materialPurOrdBilldetLink[index];
+
+    final double balQty =
+        double.tryParse(item.balQty.toString()) ?? 0.0;
+
+    if (qty > balQty) {
+      Itemlist_qtyControllers[index].text = '0.0';
+      BaseUtitiles.showToast('Bill Qty should not exceed PO Bal Qty');
+      return;
+    }
 
     await suppBillAppService.updateBillQty(
       item.detId,
