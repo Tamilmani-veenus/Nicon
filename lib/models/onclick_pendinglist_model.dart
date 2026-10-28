@@ -115,6 +115,7 @@ class OnClickListResult {
   double? totNos;
   double? totAmt;
   String? Payfor;
+  String? PoBillTypename;
   int? ProjectId;
   int? ProjectID;
   int? Projectid;
@@ -259,6 +260,7 @@ class OnClickListResult {
     this.ReqOrdNo,
     this.reviseNo,
     this.reviseDate,
+    this.PoBillTypename,
     this.labourAttendanceNo,
     this.labourAttendanceDate,
     this.reqOrdDate,
@@ -471,6 +473,7 @@ class OnClickListResult {
       ReqDueDate: json["ReqdueDate"],
     requestType: json["requestType"],
     projectId: json["projectID"],
+      PoBillTypename: json["PoBillTypename"],
     ProjectID:json["ProjectID"] ?? json["projectid"],
     Projectid:json["Projectid"],
     siteId: json["siteID"],
@@ -665,6 +668,7 @@ class OnClickListResult {
     "Labcount": Labcount,
     "reqOrdNo": reqOrdNo,
     "ReqOrdNo": ReqOrdNo,
+    "PoBillTypename": PoBillTypename,
     "ManPowerNo": manPowerNo,
     "reviseNo": reviseNo,
     "reviseDate": reviseDate,
