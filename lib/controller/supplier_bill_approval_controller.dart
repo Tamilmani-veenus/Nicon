@@ -10,32 +10,61 @@ import '../utilities/baseutitiles.dart';
 class SupplierBillApprovalController extends GetxController {
   RxList suppBillAppEditListValue = [].obs;
   RxList getSupplierBillItemViewDbList = [].obs;
+  final RxList<String> supplierBillImageList = <String>[].obs;
   late List<SupplierBillAppDet> materialTableList = <SupplierBillAppDet>[];
   late List<SupplierBillAppDet> updateListData = <SupplierBillAppDet>[];
   late List<SupplierBillAppDet> deleteModelList = <SupplierBillAppDet>[];
   var supplierBillAppDetModel = SupplierBillAppDet();
   List<TextEditingController> Itemlist_qtyControllers = [];
-  final autoYearWiseNoController = TextEditingController();
-  final RequestDateController = TextEditingController();
-  final billingTypeController = TextEditingController();
-  final againstTypeController = TextEditingController();
-  final supplierNameController = TextEditingController();
-  final inwardNoController = TextEditingController();
-  final dcNoController = TextEditingController();
-  final invoiceNoController = TextEditingController();
-  final dcDateController = TextEditingController();
-  final invoiceDateController = TextEditingController();
   int reqId = 0;
   RxInt selectedSupplierId = 0.obs;
-  RxInt inwardMasId = 0.obs;
-
-
   var suppBillAppService = SuppBillAppService();
+  RxBool isGstInclusive = false.obs;
+
+  @override
+  void onClose() {
+    for (final controller in controllers.values) {
+      controller.dispose();
+    }
+    super.onClose();
+  }
+
+  final Map<String, TextEditingController> controllers = {
+    'Freight Charges': TextEditingController(),
+    'Labour Charges': TextEditingController(),
+    'Other Charges': TextEditingController(),
+    'Round Off': TextEditingController(),
+
+    'S-GST %': TextEditingController(),
+    'S-GST Amt': TextEditingController(),
+    'Net S-GST': TextEditingController(),
+
+    'C-GST %': TextEditingController(),
+    'C-GST Amt': TextEditingController(),
+    'Net C-GST': TextEditingController(),
+
+    'I-GST %': TextEditingController(),
+    'I-GST Amt': TextEditingController(),
+    'Net I-GST': TextEditingController(),
+
+    'TDS %': TextEditingController(),
+    'TDS Amt': TextEditingController(),
+    'TCS %': TextEditingController(),
+    'TCS Amt': TextEditingController(),
+
+    'Discount %': TextEditingController(),
+    'Disc Amt': TextEditingController(),
+
+    'Net Amount': TextEditingController(),
+    'Advance Amount': TextEditingController(),
+    'Deduction Amount': TextEditingController(),
+    'Net Pay Amount': TextEditingController(),
+    'Remarks': TextEditingController(),
+  };
 
   Future suppBillApprovalEditApi(int reqId, context,MenuName) async {
     await ClickUtils.run(() async {
-      final value =
-      await SupplierBillAppProvider.SupplierBillGetByIdAPI(reqId);
+      final value = await SupplierBillAppProvider.SupplierBillGetByIdAPI(reqId);
 
       if (value != null) {
         if (value.success == true) {
@@ -43,18 +72,11 @@ class SupplierBillApprovalController extends GetxController {
 
           getSupplierBillItemViewDbList.clear();
           suppBillAppEditListValue.value = [value];
+          print("eeeeeeeeeeeeeeeeee...${suppBillAppEditListValue.value[0].result.sgstAmount}");
 
           if (suppBillAppEditListValue.isNotEmpty) {
             await supplierBillSaveDetTable();
             await getSupplierBillSaveDetData();
-            if(suppBillAppEditListValue[0].result.poBillType=="P"){
-              final value = await SupplierBillAppProvider.SupplierBillInwNoAPI(suppBillAppEditListValue[0].result.purOrdMasId);
-              inwardNoController.text = value["grnNo"].toString();
-              inwardMasId.value = value["inwardMasId"];
-              print("eeeeeee...${inwardNoController.text}");
-              print("eeeeeee...${inwardMasId.value}");
-            }
-
             await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -69,6 +91,21 @@ class SupplierBillApprovalController extends GetxController {
           BaseUtitiles.showToast(
               value.message ?? 'Something went wrong..');
         }
+      } else {
+        BaseUtitiles.showToast('Something went wrong..');
+      }
+    });
+  }
+
+  Future<void> suppBillApprovalImageApi(int reqId, dynamic type) async {
+    await ClickUtils.run(() async {
+      final value =
+      await SupplierBillAppProvider.SupplierBillImgListAPI(reqId, type);
+
+      if (value != null) {
+        supplierBillImageList.value = List<String>.from(
+          (value as List).map((e) => e['url'].toString()),
+        );
       } else {
         BaseUtitiles.showToast('Something went wrong..');
       }
@@ -169,14 +206,37 @@ class SupplierBillApprovalController extends GetxController {
     setTextControllersValue();
   }
 
-  Material_itemlist_textControllersInitiate() {
+  Future<void> updateBillQty(int index, String value) async {
+    final qty = double.tryParse(value);
+
+    if (qty == null) return;
+
+    final item =
+    suppBillAppEditListValue[0].materialPurOrdBilldetLink[index];
+
+    final double balQty =
+        double.tryParse(item.balQty.toString()) ?? 0.0;
+
+    if (qty > balQty) {
+      Itemlist_qtyControllers[index].text = '0.0';
+      BaseUtitiles.showToast('Bill Qty should not exceed PO Bal Qty');
+      return;
+    }
+
+    await suppBillAppService.updateBillQty(
+      item.detId,
+      qty,
+    );
+  }
+
+  textControllersInitiate() {
     Itemlist_qtyControllers.add(TextEditingController());
   }
 
 
   setTextControllersValue() async {
     for (var index = 0; index < getSupplierBillItemViewDbList.length; index++) {
-      Material_itemlist_textControllersInitiate();
+      textControllersInitiate();
       Itemlist_qtyControllers[index].text = getSupplierBillItemViewDbList[index].billQty.toString();
     }
   }

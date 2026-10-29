@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 const Color lightpurpleColor = Color.fromARGB(107, 241, 150, 250);
 //const Color lightpurpleColor = Color(0xff1d2635);
-const Color primaryColor = Colors.purpleAccent;
 //const Color accentColor= Colors.purple.shade400;
 const String fontFamily = 'NunitoSans';
 const Color background = Color(0xff1d2635);

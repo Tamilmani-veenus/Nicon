@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,18 +6,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/supplier_bill_approval_controller.dart';
 import 'package:nicon/home/menu/materials/supplier_bill_approval/supplier_bill_itemlist.dart';
-
 import '../../../../app_theme/app_colors.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
 import '../../../../utilities/baseutitiles.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
-import '../../../../controller/supplier_bill_approval_controller.dart';
-import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/common_date_fields.dart';
+import '../../../../utilities/image_view.dart';
 import '../../../../utilities/requestconstant.dart';
 
 class SupplierBillEntry extends StatefulWidget {
@@ -40,31 +34,89 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
   @override
   void initState() {
     super.initState();
-    var duration = const Duration(seconds: 0);
-    Future.delayed(duration, () async {
-      final result = supplierBillApprovalController.suppBillAppEditListValue[0].result;
-      supplierBillApprovalController.reqId = result.id;
-      supplierBillApprovalController.autoYearWiseNoController.text = result.billNo;
-      supplierBillApprovalController.RequestDateController.text = result.entrydate;
-      supplierBillApprovalController.billingTypeController.text = result.billType == "C" ? "Company" : "Client";
-      projectController.selectedProjectId.value = result.projectId;
-      siteController.selectedsiteId.value = result.siteId;
-      projectController.projectname.text = result.projectName;
-      siteController.Sitename.text = result.siteName;
-      supplierBillApprovalController.selectedSupplierId.value = result.supplierId;
-      supplierBillApprovalController.supplierNameController.text = result.supplierName;
-      supplierBillApprovalController.dcNoController.text = result.dcNo;
-      supplierBillApprovalController.dcDateController.text = result.dcDate;
-      supplierBillApprovalController.invoiceNoController.text = result.invoiceNo;
-      supplierBillApprovalController.invoiceDateController.text = result.billDate;
-      supplierBillApprovalController.inwardNoController.text = result.billDate;
-      supplierBillApprovalController.againstTypeController.text = result.poBillDesc;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (supplierBillApprovalController.suppBillAppEditListValue.isEmpty) {
+        return;
+      }
 
+      final result =
+          supplierBillApprovalController.suppBillAppEditListValue[0].result;
 
-      if (!mounted) return;
+      final controllers = supplierBillApprovalController.controllers;
 
-      setState(() {});
+      // Additional Charges
+      controllers['Freight Charges']!.text =
+          (result.frieghtCharges ?? 0).toString();
+
+      controllers['Labour Charges']!.text =
+          (result.labourCharges ?? 0).toString();
+
+      controllers['Other Charges']!.text =
+          (result.otherCharges ?? 0).toString();
+
+      controllers['Round Off']!.text =
+          (result.roundOff ?? 0).toString();
+
+      // Taxes
+      controllers['S-GST %']!.text =
+          (result.sgstPercentage ?? 0).toString();
+
+      controllers['S-GST Amt']!.text =
+          (result.sgstAmount ?? 0).toString();
+
+      controllers['Net S-GST']!.text =
+          (result.netSgstAmount ?? 0).toString();
+
+      controllers['C-GST %']!.text =
+          (result.cgstPercentage ?? 0).toString();
+
+      controllers['C-GST Amt']!.text =
+          (result.cgstAmount ?? 0).toString();
+
+      controllers['Net C-GST']!.text =
+          (result.netCgstAmount ?? 0).toString();
+
+      controllers['I-GST %']!.text =
+          (result.igstPercentage ?? 0).toString();
+
+      controllers['I-GST Amt']!.text =
+          (result.igstAmount ?? 0).toString();
+
+      controllers['Net I-GST']!.text =
+          (result.netIgstAmount ?? 0).toString();
+
+      controllers['TDS %']!.text =
+          (result.tdsPercentage ?? 0).toString();
+
+      controllers['TDS Amt']!.text =
+          (result.tdsAmount ?? 0).toString();
+
+      controllers['TCS %']!.text =
+          (result.tcsPercentage ?? 0).toString();
+
+      controllers['TCS Amt']!.text =
+          (result.tcsAmount ?? 0).toString();
+
+      controllers['Disc Amt']!.text =
+          (result.discntAmount ?? 0).toString();
+
+      controllers['Discount %']!.text =
+          "0.0";
+      // Payment Details
+      controllers['Net Amount']!.text =
+          (result.netAmount ?? 0).toString();
+
+      controllers['Advance Amount']!.text =
+          (result.advanceAmount ?? 0).toString();
+
+      controllers['Net Pay Amount']!.text =
+          (result.netPayAmount ?? 0).toString();
+
+      controllers['Deduction Amount']!.text = "0.0";
+
+      // Remarks — if this controller exists
+      controllers['Remarks']?.text = result.remarks ?? '';
     });
   }
 
@@ -104,7 +156,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          "NEXT",
+                          "Next",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: RequestConstant.Lable_Font_SIZE,
@@ -173,8 +225,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               readOnly: true,
-                              controller: supplierBillApprovalController
-                                  .autoYearWiseNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.billNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -198,10 +249,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "Entry Date",
-                          value: supplierBillApprovalController.RequestDateController.text,
-                          controller: supplierBillApprovalController.RequestDateController,
+                          value:  supplierBillApprovalController.suppBillAppEditListValue[0].result.entrydate.toString() ,
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.RequestDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.entrydate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -222,7 +272,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: projectController.projectname,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.projectName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -268,7 +318,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: siteController.Sitename,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.siteName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -314,7 +364,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.supplierNameController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.supplierName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -343,6 +393,54 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           ),
                         ),
                       ),
+                      if(supplierBillApprovalController.suppBillAppEditListValue[0].result.poBillType=="P")...{
+                      Container(
+                margin:
+                const EdgeInsets.only(top: 2, left: 10, right: 10),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(
+                        color: Colors.white70, width: 1),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 3, left: 10, bottom: 5),
+                    child: TextFormField(
+                      autovalidateMode:
+                      AutovalidateMode.always,
+                      readOnly: true,
+                      controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.purOrdMasNo.toString()),
+                      cursorColor: Colors.black,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        labelText: "Order No",
+                        labelStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: RequestConstant.Lable_Font_SIZE),
+                        prefixIconConstraints:
+                        BoxConstraints(minWidth: 0, minHeight: 0),
+                        prefixIcon: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            child: ConstIcons.requestNo),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty ||
+                            value == "--Select--" ||
+                            value == "--SELECT--") {
+                          return '\u26A0 ${RequestConstant.VALIDATE}';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ),
+                       },
                       Container(
                         margin:
                         const EdgeInsets.only(top: 2, left: 10, right: 10),
@@ -360,7 +458,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.dcNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.dcNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -392,10 +490,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "DC Date",
-                          value: supplierBillApprovalController.dcDateController.text,
-                          controller: supplierBillApprovalController.dcDateController,
+                          value: supplierBillApprovalController.suppBillAppEditListValue[0].result.dcDate.toString(),
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.dcDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.dcDate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -417,7 +514,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.invoiceNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.invoiceNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -449,10 +546,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "Invoice Date",
-                          value: supplierBillApprovalController.invoiceDateController.text,
-                          controller: supplierBillApprovalController.invoiceDateController,
+                          value: supplierBillApprovalController.suppBillAppEditListValue[0].result.billDate.toString(),
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.invoiceDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.billDate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -474,8 +570,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.billingTypeController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.billType == "C" ? "Company" : "Client"),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -515,8 +610,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.againstTypeController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.poBillDesc.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -556,14 +650,13 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.againstTypeController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.companyName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 border: InputBorder.none,
-                                labelText: "Inward No",
+                                labelText: "Company",
                                 labelStyle: TextStyle(
                                   color: Colors.grey,
                                   fontSize: RequestConstant.Lable_Font_SIZE,
@@ -573,19 +666,61 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 8),
-                                  child: ConstIcons.preparedBy,
+                                  child: ConstIcons.accountName,
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10,),
+                      InkWell(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 20, right: 20),
+                          width: BaseUtitiles.getWidthtofPercentage(context, 32),
+                          height: BaseUtitiles.getheightofPercentage(context, 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Theme.of(context).primaryColor
+                          ),
+                          alignment: Alignment.center,
+                          child: const Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.image_outlined,color: Colors.white,size: 20,),
+                              Text(
+                                "Bill Images",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                    color: Colors.white
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () async {
+                          await supplierBillApprovalController.suppBillApprovalImageApi(
+                            supplierBillApprovalController
+                                .suppBillAppEditListValue[0].result.id,
+                            supplierBillApprovalController
+                                .suppBillAppEditListValue[0].result.poBillType,
+                          );
+
+                          showDialog(
+                            context: context,
+                            builder: (context) => SelectTypeDialog(
+                              imagePaths: supplierBillApprovalController
+                                  .supplierBillImageList
+                                  .toList(),
+                            ),
+                          );
+                        },
+                      ),
                       SizedBox(height: height),
                     ],
                   ),
                 ),
-                
-                    SizedBox(
+                SizedBox(
                   height:
                   BaseUtitiles.getheightofPercentage(context, 100),
                   child: DraggableScrollableSheet(
@@ -659,6 +794,110 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
     );
   }
 
+  InputDecoration _supplierInputDecoration(BuildContext context) {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).primaryColor,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Theme.of(context).primaryColor,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+  }
+
+  List<TextInputFormatter> _supplierNumberFormatters() {
+    return [
+      TextInputFormatter.withFunction((oldValue, newValue) {
+        return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+            ? newValue
+            : oldValue;
+      }),
+    ];
+  }
+
+  Widget _supplierInput(
+      BuildContext context, {
+        String? initialValue,
+        TextEditingController? controller,
+        bool readOnly = false,
+        bool validateNumber = true,
+        EdgeInsets margin = const EdgeInsets.only(right: 11),
+        ValueChanged<String>? onChanged,
+        VoidCallback? onTap
+      }) {
+    return Container(
+      margin: margin,
+      height: BaseUtitiles.getheightofPercentage(context, 4),
+      child: TextFormField(
+        controller: controller,
+        initialValue: controller == null ? initialValue : null,
+        readOnly: readOnly,
+        onChanged: onChanged,
+        onTap: onTap,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 14,
+          fontWeight:  FontWeight.w500 ,
+        ),
+        cursorColor: Colors.black,
+        cursorWidth: 1,
+        keyboardType: Platform.isAndroid
+            ? const TextInputType.numberWithOptions(decimal: true)
+            : TextInputType.text,
+        inputFormatters:
+        validateNumber ? _supplierNumberFormatters() : null,
+        textAlign: TextAlign.center,
+        decoration: _supplierInputDecoration(context).copyWith(
+          filled: true,
+          fillColor: readOnly
+              ? Theme.of(context).primaryColor.withOpacity(0.05)
+              : Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _supplierFieldRow(
+      BuildContext context, {
+        required String leftLabel,
+        required Widget leftField,
+        required String rightLabel,
+        required Widget rightField,
+      }) {
+    Widget label(String text) {
+      return Expanded(
+        flex: 2,
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            color: Colors.black,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10, left: 5, right: 3),
+      child: Row(
+        children: [
+          label(leftLabel),
+          Expanded(flex: 4, child: leftField),
+          label(rightLabel),
+          Expanded(flex: 4, child: rightField),
+        ],
+      ),
+    );
+  }
+
   Widget ListDetails(BuildContext context, ScrollController scrollController) {
     return Column(
       children: [
@@ -668,446 +907,178 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 10)),
-            itemCount: 1,
+            padding: EdgeInsets.only(
+              bottom: BaseUtitiles.getheightofPercentage(context, 10),
+            ),
+            itemCount: supplierBillApprovalController
+                .getSupplierBillItemViewDbList.length,
             itemBuilder: (BuildContext context, int index) {
-              // dailyEntriesController.textControllersInitiate();
-              return SingleChildScrollView(
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+              final value = supplierBillApprovalController
+                  .getSupplierBillItemViewDbList.value;
+
+              final item = value[index];
+              final primary = Theme.of(context).primaryColor;
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                color: Colors.white,
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 7,
                   ),
-                  elevation: 5,
-                  color: Colors.white,
-                  // margin: EdgeInsets.only(left: 10, right: 10,bottom: 10),
                   child: Column(
-                    children: <Widget>[
+                    children: [
+                      // Material name and View Details
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             flex: 6,
                             child: Container(
                               margin: const EdgeInsets.only(
-                                  top: 5, left: 10, right: 25),
-                              child: Text(
-                                'Material Name ( Scale )',
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold),
+                                left: 5,
+                                right: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      '${item.materialName}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      ' (${item.scaleName.toString().trim()})',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () => showAmountDetailsDialog(context,item),
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'View Details',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: primary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: primary,
+                                    size: 16,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ],
                       ),
 
-                      Container(
-                        margin:
-                        const EdgeInsets.only(top: 10, left: 5, right: 3),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                text: TextSpan(
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    children: <TextSpan>[
-                                      const TextSpan(
-                                        text: "PO BalQty",
-                                      ),
-                                      TextSpan(
-                                        text:  "",
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 4,
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 11),
-                                  height: BaseUtitiles.getheightofPercentage(
-                                      context, 4),
-                                  child: TextFormField(
-                                      style:
-                                      const TextStyle(color: Colors.black),
-                                      // controller: dailyEntriesController
-                                      //     .EntrySCreenNosControllers[index],
-                                      cursorColor: Colors.black,
-                                      keyboardType: Platform.isAndroid
-                                          ? TextInputType.numberWithOptions(
-                                          decimal: true)
-                                          : TextInputType.text,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return RegExp(r'^\d*\.?\d{0,2}$')
-                                                  .hasMatch(newValue.text)
-                                                  ? newValue
-                                                  : oldValue;
-                                            }),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                      )),
-                                )),
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                text: const TextSpan(
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "Bill Qty",
-                                      ),
-                                      TextSpan(
-                                        text: "",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                  margin: const EdgeInsets.only(left: 8),
-                                  height: BaseUtitiles.getheightofPercentage(
-                                      context, 4),
-                                  child: TextFormField(
+                      // PO BalQty and Bill Qty
+                      _supplierFieldRow(
+                        context,
+                        leftLabel: 'PO BalQty',
+                        leftField: _supplierInput(
+                          context,
+                          initialValue: item.balQty.toString(),
+                          readOnly: true,
+                          validateNumber: false,
+                        ),
 
-                                      style:
-                                      const TextStyle(color: Colors.black),
-                                      // controller: dailyEntriesController
-                                      //     .ExtrasControllers[index],
-                                      cursorColor: Colors.black,
-                                      keyboardType: Platform.isAndroid
-                                          ? TextInputType.numberWithOptions(
-                                          decimal: true)
-                                          : TextInputType.text,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return RegExp(r'^\d*\.?\d{0,2}$')
-                                                  .hasMatch(newValue.text)
-                                                  ? newValue
-                                                  : oldValue;
-                                            }),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                      ),
-                                  )),
-                            )
-                          ],
+                        rightLabel: 'PO Rate',
+                        rightField: _supplierInput(
+                          context,
+                          initialValue: item.poRate.toString(),
+                          readOnly: true,
+                          validateNumber: false,
+                          margin: const EdgeInsets.only(left: 8),
                         ),
                       ),
-                      Container(
-                        margin:
-                        const EdgeInsets.only(top: 10, left: 5, right: 3),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                text: const TextSpan(
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "PO Rate",
-                                      ),
-                                      TextSpan(
-                                        text: "",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 4,
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 11),
-                                  height: BaseUtitiles.getheightofPercentage(
-                                      context, 4),
-                                  child: TextFormField(
-                                      style:
-                                      const TextStyle(color: Colors.black),
-                                      // controller: dailyEntriesController
-                                      //     .MrngOtHrsControllers[index],
-                                      cursorColor: Colors.black,
-                                      keyboardType: Platform.isAndroid
-                                          ? TextInputType.numberWithOptions(
-                                          decimal: true)
-                                          : TextInputType.text,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return RegExp(r'^\d*\.?\d{0,2}$')
-                                                  .hasMatch(newValue.text)
-                                                  ? newValue
-                                                  : oldValue;
-                                            }),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                      ),
-                                      ),
-                                )),
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                text: const TextSpan(
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "Rate",
-                                      ),
-                                      TextSpan(
-                                        text: "",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                  margin: const EdgeInsets.only(left: 8),
-                                  height: BaseUtitiles.getheightofPercentage(
-                                      context, 4),
-                                  child: TextField(
-                                      readOnly: true,
-                                      style:
-                                      const TextStyle(color: Colors.black),
-                                      // controller: dailyEntriesController
-                                      //     .MrngOtAmtControllers[index],
-                                      cursorColor: Colors.black,
-                                      keyboardType: Platform.isAndroid
-                                          ? TextInputType.numberWithOptions(
-                                          decimal: true)
-                                          : TextInputType.text,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return RegExp(r'^\d*\.?\d{0,2}$')
-                                                  .hasMatch(newValue.text)
-                                                  ? newValue
-                                                  : oldValue;
-                                            }),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                      ),
-                                     )),
-                            )
-                          ],
+
+                      // PO Rate and Rate
+                      _supplierFieldRow(
+                        context,
+                        leftLabel: 'Bill Qty',
+                        leftField: _supplierInput(
+                            context,
+                          initialValue: item.billQty.toString(),
+                          controller:
+                          supplierBillApprovalController.Itemlist_qtyControllers[index],
+                          onChanged: (value) {
+                            supplierBillApprovalController.updateBillQty(index, value);
+                          },
+                          onTap: () {
+                            final controller =
+                            supplierBillApprovalController.Itemlist_qtyControllers[index];
+
+                            if (controller.text == '0.0' || controller.text =="0") {
+                              controller.clear();
+                            }
+                          },
+                        ),
+                        rightLabel: 'Rate',
+                        rightField: _supplierInput(
+                          context,
+                          initialValue: item.rate.toString(),
+                          readOnly: true,
+                          margin: const EdgeInsets.only(left: 8),
                         ),
                       ),
-                      Container(
-                        margin:
-                        const EdgeInsets.only(top: 10, left: 5, right: 3,bottom: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                text: const TextSpan(
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "Amount",
-                                      ),
-                                      TextSpan(
-                                        text: "",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 6,
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 11),
-                                  height: BaseUtitiles.getheightofPercentage(
-                                      context, 4),
-                                  child: TextFormField(
 
-                                      // controller: dailyEntriesController
-                                      //     .EvgOtHrsControllers[index],
-                                      style:
-                                      const TextStyle(color: Colors.black),
-                                      cursorColor: Colors.black,
-                                      keyboardType: Platform.isAndroid
-                                          ? TextInputType.numberWithOptions(
-                                          decimal: true)
-                                          : TextInputType.text,
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction(
-                                                (oldValue, newValue) {
-                                              return RegExp(r'^\d*\.?\d{0,2}$')
-                                                  .hasMatch(newValue.text)
-                                                  ? newValue
-                                                  : oldValue;
-                                            }),
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(10))),
-                                      ),
-                                     ),
-                                )),
-                            InkWell(
-                              onTap: () => showAmountDetailsDialog(context),
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.remove_red_eye_outlined,color: Theme.of(context).primaryColor,size: 16,),
-                                    SizedBox(width: 5,),
-                                    Text(
-                                      'View Details',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Icon(Icons.arrow_forward_rounded,
-                                        size: 14, color: Theme.of(context).primaryColor),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
+                      // Desc and Amount
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: _supplierFieldRow(
+                          context,
+                          leftLabel: 'Desc',
+                          leftField: _supplierInput(context,
+                              initialValue: item.description.toString(),
+                              readOnly: true,
+                              validateNumber: false),
+                          rightLabel: 'Amount',
+                          rightField: _supplierInput(
+                            context,
+                            initialValue: item.amount.toString(),
+                            readOnly: true,
+                            margin: const EdgeInsets.only(left: 8),
+                          ),
                         ),
                       ),
                     ],
@@ -1115,25 +1086,25 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                 ),
               );
             },
-          ),
+          )
         ),
         SizedBox(height: BaseUtitiles.getheightofPercentage(context, 4)),
       ],
     );
   }
 
-  void showAmountDetailsDialog(BuildContext context) {
+  void showAmountDetailsDialog(BuildContext context,item) {
     final Color primaryColor = Theme.of(context).primaryColor;
 
     final List<Map<String, String>> details = [
-      {'label': 'Disc %', 'value': '5.00%'},
-      {'label': 'Disc Amt', 'value': '500.00'},
-      {'label': 'SGST %', 'value': '9.00%'},
-      {'label': 'SGST Amt', 'value': '540.00'},
-      {'label': 'CGST %', 'value': '9.00%'},
-      {'label': 'CGST Amt', 'value': '540.00'},
-      {'label': 'IGST %', 'value': '0.00%'},
-      {'label': 'IGST Amt', 'value': '0.00'},
+      {'label': 'Disc %', 'value': item.disc_Per.toString()},
+      {'label': 'Disc Amt', 'value': item.disc_Amt.toString()},
+      {'label': 'SGST %', 'value': item.sgstPer.toString()},
+      {'label': 'SGST Amt', 'value': item.sgstAmt.toString()},
+      {'label': 'CGST %', 'value': item.cgstPer.toString()},
+      {'label': 'CGST Amt', 'value': item.cgstAmt.toString()},
+      {'label': 'IGST %', 'value': item.igstPer.toString()},
+      {'label': 'IGST Amt', 'value': item.igstAmt.toString()},
     ];
 
     showDialog(
@@ -1177,12 +1148,11 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: details.length,
-                    gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 1.9,
+                      childAspectRatio: 2.2,
                     ),
                     itemBuilder: (context, index) {
                       final item = details[index];
@@ -1202,21 +1172,26 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           children: [
                             Text(
                               item['label']!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: Colors.grey.shade700,
                               ),
                             ),
                             const SizedBox(height: 5),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                item['value']!,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  item['value']!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1241,8 +1216,8 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           style: TextStyle(fontSize: 12),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          '₹ 12,500.00',
+                         Text(
+                          '₹ ${item.netAmount}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -1257,6 +1232,235 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           ),
         );
       },
+    );
+  }
+}
+
+class SelectTypeDialog extends StatelessWidget {
+  final List<String> imagePaths;
+
+  const SelectTypeDialog({
+    super.key,
+    required this.imagePaths,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).primaryColor;
+
+    return Dialog(
+      backgroundColor: Colors.white,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+      elevation: 8,
+      shadowColor: primary.withOpacity(.12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: primary.withOpacity(.18),
+          width: 1,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: primary.withOpacity(.06),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: primary.withOpacity(.12),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: primary.withOpacity(.10),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.photo_library_outlined,
+                        color: primary,
+                        size: 21,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Bill Images",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF20243A),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "${imagePaths.length} images available",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Material(
+                      color: Colors.white,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () => Navigator.pop(context),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Icon(
+                            Icons.close_rounded,
+                            size: 21,
+                            color: primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              // Image grid
+              if (imagePaths.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text("No images available"),
+                  ),
+                )
+              else
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight:
+                    MediaQuery.of(context).size.height * 0.55,
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(3),
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 9,
+                      mainAxisSpacing: 9,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: imagePaths.length,
+                    itemBuilder: (context, index) {
+                      final imageUrl = imagePaths[index];
+                      final cacheBuster =
+                          "time=${DateTime.now().millisecondsSinceEpoch}";
+
+                      return GestureDetector(
+                        onTap: () {
+                          final viewUrl = Uri.parse(imageUrl)
+                              .replace(
+                            queryParameters: {
+                              ...Uri.parse(imageUrl).queryParameters,
+                              'time': DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString(),
+                            },
+                          )
+                              .toString();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ImageViewPage(
+                                imageUrl: viewUrl,
+                                netUrl: true,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9),
+                            border: Border.all(
+                              color: grey.withOpacity(.15),
+                              width: 1,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              Uri.parse(imageUrl)
+                                  .replace(
+                                queryParameters: {
+                                  ...Uri.parse(imageUrl).queryParameters,
+                                  'time': DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString(),
+                                },
+                              )
+                                  .toString(),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+
+                                return Container(
+                                  color: Colors.grey.shade100,
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: primary,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey.shade100,
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.broken_image_outlined,
+                                    color: Colors.grey,
+                                    size: 28,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

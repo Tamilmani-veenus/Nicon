@@ -34,10 +34,25 @@ class DBManager {
     return await connection?.query(table, where: 'id=?', whereArgs: [itemId]);
   }
 
-  updateData(table, data) async {
+    updateData(table, data) async {
     var connection =  _database;
     return await connection
         ?.update(table, data, where: 'catId=? AND siteId=?', whereArgs: [data['catId'],data['siteId']]);
+  }
+
+  Future<int?> update(
+      String table,
+      Map<String, dynamic> values, {
+        String? where,
+        List<Object?>? whereArgs,
+      }) async {
+    final db = await database;
+    return await db?.update(
+      table,
+      values,
+      where: where,
+      whereArgs: whereArgs,
+    );
   }
 
   groupBySubcontTable()async{

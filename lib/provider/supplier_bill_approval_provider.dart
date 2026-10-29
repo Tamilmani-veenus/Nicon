@@ -14,9 +14,9 @@ class SupplierBillAppProvider{
       return null;
     }
   }
-  static Future SupplierBillInwNoAPI(int reqId) async {
+  static Future SupplierBillImgListAPI(int reqId,type) async {
     try {
-      final value = await ApiManager.getAPICall("${ApiConstant.GET_SUP_BILL_INWARDNO_API}?ordMasId=$reqId&type=p");
+      final value = await ApiManager.getAPICall(type=="P"?"${ApiConstant.GET_SUP_BILL_INWIMAGE_API}?id=$reqId":"${ApiConstant.GET_SUP_BILL_POIMAGE_API}?id=$reqId");
       return jsonDecode(value);
     } catch (error) {
       print("Error == $error");

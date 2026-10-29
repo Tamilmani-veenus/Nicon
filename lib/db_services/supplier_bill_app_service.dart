@@ -22,4 +22,12 @@ class SuppBillAppService {
   suppBillApplist_table_readAll() async {
     return  _dbManager.readData('supplierBillAppDetTable');
   }
+  Future<int?> updateBillQty(int detId, double billQty) async {
+    return await _dbManager.update(
+      'supplierBillAppDetTable',
+      {'billQty': billQty},
+      where: 'detId = ?',
+      whereArgs: [detId],
+    );
+  }
 }
