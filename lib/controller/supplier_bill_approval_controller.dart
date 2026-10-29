@@ -16,20 +16,33 @@ class SupplierBillApprovalController extends GetxController {
   late List<SupplierBillAppDet> deleteModelList = <SupplierBillAppDet>[];
   var supplierBillAppDetModel = SupplierBillAppDet();
   List<TextEditingController> Itemlist_qtyControllers = [];
-  final autoYearWiseNoController = TextEditingController();
-  final RequestDateController = TextEditingController();
-  final billingTypeController = TextEditingController();
-  final againstTypeController = TextEditingController();
-  final companyNameController = TextEditingController();
-  final supplierNameController = TextEditingController();
-  final orderNoController = TextEditingController();
-  final dcNoController = TextEditingController();
-  final invoiceNoController = TextEditingController();
-  final dcDateController = TextEditingController();
-  final invoiceDateController = TextEditingController();
   int reqId = 0;
   RxInt selectedSupplierId = 0.obs;
   var suppBillAppService = SuppBillAppService();
+  RxBool isGstInclusive = false.obs;
+
+  @override
+  void onClose() {
+    for (final controller in controllers.values) {
+      controller.dispose();
+    }
+    super.onClose();
+  }
+
+  final Map<String, TextEditingController> controllers = {
+    'Freight Charges': TextEditingController(),
+    'Labour Charges': TextEditingController(),
+    'Other Charges': TextEditingController(),
+    'S-GST %': TextEditingController(),
+    'I-GST %': TextEditingController(),
+    'TCS %': TextEditingController(),
+    'TDS %': TextEditingController(),
+    'Discount %': TextEditingController(),
+    'Round Off': TextEditingController(),
+    'Deduction Amount': TextEditingController(),
+    'Net Amount': TextEditingController(),
+    'Net Pay Amount': TextEditingController(),
+  };
 
   Future suppBillApprovalEditApi(int reqId, context,MenuName) async {
     await ClickUtils.run(() async {

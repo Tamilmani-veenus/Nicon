@@ -7,8 +7,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/supplier_bill_approval_controller.dart';
 import 'package:nicon/home/menu/materials/supplier_bill_approval/supplier_bill_itemlist.dart';
 import '../../../../app_theme/app_colors.dart';
-import '../../../../app_theme/app_colors.dart';
-import '../../../../app_theme/app_colors.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
 import '../../../../utilities/baseutitiles.dart';
@@ -36,35 +34,87 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
   @override
   void initState() {
     super.initState();
-    var duration = const Duration(seconds: 0);
-    Future.delayed(duration, () async {
-      final result = supplierBillApprovalController.suppBillAppEditListValue[0].result;
-      supplierBillApprovalController.reqId = result.id;
-      supplierBillApprovalController.autoYearWiseNoController.text = result.billNo;
-      supplierBillApprovalController.RequestDateController.text = result.entrydate;
-      supplierBillApprovalController.billingTypeController.text = result.billType == "C" ? "Company" : "Client";
-      projectController.selectedProjectId.value = result.projectId;
-      siteController.selectedsiteId.value = result.siteId;
-      projectController.projectname.text = result.projectName;
-      siteController.Sitename.text = result.siteName;
-      supplierBillApprovalController.selectedSupplierId.value = result.supplierId;
-      supplierBillApprovalController.supplierNameController.text = result.supplierName;
-      supplierBillApprovalController.dcNoController.text = result.dcNo;
-      supplierBillApprovalController.dcDateController.text = result.dcDate;
-      supplierBillApprovalController.invoiceNoController.text = result.invoiceNo;
-      supplierBillApprovalController.invoiceDateController.text = result.billDate;
-      supplierBillApprovalController.againstTypeController.text = result.poBillDesc;
-      supplierBillApprovalController.companyNameController.text = result.companyName;
-      supplierBillApprovalController.orderNoController.text = result.purOrdMasNo;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (supplierBillApprovalController.suppBillAppEditListValue.isEmpty) {
+        return;
+      }
 
+      final result =
+          supplierBillApprovalController.suppBillAppEditListValue[0].result;
 
-      if (!mounted) return;
+      final controllers = supplierBillApprovalController.controllers;
 
-      setState(() {});
+      // Additional Charges
+      controllers['Freight Charges']!.text =
+          (result.frieghtCharges ?? 0).toString();
+
+      controllers['Labour Charges']!.text =
+          (result.labourCharges ?? 0).toString();
+
+      controllers['Other Charges']!.text =
+          (result.otherCharges ?? 0).toString();
+
+      controllers['Round Off']!.text =
+          (result.roundOff ?? 0).toString();
+
+      // Taxes
+      controllers['S-GST %']!.text =
+          (result.sgstPercentage ?? 0).toString();
+
+      controllers['S-GST Amt']!.text =
+          (result.sgstAmount ?? 0).toString();
+
+      controllers['Net S-GST']!.text =
+          (result.netSGSTAmount ?? 0).toString();
+
+      controllers['C-GST %']!.text =
+          (result.cgstPercentage ?? 0).toString();
+
+      controllers['C-GST Amt']!.text =
+          (result.cgstAmount ?? 0).toString();
+
+      controllers['Net C-GST']!.text =
+          (result.netCgstAmount ?? 0).toString();
+
+      controllers['I-GST %']!.text =
+          (result.igstPercentage ?? 0).toString();
+
+      controllers['I-GST Amt']!.text =
+          (result.igstAmount ?? 0).toString();
+
+      controllers['Net I-GST']!.text =
+          (result.netIGSTAmount ?? 0).toString();
+
+      controllers['TDS %']!.text =
+          (result.tdsPercentage ?? 0).toString();
+
+      controllers['TDS Amt']!.text =
+          (result.tdsAmount ?? 0).toString();
+
+      controllers['TCS %']!.text =
+          (result.tcsPercentage ?? 0).toString();
+
+      controllers['TCS Amt']!.text =
+          (result.tcsAmount ?? 0).toString();
+
+      controllers['Disc Amt']!.text =
+          (result.discntAmount ?? 0).toString();
+
+      // Payment Details
+      controllers['Net Amount']!.text =
+          (result.netAmount ?? 0).toString();
+
+      controllers['Advance Amount']!.text =
+          (result.advanceAmount ?? 0).toString();
+
+      controllers['Net Pay Amount']!.text =
+          (result.netPayAmount ?? 0).toString();
+
+      // Remarks — if this controller exists
+      controllers['Remarks']?.text = result.remarks ?? '';
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width * 100 / 100;
@@ -170,8 +220,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               readOnly: true,
-                              controller: supplierBillApprovalController
-                                  .autoYearWiseNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.billNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -195,10 +244,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "Entry Date",
-                          value: supplierBillApprovalController.RequestDateController.text,
-                          controller: supplierBillApprovalController.RequestDateController,
+                          value:  supplierBillApprovalController.suppBillAppEditListValue[0].result.entrydate.toString() ,
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.RequestDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.entrydate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -219,7 +267,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: projectController.projectname,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.projectName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -265,7 +313,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: siteController.Sitename,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.siteName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -311,7 +359,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.supplierNameController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.supplierName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -358,8 +406,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       autovalidateMode:
                       AutovalidateMode.always,
                       readOnly: true,
-                      controller: supplierBillApprovalController
-                          .orderNoController,
+                      controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.purOrdMasNo.toString()),
                       cursorColor: Colors.black,
                       style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
@@ -406,7 +453,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.dcNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.dcNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -438,10 +485,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "DC Date",
-                          value: supplierBillApprovalController.dcDateController.text,
-                          controller: supplierBillApprovalController.dcDateController,
+                          value: supplierBillApprovalController.suppBillAppEditListValue[0].result.dcDate.toString(),
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.dcDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.dcDate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -463,7 +509,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller: supplierBillApprovalController.invoiceNoController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.invoiceNo.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -495,10 +541,9 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       CommonDateFields(
                         date1: CommonDateFieldConfig(
                           title: "Invoice Date",
-                          value: supplierBillApprovalController.invoiceDateController.text,
-                          controller: supplierBillApprovalController.invoiceDateController,
+                          value: supplierBillApprovalController.suppBillAppEditListValue[0].result.billDate.toString(),
                           selectable: false,
-                          initialDate: DateTime.tryParse(supplierBillApprovalController.invoiceDateController.text) ?? DateTime.now(),
+                          initialDate: DateTime.tryParse(supplierBillApprovalController.suppBillAppEditListValue[0].result.billDate.toString()) ?? DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime.now(),
                         ),
@@ -520,8 +565,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.billingTypeController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.billType == "C" ? "Company" : "Client"),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -561,8 +605,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.againstTypeController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.poBillDesc.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -602,8 +645,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               autovalidateMode:
                               AutovalidateMode.always,
                               readOnly: true,
-                              controller:
-                              supplierBillApprovalController.companyNameController,
+                              controller: TextEditingController(text: supplierBillApprovalController.suppBillAppEditListValue[0].result.companyName.toString()),
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
