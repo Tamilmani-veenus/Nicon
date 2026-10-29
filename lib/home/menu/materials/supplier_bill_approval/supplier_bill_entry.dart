@@ -66,7 +66,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           (result.sgstAmount ?? 0).toString();
 
       controllers['Net S-GST']!.text =
-          (result.netSGSTAmount ?? 0).toString();
+          (result.netSgstAmount ?? 0).toString();
 
       controllers['C-GST %']!.text =
           (result.cgstPercentage ?? 0).toString();
@@ -84,7 +84,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           (result.igstAmount ?? 0).toString();
 
       controllers['Net I-GST']!.text =
-          (result.netIGSTAmount ?? 0).toString();
+          (result.netIgstAmount ?? 0).toString();
 
       controllers['TDS %']!.text =
           (result.tdsPercentage ?? 0).toString();
@@ -101,6 +101,8 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       controllers['Disc Amt']!.text =
           (result.discntAmount ?? 0).toString();
 
+      controllers['Discount %']!.text =
+          "0.0";
       // Payment Details
       controllers['Net Amount']!.text =
           (result.netAmount ?? 0).toString();
@@ -111,10 +113,13 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       controllers['Net Pay Amount']!.text =
           (result.netPayAmount ?? 0).toString();
 
+      controllers['Deduction Amount']!.text = "0.0";
+
       // Remarks — if this controller exists
       controllers['Remarks']?.text = result.remarks ?? '';
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width * 100 / 100;

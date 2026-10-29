@@ -33,15 +33,33 @@ class SupplierBillApprovalController extends GetxController {
     'Freight Charges': TextEditingController(),
     'Labour Charges': TextEditingController(),
     'Other Charges': TextEditingController(),
-    'S-GST %': TextEditingController(),
-    'I-GST %': TextEditingController(),
-    'TCS %': TextEditingController(),
-    'TDS %': TextEditingController(),
-    'Discount %': TextEditingController(),
     'Round Off': TextEditingController(),
-    'Deduction Amount': TextEditingController(),
+
+    'S-GST %': TextEditingController(),
+    'S-GST Amt': TextEditingController(),
+    'Net S-GST': TextEditingController(),
+
+    'C-GST %': TextEditingController(),
+    'C-GST Amt': TextEditingController(),
+    'Net C-GST': TextEditingController(),
+
+    'I-GST %': TextEditingController(),
+    'I-GST Amt': TextEditingController(),
+    'Net I-GST': TextEditingController(),
+
+    'TDS %': TextEditingController(),
+    'TDS Amt': TextEditingController(),
+    'TCS %': TextEditingController(),
+    'TCS Amt': TextEditingController(),
+
+    'Discount %': TextEditingController(),
+    'Disc Amt': TextEditingController(),
+
     'Net Amount': TextEditingController(),
+    'Advance Amount': TextEditingController(),
+    'Deduction Amount': TextEditingController(),
     'Net Pay Amount': TextEditingController(),
+    'Remarks': TextEditingController(),
   };
 
   Future suppBillApprovalEditApi(int reqId, context,MenuName) async {
@@ -54,6 +72,7 @@ class SupplierBillApprovalController extends GetxController {
 
           getSupplierBillItemViewDbList.clear();
           suppBillAppEditListValue.value = [value];
+          print("eeeeeeeeeeeeeeeeee...${suppBillAppEditListValue.value[0].result.sgstAmount}");
 
           if (suppBillAppEditListValue.isNotEmpty) {
             await supplierBillSaveDetTable();

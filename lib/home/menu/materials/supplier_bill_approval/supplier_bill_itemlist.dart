@@ -20,36 +20,6 @@ class SupplierBillItemList extends StatefulWidget {
 
 class _SupplierBillItemListState extends State<SupplierBillItemList> {
 
-  final Map<String, String> initialValues = {
-    // Additional Charges
-    'Freight Charges': '1500.00',
-    'Labour Charges': '750.00',
-    'Other Charges': '250.00',
-
-    // Taxes
-    'S-GST %': '9.00',
-    'S-GST Amt': '900.00',
-    'Net S-GST': '900.00',
-    'C-GST %': '9.00',
-    'C-GST Amt': '900.00',
-    'Net C-GST': '900.00',
-    'I-GST %': '0.00',
-    'I-GST Amt': '0.00',
-    'Net I-GST': '0.00',
-    'TCS %': '1.00',
-    'TCS Amt': '100.00',
-    'TDS %': '2.00',
-    'TDS Amt': '200.00',
-    'Discount %': '5.00',
-    'Disc Amt': '500.00',
-
-    // Payment Details
-    'Round Off': '0.00',
-    'Net Amount': '22700.00',
-    'Advance Amount': '5000.00',
-    'Deduction Amount': '200.00',
-    'Net Pay Amount': '17500.00',
-  };
 
   final Map<String, IconData> fieldIcons = {
     'Freight Charges': Icons.local_shipping_outlined,
@@ -57,19 +27,21 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     'Other Charges': Icons.more_horiz,
     'S-GST %': Icons.percent,
     'S-GST Amt': Icons.currency_rupee,
-    'Net S-GST': Icons.account_balance_wallet_outlined,
     'C-GST %': Icons.percent,
     'C-GST Amt': Icons.currency_rupee,
-    'Net C-GST': Icons.account_balance_wallet_outlined,
     'I-GST %': Icons.percent,
     'I-GST Amt': Icons.currency_rupee,
-    'Net I-GST': Icons.account_balance_wallet_outlined,
     'TCS %': Icons.percent,
     'TCS Amt': Icons.currency_rupee,
     'TDS %': Icons.percent,
     'TDS Amt': Icons.currency_rupee,
     'Discount %': Icons.percent,
     'Disc Amt': Icons.currency_rupee,
+
+    'Net S-GST': Icons.account_balance_wallet_outlined,
+    'Net C-GST': Icons.account_balance_wallet_outlined,
+    'Net I-GST': Icons.account_balance_wallet_outlined,
+
     'Round Off': Icons.tune,
     'Net Amount': Icons.receipt_long_outlined,
     'Advance Amount': Icons.payments_outlined,
@@ -100,13 +72,6 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
   @override
   void initState() {
     super.initState();
-
-    for (final entry in initialValues.entries) {
-      supplierBillApprovalController.controllers.putIfAbsent(
-        entry.key,
-            () => TextEditingController(text: entry.value),
-      );
-    }
   }
 
   @override
@@ -163,6 +128,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                           'Freight Charges',
                           'Labour Charges',
                           'Other Charges',
+                          'Remarks'
                         ],
                       ),
                       const SizedBox(height: 14),
@@ -173,19 +139,19 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                         fields: const [
                           'S-GST %',
                           'S-GST Amt',
-                          'Net S-GST',
                           'C-GST %',
                           'C-GST Amt',
-                          'Net C-GST',
                           'I-GST %',
                           'I-GST Amt',
-                          'Net I-GST',
                           'TCS %',
                           'TCS Amt',
                           'TDS %',
                           'TDS Amt',
                           'Discount %',
                           'Disc Amt',
+                          'Net S-GST',
+                          'Net C-GST',
+                          'Net I-GST',
                         ],
                       ),
                       const SizedBox(height: 14),
