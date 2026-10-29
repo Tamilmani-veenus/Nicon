@@ -31,15 +31,15 @@ class _TrasferBetweenProjects_EntryState
     extends State<TrasferBetweenProjects_Entry> {
   LoginController loginController = Get.put(LoginController());
   AutoYearWiseNoController autoYearWiseNoController =
-      Get.put(AutoYearWiseNoController());
+  Get.put(AutoYearWiseNoController());
   TransferBW_project_Controller transferBW_project_Controller =
-      Get.put(TransferBW_project_Controller());
+  Get.put(TransferBW_project_Controller());
   FromSiteController fromsiteController = Get.put(FromSiteController());
   ProjectController projectController = Get.put(ProjectController());
   FromProjectController fromprojectController =
-      Get.put(FromProjectController());
+  Get.put(FromProjectController());
   BottomsheetControllers bottomsheetControllers =
-      Get.put(BottomsheetControllers());
+  Get.put(BottomsheetControllers());
   SiteController siteController = Get.put(SiteController());
 
   final _formkey = GlobalKey<FormState>();
@@ -53,9 +53,9 @@ class _TrasferBetweenProjects_EntryState
       transferBW_project_Controller.AgTransReqMasid.value=0;
 
       if (transferBW_project_Controller.type.value == "Against Mrn Approval" && transferBW_project_Controller.saveButton.value == RequestConstant.SUBMIT) {
-       await autoYearWiseNoController.AutoYearWiseNo("TRANSFER BETWEEN PROJECTS");
-       transferBW_project_Controller.autoyrwiseText.text = autoYearWiseNoController.TransferBetProjectautoYrsWise.toString();
-       transferBW_project_Controller.vechicleNoText.text = "";
+        await autoYearWiseNoController.AutoYearWiseNo("TRANSFER BETWEEN PROJECTS");
+        transferBW_project_Controller.autoyrwiseText.text = autoYearWiseNoController.TransferBetProjectautoYrsWise.toString();
+        transferBW_project_Controller.vechicleNoText.text = "";
         transferBW_project_Controller.dcNoText.text = "";
         transferBW_project_Controller.transportCostText.text = "0.0";
         transferBW_project_Controller.transportAmtText.text = "0.0";
@@ -63,49 +63,49 @@ class _TrasferBetweenProjects_EntryState
         transferBW_project_Controller.ItemGetTableListdata.value = [];
         fromsiteController.FromSitename.text = "--SELECT--";
         fromsiteController.selectedsiteId.value = 0;
-       fromprojectController.fromprojectname.text = "--SELECT--";
-       fromprojectController.selectedProjectId.value = 0;
-       transferBW_project_Controller.transferTypeText.text = transferBW_project_Controller.type.value;
-       transferBW_project_Controller.entryDateText.text = BaseUtitiles.initiateCurrentDateFormat();
-       transferBW_project_Controller.appNoText.text = transferBW_project_Controller.transferAllDatasList[0].requestNo;
-       projectController.projectnameAll.text = transferBW_project_Controller.transferAllDatasList[0].toprojectName.toString();
+        fromprojectController.fromprojectname.text = "--SELECT--";
+        fromprojectController.selectedProjectId.value = 0;
+        transferBW_project_Controller.transferTypeText.text = transferBW_project_Controller.type.value;
+        transferBW_project_Controller.entryDateText.text = BaseUtitiles.initiateCurrentDateFormat();
+        transferBW_project_Controller.appNoText.text = transferBW_project_Controller.transferAllDatasList[0].requestNo;
+        projectController.projectnameAll.text = transferBW_project_Controller.transferAllDatasList[0].toprojectName.toString();
         projectController.selectedProjectIdAll.value = transferBW_project_Controller.transferAllDatasList[0].toProjectId;
-       transferBW_project_Controller.prearedbyText.text = loginController.EmpName();
-       transferBW_project_Controller.AgMRNAppreqMasid.value=transferBW_project_Controller.transferAllDatasList[0].reqMasid;
-       transferBW_project_Controller.createdById.value = transferBW_project_Controller.transferAllDatasList[0].createdBy;
+        transferBW_project_Controller.prearedbyText.text = loginController.EmpName();
+        transferBW_project_Controller.AgMRNAppreqMasid.value=transferBW_project_Controller.transferAllDatasList[0].reqMasid;
+        transferBW_project_Controller.createdById.value = transferBW_project_Controller.transferAllDatasList[0].createdBy;
       }
 
       else if (transferBW_project_Controller.type.value == "Against Transfer Request" && transferBW_project_Controller.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.AutoYearWiseNo("TRANSFER BETWEEN PROJECTS");
         transferBW_project_Controller.autoyrwiseText.text = autoYearWiseNoController.TransferBetProjectautoYrsWise.toString();
         transferBW_project_Controller.vechicleNoText.text = "";
-          transferBW_project_Controller.dcNoText.text = "";
-          transferBW_project_Controller.remarksText.text = "";
-          transferBW_project_Controller.transportCostText.text = "0.0";
-          transferBW_project_Controller.transportAmtText.text = "0.0";
+        transferBW_project_Controller.dcNoText.text = "";
+        transferBW_project_Controller.remarksText.text = "";
+        transferBW_project_Controller.transportCostText.text = "0.0";
+        transferBW_project_Controller.transportAmtText.text = "0.0";
         transferBW_project_Controller.transferTypeText.text = transferBW_project_Controller.type.value;
-          projectController.projectnameAll.text =
-              transferBW_project_Controller.transferAllDatasList[0]
-                  .toProjectName.toString();
-          projectController.selectedProjectIdAll.value =
-              transferBW_project_Controller.transferAllDatasList[0].toProjectId;
-          fromprojectController.fromprojectname.text =
-              transferBW_project_Controller.transferAllDatasList[0]
-                  .fromProjectName.toString();
-          fromprojectController.selectedProjectId.value =
-              transferBW_project_Controller.transferAllDatasList[0]
-                  .fromProjectId;
-          fromsiteController.FromSitename.text =
-              transferBW_project_Controller.transferAllDatasList[0].siteName
-                  .toString();
+        projectController.projectnameAll.text =
+            transferBW_project_Controller.transferAllDatasList[0]
+                .toProjectName.toString();
+        projectController.selectedProjectIdAll.value =
+            transferBW_project_Controller.transferAllDatasList[0].toProjectId;
+        fromprojectController.fromprojectname.text =
+            transferBW_project_Controller.transferAllDatasList[0]
+                .fromProjectName.toString();
+        fromprojectController.selectedProjectId.value =
+            transferBW_project_Controller.transferAllDatasList[0]
+                .fromProjectId;
+        fromsiteController.FromSitename.text =
+            transferBW_project_Controller.transferAllDatasList[0].siteName
+                .toString();
         transferBW_project_Controller.appNoText.text = transferBW_project_Controller.transferAllDatasList[0].transferNo;
         transferBW_project_Controller.entryDateText.text =
-              BaseUtitiles.initiateCurrentDateFormat();
-          fromsiteController.selectedsiteId.value =
-              transferBW_project_Controller.transferAllDatasList[0].fromSiteId;
-          transferBW_project_Controller.prearedbyText.text = loginController.EmpName();
-          transferBW_project_Controller.AgTransReqMasid.value =
-              transferBW_project_Controller.transferAllDatasList[0].id;
+            BaseUtitiles.initiateCurrentDateFormat();
+        fromsiteController.selectedsiteId.value =
+            transferBW_project_Controller.transferAllDatasList[0].fromSiteId;
+        transferBW_project_Controller.prearedbyText.text = loginController.EmpName();
+        transferBW_project_Controller.AgTransReqMasid.value =
+            transferBW_project_Controller.transferAllDatasList[0].id;
         // transferBW_project_Controller.createdById.value = transferBW_project_Controller.transferAllDatasList[0].createdBy;
 
       }
@@ -135,7 +135,7 @@ class _TrasferBetweenProjects_EntryState
         transferBW_project_Controller.ItemGetTableListdata.value = [];
       }
 
-      else if (transferBW_project_Controller.saveButton.value == RequestConstant.RESUBMIT) {
+      else if (transferBW_project_Controller.saveButton.value == RequestConstant.RESUBMIT || transferBW_project_Controller.saveButton.value == RequestConstant.APPROVAL) {
         transferBW_project_Controller.editListApiDatas.forEach((element) {
           transferBW_project_Controller.transferId = element.id!;
           transferBW_project_Controller.autoyrwiseText.text =
@@ -145,7 +145,7 @@ class _TrasferBetweenProjects_EntryState
           fromprojectController.fromprojectname.text =
               element.frProjectName.toString();
           fromprojectController.selectedProjectId.value =
-              element.fromProjectId!;
+          element.fromProjectId!;
           fromsiteController.FromSitename.text = element.frSiteName.toString();
           fromsiteController.selectedsiteId.value = element.fromSiteid!;
           projectController.projectnameAll.text =
@@ -153,11 +153,11 @@ class _TrasferBetweenProjects_EntryState
           if(transferBW_project_Controller.type.value != "Direct")transferBW_project_Controller.appNoText.text = (element.entryType == "R" ? element.matTransferReqNo : element.reqOrdNo)!;
           projectController.selectedProjectIdAll.value = element.toProjectId!;
           transferBW_project_Controller.transferTypeText.text =
-              element.entryType == "A"
-                  ? "Against Mrn Approval"
-                  : element.entryType == "R"
-                      ? "Against Transfer Request"
-                      : "Direct";
+          element.entryType == "A"
+              ? "Against Mrn Approval"
+              : element.entryType == "R"
+              ? "Against Transfer Request"
+              : "Direct";
           transferBW_project_Controller.vechicleNoText.text =
               element.vehicleName.toString();
           transferBW_project_Controller.dcNoText.text = element.dcNo.toString();
@@ -270,7 +270,7 @@ class _TrasferBetweenProjects_EntryState
                                       labelStyle: TextStyle(
                                         color: Colors.grey,
                                         fontSize:
-                                            RequestConstant.Lable_Font_SIZE,
+                                        RequestConstant.Lable_Font_SIZE,
                                       ),
                                       prefixIconConstraints: BoxConstraints(
                                         minWidth: 0,
@@ -314,7 +314,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -327,7 +327,7 @@ class _TrasferBetweenProjects_EntryState
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               autovalidateMode:
-                                  AutovalidateMode.always,
+                              AutovalidateMode.always,
                               readOnly: true,
                               controller: fromprojectController.fromprojectname,
                               cursorColor: Colors.black,
@@ -340,34 +340,34 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
                                     child: ConstIcons.projectName),
                               ),
-                                onTap: () async {
-                                  String? type = transferBW_project_Controller.type.value;
+                              onTap: () async {
+                                String? type = transferBW_project_Controller.type.value;
 
-                                  if (type == "Direct") {
-                                    await fromprojectController.getFromProjectList();
-                                  }
-                                  else if (type == "Against Mrn Approval") {
-                                    await fromprojectController.getFromProjectList(
-                                      type: "Against Mrn Approval",
-                                      id: transferBW_project_Controller.AgMRNAppreqMasid.value,
-                                    );
-                                  }
-                                  else {
-                                    return;
-                                  }
-                                  if (mounted) {
-                                    bottomsheetControllers.FromProjectName(
-                                      context,
-                                      fromprojectController.getdropDownvalue.value,
-                                    );
-                                  }
-                                },
+                                if (type == "Direct") {
+                                  await fromprojectController.getFromProjectList();
+                                }
+                                else if (type == "Against Mrn Approval") {
+                                  await fromprojectController.getFromProjectList(
+                                    type: "Against Mrn Approval",
+                                    id: transferBW_project_Controller.AgMRNAppreqMasid.value,
+                                  );
+                                }
+                                else {
+                                  return;
+                                }
+                                if (mounted) {
+                                  bottomsheetControllers.FromProjectName(
+                                    context,
+                                    fromprojectController.getdropDownvalue.value,
+                                  );
+                                }
+                              },
                               validator: (value) {
                                 if (value!.isEmpty ||
                                     value == "--Select--" ||
@@ -382,7 +382,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -395,7 +395,7 @@ class _TrasferBetweenProjects_EntryState
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               autovalidateMode:
-                                  AutovalidateMode.always,
+                              AutovalidateMode.always,
                               readOnly: true,
                               controller: fromsiteController.FromSitename,
                               cursorColor: Colors.black,
@@ -408,7 +408,7 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
@@ -416,11 +416,11 @@ class _TrasferBetweenProjects_EntryState
                               ),
                               onTap: () async {
                                 if (transferBW_project_Controller.type.value ==
-                                        "Against Transfer Request" ||
+                                    "Against Transfer Request" ||
                                     (transferBW_project_Controller.type.value ==
-                                            "Against Mrn Approval" &&
+                                        "Against Mrn Approval" &&
                                         transferBW_project_Controller
-                                                .saveButton.value ==
+                                            .saveButton.value ==
                                             RequestConstant.RESUBMIT)) {
                                 } else {
                                   await siteController.subcontEntry_siteDropdowntList(context, 0, type: "transb/wproj&site");
@@ -443,7 +443,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -456,7 +456,7 @@ class _TrasferBetweenProjects_EntryState
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               autovalidateMode:
-                                  AutovalidateMode.always,
+                              AutovalidateMode.always,
                               readOnly: true,
                               controller: projectController.projectnameAll,
                               cursorColor: Colors.black,
@@ -469,7 +469,7 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
@@ -502,7 +502,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -527,7 +527,7 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 8),
@@ -547,9 +547,9 @@ class _TrasferBetweenProjects_EntryState
                         ),
                       ),
                       Obx(
-                        () => Visibility(
+                            () => Visibility(
                           visible: transferBW_project_Controller.type.value ==
-                                  "Direct"
+                              "Direct"
                               ? false
                               : true,
                           child: Container(
@@ -568,7 +568,7 @@ class _TrasferBetweenProjects_EntryState
                                 child: TextFormField(
                                   readOnly: true,
                                   controller:
-                                      transferBW_project_Controller.appNoText,
+                                  transferBW_project_Controller.appNoText,
                                   cursorColor: Colors.black,
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
@@ -578,7 +578,7 @@ class _TrasferBetweenProjects_EntryState
                                     labelStyle: const TextStyle(
                                         color: Colors.grey,
                                         fontSize:
-                                            RequestConstant.Lable_Font_SIZE),
+                                        RequestConstant.Lable_Font_SIZE),
                                     prefixIconConstraints: const BoxConstraints(
                                         minWidth: 0, minHeight: 0),
                                     prefixIcon: Padding(
@@ -596,7 +596,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -610,7 +610,7 @@ class _TrasferBetweenProjects_EntryState
                             child: TextFormField(
                               readOnly: true,
                               controller:
-                                  transferBW_project_Controller.prearedbyText,
+                              transferBW_project_Controller.prearedbyText,
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -621,7 +621,7 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
@@ -650,7 +650,7 @@ class _TrasferBetweenProjects_EntryState
                                       top: 3, left: 10, bottom: 5),
                                   child: TextFormField(
                                     autovalidateMode:
-                                        AutovalidateMode.always,
+                                    AutovalidateMode.always,
                                     controller: transferBW_project_Controller
                                         .vechicleNoText,
                                     cursorColor: Colors.black,
@@ -662,7 +662,7 @@ class _TrasferBetweenProjects_EntryState
                                       labelStyle: TextStyle(
                                           color: Colors.grey,
                                           fontSize:
-                                              RequestConstant.Lable_Font_SIZE),
+                                          RequestConstant.Lable_Font_SIZE),
                                       prefixIconConstraints: BoxConstraints(
                                           minWidth: 0, minHeight: 0),
                                       prefixIcon: Padding(
@@ -700,10 +700,10 @@ class _TrasferBetweenProjects_EntryState
                                       top: 3, left: 10, bottom: 5),
                                   child: TextFormField(
                                     autovalidateMode:
-                                        AutovalidateMode.always,
+                                    AutovalidateMode.always,
                                     // keyboardType: TextInputType.number,
                                     controller:
-                                        transferBW_project_Controller.dcNoText,
+                                    transferBW_project_Controller.dcNoText,
                                     cursorColor: Colors.black,
                                     style: const TextStyle(color: Colors.black),
                                     decoration: const InputDecoration(
@@ -713,7 +713,7 @@ class _TrasferBetweenProjects_EntryState
                                       labelStyle: TextStyle(
                                           color: Colors.grey,
                                           fontSize:
-                                              RequestConstant.Lable_Font_SIZE),
+                                          RequestConstant.Lable_Font_SIZE),
                                       prefixIconConstraints: BoxConstraints(
                                           minWidth: 0, minHeight: 0),
                                       prefixIcon: Padding(
@@ -743,7 +743,7 @@ class _TrasferBetweenProjects_EntryState
                           Expanded(
                             child: Container(
                               margin:
-                                  EdgeInsets.only(top: 5, left: 10, right: 10),
+                              EdgeInsets.only(top: 5, left: 10, right: 10),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
@@ -766,7 +766,7 @@ class _TrasferBetweenProjects_EntryState
                                       labelStyle: TextStyle(
                                           color: Colors.grey,
                                           fontSize:
-                                              RequestConstant.Lable_Font_SIZE),
+                                          RequestConstant.Lable_Font_SIZE),
                                       prefixIconConstraints: BoxConstraints(
                                           minWidth: 0, minHeight: 0),
                                       prefixIcon: Padding(
@@ -782,10 +782,10 @@ class _TrasferBetweenProjects_EntryState
                                     },
                                     onTap: () {
                                       if (transferBW_project_Controller
-                                                  .transportCostText.text ==
-                                              "0.0" ||
+                                          .transportCostText.text ==
+                                          "0.0" ||
                                           transferBW_project_Controller
-                                                  .transportCostText.text ==
+                                              .transportCostText.text ==
                                               "0") {
                                         transferBW_project_Controller
                                             .transportCostText.text = "";
@@ -805,7 +805,7 @@ class _TrasferBetweenProjects_EntryState
                           Expanded(
                             child: Container(
                               margin:
-                                  EdgeInsets.only(top: 5, left: 10, right: 10),
+                              EdgeInsets.only(top: 5, left: 10, right: 10),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
@@ -829,7 +829,7 @@ class _TrasferBetweenProjects_EntryState
                                       labelStyle: TextStyle(
                                           color: Colors.grey,
                                           fontSize:
-                                              RequestConstant.Lable_Font_SIZE),
+                                          RequestConstant.Lable_Font_SIZE),
                                       prefixIconConstraints: BoxConstraints(
                                           minWidth: 0, minHeight: 0),
                                       prefixIcon: Padding(
@@ -853,7 +853,7 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       Container(
                         margin:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
+                        const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -866,9 +866,9 @@ class _TrasferBetweenProjects_EntryState
                                 top: 3, left: 10, bottom: 5),
                             child: TextFormField(
                               autovalidateMode:
-                                  AutovalidateMode.always,
+                              AutovalidateMode.always,
                               controller:
-                                  transferBW_project_Controller.remarksText,
+                              transferBW_project_Controller.remarksText,
                               cursorColor: Colors.black,
                               style: const TextStyle(color: Colors.black),
                               decoration: const InputDecoration(
@@ -879,7 +879,7 @@ class _TrasferBetweenProjects_EntryState
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),
                                 prefixIconConstraints:
-                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                BoxConstraints(minWidth: 0, minHeight: 0),
                                 prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
@@ -897,9 +897,9 @@ class _TrasferBetweenProjects_EntryState
                       ),
                       const SizedBox(height: 5),
                       Obx(
-                        () => Visibility(
+                            () => Visibility(
                             visible: transferBW_project_Controller.type.value ==
-                                    "Direct"
+                                "Direct"
                                 ? true
                                 : false,
                             child: Row(
@@ -912,29 +912,29 @@ class _TrasferBetweenProjects_EntryState
                                     if (_formkey.currentState!.validate()) {
                                       _formkey.currentState!.save();
                                       if (fromprojectController
-                                                  .selectedProjectId.value !=
-                                              0 &&
+                                          .selectedProjectId.value !=
+                                          0 &&
                                           fromsiteController
-                                                  .selectedsiteId.value !=
+                                              .selectedsiteId.value !=
                                               0) {
                                         await transferBW_project_Controller
                                             .getTransproject_ItemList(
-                                                fromprojectController
-                                                    .selectedProjectId.value,
-                                                fromsiteController
-                                                    .selectedsiteId.value,
-                                                0,
-                                                context);
+                                            fromprojectController
+                                                .selectedProjectId.value,
+                                            fromsiteController
+                                                .selectedsiteId.value,
+                                            0,
+                                            context);
                                       }
                                     }
                                   },
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Icon(Icons.add,
                                           color:
-                                              Theme.of(context).primaryColor),
+                                          Theme.of(context).primaryColor),
                                       const SizedBox(width: 5),
                                       Text("Add Items",
                                           style: TextStyle(
@@ -952,11 +952,11 @@ class _TrasferBetweenProjects_EntryState
                 ),
               ),
               Obx(
-                () => Visibility(
+                    () => Visibility(
                   visible:
-                      transferBW_project_Controller.ItemGetTableListdata.isEmpty
-                          ? false
-                          : true,
+                  transferBW_project_Controller.ItemGetTableListdata.isEmpty
+                      ? false
+                      : true,
                   child: SizedBox(
                     height: BaseUtitiles.getheightofPercentage(context, 100),
                     child: DraggableScrollableSheet(
@@ -1006,7 +1006,7 @@ class _TrasferBetweenProjects_EntryState
                                         width: 60,
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                            BorderRadius.circular(10),
                                             color: Colors.grey),
                                       ),
                                     ],
@@ -1036,7 +1036,7 @@ class _TrasferBetweenProjects_EntryState
                       height: BaseUtitiles.getheightofPercentage(context, 4),
                       decoration: BoxDecoration(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          const BorderRadius.all(Radius.circular(10)),
                           color: Colors.white),
                       alignment: Alignment.center,
                       child: Text(
@@ -1061,7 +1061,7 @@ class _TrasferBetweenProjects_EntryState
                       height: BaseUtitiles.getheightofPercentage(context, 4),
                       decoration: BoxDecoration(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          const BorderRadius.all(Radius.circular(10)),
                           color: Theme.of(context).primaryColor),
                       alignment: Alignment.center,
                       child: Text(
@@ -1136,387 +1136,629 @@ class _TrasferBetweenProjects_EntryState
     return SingleChildScrollView(
       controller: scrollController,
       child: transferBW_project_Controller.type.value ==
-              "Against Transfer Request"
+          "Against Transfer Request"
           ? Column(
-              children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 5 / 100),
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 10,
-                    left: 4,
-                    right: 4,
-                  ),
-                  height: MediaQuery.of(context).size.height * 80 / 100,
-                  child: Obx(
-                    () => ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: transferBW_project_Controller
-                          .ItemGetTableListdata.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        transferBW_project_Controller
-                            .itemlist_textControllersInitiate();
-                        return Container(
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Colors.white,
-                          ),
+        children: <Widget>[
+          SizedBox(height: MediaQuery.of(context).size.height * 5 / 100),
+          Container(
+            margin: const EdgeInsets.only(
+              top: 10,
+              left: 4,
+              right: 4,
+            ),
+            height: MediaQuery.of(context).size.height * 80 / 100,
+            child: Obx(
+                  () => ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemCount: transferBW_project_Controller
+                    .ItemGetTableListdata.length,
+                itemBuilder: (BuildContext context, int index) {
+                  transferBW_project_Controller
+                      .itemlist_textControllersInitiate();
+                  return Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                    margin: const EdgeInsets.only(
+                        left: 10, right: 10, bottom: 10),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 10, top: 10),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${transferBW_project_Controller.ItemGetTableListdata[index].materialName} ( ${transferBW_project_Controller.ItemGetTableListdata[index].scale} ) ",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Text(
+                                  "Bal Qty ( ${transferBW_project_Controller.ItemGetTableListdata[index].balQty} ) ",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        Container(
                           margin: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Column(
+                              left: 5, right: 4, bottom: 5, top: 5),
+                          child: const Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "Stock Qty",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Transfer Qty",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              //   Text(inward_controller.inwardItemListdatas[index].inwQty.toString(),style: TextStyle(color: Colors.white),)),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 7, right: 4, bottom: 8),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "${transferBW_project_Controller.ItemGetTableListdata[index].materialName} ( ${transferBW_project_Controller.ItemGetTableListdata[index].scale} ) ",
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                        Text(
-                                          "Bal Qty ( ${transferBW_project_Controller.ItemGetTableListdata[index].balQty} ) ",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                    ],
-                                  )),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 5, right: 4, bottom: 5, top: 5),
-                                child: const Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      "Stock Quantity",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      "Transfer Qty",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    //   Text(inward_controller.inwardItemListdatas[index].inwQty.toString(),style: TextStyle(color: Colors.white),)),
+                                margin: const EdgeInsets.only(right: 11),
+                                height: BaseUtitiles.getheightofPercentage(
+                                    context, 4),
+                                width: BaseUtitiles.getWidthtofPercentage(
+                                    context, 38),
+                                child: TextField(
+                                  readOnly: true,
+                                  cursorColor:
+                                  Theme.of(context).primaryColor,
+                                  textAlign: TextAlign.center,
+                                  controller: transferBW_project_Controller
+                                      .Itemlist_stockQty_ListController[
+                                  index],
+                                  keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction((oldValue, newValue) {
+                                      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                          ? newValue
+                                          : oldValue;
+                                    }),
                                   ],
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                    const EdgeInsets.fromLTRB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  onChanged: (value) {},
                                 ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(
-                                    left: 7, right: 4, bottom: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 11),
-                                      height: BaseUtitiles.getheightofPercentage(
-                                          context, 4),
-                                      width: BaseUtitiles.getWidthtofPercentage(
-                                          context, 38),
-                                      child: TextField(
-                                        readOnly: true,
-                                        cursorColor:
-                                        Theme.of(context).primaryColor,
-                                        textAlign: TextAlign.center,
-                                        controller: transferBW_project_Controller
-                                            .Itemlist_stockQty_ListController[
-                                        index],
-                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                        inputFormatters: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                                ? newValue
-                                                : oldValue;
-                                          }),
-                                        ],
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                          const EdgeInsets.fromLTRB(
-                                              8.0, 0.0, 8.0, 0.0),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                        ),
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                        onChanged: (value) {},
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          right: 11, left: 8, bottom: 0),
-                                      height: BaseUtitiles.getheightofPercentage(
-                                          context, 4),
-                                      width: BaseUtitiles.getWidthtofPercentage(
-                                          context, 38),
-                                      child: TextFormField(
-                                        onTap: () {
-                                          if (transferBW_project_Controller
-                                              .Itemlist_TransQty_ListController[
-                                          index]
-                                              .text !=
-                                              "" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_TransQty_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_TransQty_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0.0") {
-                                            return;
-                                          } else {
-                                            transferBW_project_Controller
-                                                .Itemlist_TransQty_ListController[
-                                            index]
-                                                .text = "";
-                                          }
-                                        },
-                                        cursorColor:
-                                        Theme.of(context).primaryColor,
-                                        textAlign: TextAlign.center,
-                                        controller: transferBW_project_Controller
+                                    right: 11, left: 8, bottom: 0),
+                                height: BaseUtitiles.getheightofPercentage(
+                                    context, 4),
+                                width: BaseUtitiles.getWidthtofPercentage(
+                                    context, 38),
+                                child: TextFormField(
+                                  onTap: () {
+                                    if (transferBW_project_Controller
+                                        .Itemlist_TransQty_ListController[
+                                    index]
+                                        .text !=
+                                        "" &&
+                                        transferBW_project_Controller
                                             .Itemlist_TransQty_ListController[
-                                        index],
-                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                                        index]
+                                            .text !=
+                                            "0" &&
+                                        transferBW_project_Controller
+                                            .Itemlist_TransQty_ListController[
+                                        index]
+                                            .text !=
+                                            "0.0") {
+                                      return;
+                                    } else {
+                                      transferBW_project_Controller
+                                          .Itemlist_TransQty_ListController[
+                                      index]
+                                          .text = "";
+                                    }
+                                  },
+                                  cursorColor:
+                                  Theme.of(context).primaryColor,
+                                  textAlign: TextAlign.center,
+                                  controller: transferBW_project_Controller
+                                      .Itemlist_TransQty_ListController[
+                                  index],
+                                  keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
-                                        inputFormatters: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                                ? newValue
-                                                : oldValue;
-                                          }),
-                                        ],
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                          const EdgeInsets.fromLTRB(
-                                              8.0, 0.0, 8.0, 0.0),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                        ),
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                        onChanged: (value) async {
-                                          transferBW_project_Controller
-                                              .ItemListclickEdit();
-                                          transferBW_project_Controller
-                                              .transportAmtCalculation();
-
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ),
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction((oldValue, newValue) {
+                                      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                          ? newValue
+                                          : oldValue;
+                                    }),
                                   ],
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                    const EdgeInsets.fromLTRB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  onChanged: (value) async {
+                                    transferBW_project_Controller
+                                        .ItemListclickEdit();
+                                    transferBW_project_Controller
+                                        .transportAmtCalculation();
+
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 5, right: 4, bottom: 5, top: 5),
+                          child: const Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text(
+                                "Rate",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Amount",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 7, right: 4, bottom: 8),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Container(
+                                margin: const EdgeInsets.only(right: 11),
+                                height: BaseUtitiles.getheightofPercentage(
+                                    context, 4),
+                                width: BaseUtitiles.getWidthtofPercentage(
+                                    context, 38),
+                                child: TextField(
+                                  cursorColor:
+                                  Theme.of(context).primaryColor,
+                                  textAlign: TextAlign.center,
+                                  controller: transferBW_project_Controller
+                                      .Itemlist_Rate_ListController[index],
+                                  keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction((oldValue, newValue) {
+                                      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                          ? newValue
+                                          : oldValue;
+                                    }),
+                                  ],
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                    const EdgeInsets.fromLTRB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  onChanged: (value) {
+                                    transferBW_project_Controller
+                                        .ItemListclickEdit();
+                                    transferBW_project_Controller
+                                        .transportAmtCalculation();
+                                    setState(() {});
+                                  },
+                                  onTap: () {
+                                    if (transferBW_project_Controller
+                                        .Itemlist_Rate_ListController[
+                                    index]
+                                        .text !=
+                                        "" &&
+                                        transferBW_project_Controller
+                                            .Itemlist_Rate_ListController[
+                                        index]
+                                            .text !=
+                                            "0" &&
+                                        transferBW_project_Controller
+                                            .Itemlist_Rate_ListController[
+                                        index]
+                                            .text !=
+                                            "0.0") {
+                                      return;
+                                    } else {
+                                      transferBW_project_Controller
+                                          .Itemlist_Rate_ListController[
+                                      index]
+                                          .text = "";
+                                    }
+                                  },
                                 ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(
-                                    left: 5, right: 4, bottom: 5, top: 5),
-                                child: const Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      "Rate",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      "Amount",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
+                                  right: 11,
+                                ),
+                                height: BaseUtitiles.getheightofPercentage(
+                                    context, 4),
+                                width: BaseUtitiles.getWidthtofPercentage(
+                                    context, 38),
+                                child: TextFormField(
+                                  readOnly: true,
+                                  onTap: () {
+                                    if (transferBW_project_Controller
+                                        .Itemlist_Amt_ListController[
+                                    index]
+                                        .text !=
+                                        "" &&
+                                        transferBW_project_Controller
+                                            .Itemlist_Amt_ListController[
+                                        index]
+                                            .text !=
+                                            "0" &&
+                                        transferBW_project_Controller
+                                            .Itemlist_Amt_ListController[
+                                        index]
+                                            .text !=
+                                            "0.0") {
+                                      return;
+                                    } else {
+                                      transferBW_project_Controller
+                                          .Itemlist_Amt_ListController[
+                                      index]
+                                          .text = "";
+                                    }
+                                  },
+                                  cursorColor:
+                                  Theme.of(context).primaryColor,
+                                  textAlign: TextAlign.center,
+                                  controller: transferBW_project_Controller
+                                      .Itemlist_Amt_ListController[index],
+                                  keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction((oldValue, newValue) {
+                                      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                          ? newValue
+                                          : oldValue;
+                                    }),
                                   ],
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                    const EdgeInsets.fromLTRB(
+                                        8.0, 0.0, 8.0, 0.0),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .primaryColor),
+                                        borderRadius:
+                                        const BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 7, right: 4, bottom: 8),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      )
+          : Column(
+        children: <Widget>[
+          SizedBox(height: MediaQuery.of(context).size.height * 5 / 100),
+          Container(
+            margin: const EdgeInsets.only(
+              top: 10,
+              left: 4,
+              right: 4,
+            ),
+            height: MediaQuery.of(context).size.height * 80 / 100,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: transferBW_project_Controller
+                  .ItemGetTableListdata.length,
+              itemBuilder: (BuildContext context, int index) {
+                transferBW_project_Controller
+                    .itemlist_textControllersInitiate();
+                final c = transferBW_project_Controller;
+                return Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white,
+                  ),
+                  margin: const EdgeInsets.only(
+                      left: 10, right: 10, bottom: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 10, top: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${transferBW_project_Controller.ItemGetTableListdata[index].materialName} ( ${transferBW_project_Controller.ItemGetTableListdata[index].scale} ) ",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              if (transferBW_project_Controller
+                                  .type.value !=
+                                  "Direct")
+                                Text(
+                                  "Bal Qty ( ${transferBW_project_Controller.ItemGetTableListdata[index].balQty} ) ",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              if (transferBW_project_Controller
+                                  .type.value ==
+                                  "Direct")
+                                SizedBox(
+                                  width: 50,
+                                  child: InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context:
+                                        context,
+                                        builder:
+                                            (context) =>
+                                            AlertDialog(
+                                              title:
+                                              const Text(
+                                                RequestConstant.DO_YOU_WANT_DELETE,
+                                                style:
+                                                TextStyle(color: Colors.black),
+                                              ),
+                                              actions: <Widget>[
+                                                Container(
+                                                  // margin: const EdgeInsets.only(left: 20, right: 20),
+                                                  child: IntrinsicHeight(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: const Text(
+                                                              "Cancel",
+                                                              style: TextStyle(
+                                                                color: Colors.grey,
+                                                                fontWeight: FontWeight.bold,
+                                                                fontSize: RequestConstant.Lable_Font_SIZE,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        VerticalDivider(
+                                                          color: Colors.grey.shade400,
+                                                          width: 5,
+                                                          thickness: 2,
+                                                          indent: 15,
+                                                          endIndent: 15,
+                                                        ),
+                                                        Expanded(
+                                                          child: TextButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  transferBW_project_Controller.deleteParticularList(transferBW_project_Controller.ItemGetTableListdata[index]);
+                                                                  transferBW_project_Controller.ItemGetTableListdata.remove(transferBW_project_Controller.ItemGetTableListdata[index]);
+                                                                  transferBW_project_Controller.getItemlistTablesDatas();
+                                                                  Navigator.pop(context);
+                                                                });
+                                                              },
+                                                              child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.remove_circle,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          )),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(7, 5, 7, 8),
+                        child: Row(
+                          children: [
+                            _labelBoxPair(
+                              context,
+                              label: "Stock Quantity",
+                              controller: c.Itemlist_stockQty_ListController[index],
+                              readOnly: true,
+                            ),
+                            const SizedBox(width: 10), // gap between the two pairs
+                            _labelBoxPair(
+                              context,
+                              label: "Transfer Qty",
+                              controller: c.Itemlist_TransQty_ListController[index],
+                              onChanged: () {
+                                c.ItemListclickEdit();
+                                c.transportAmtCalculation();
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(7, 5, 7, 8),
+                        child: Row(
+                          children: [
+                            _labelBoxPair(
+                              context,
+                              label: "Rate",
+                              controller: c.Itemlist_Rate_ListController[index],
+                              onChanged: () {
+                                c.ItemListclickEdit();
+                                c.transportAmtCalculation();
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            _labelBoxPair(
+                              context,
+                              label: "Amount",
+                              controller: c.Itemlist_Amt_ListController[index],
+                              readOnly: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if(transferBW_project_Controller
+                          .type.value ==
+                          "Direct")
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(7, 5, 7, 8),
+                          child: Row(
+                            children: [
+                              Expanded(
                                 child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 11),
-                                      height: BaseUtitiles.getheightofPercentage(
-                                          context, 4),
-                                      width: BaseUtitiles.getWidthtofPercentage(
-                                          context, 38),
-                                      child: TextField(
-                                        cursorColor:
-                                        Theme.of(context).primaryColor,
-                                        textAlign: TextAlign.center,
-                                        controller: transferBW_project_Controller
-                                            .Itemlist_Rate_ListController[index],
-                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                        inputFormatters: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                                ? newValue
-                                                : oldValue;
-                                          }),
-                                        ],
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                          const EdgeInsets.fromLTRB(
-                                              8.0, 0.0, 8.0, 0.0),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
+                                  children: [
+                                    const Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        "Approx days",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
                                         ),
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                        onChanged: (value) {
-                                          transferBW_project_Controller
-                                              .ItemListclickEdit();
-                                          transferBW_project_Controller
-                                              .transportAmtCalculation();
-                                          setState(() {});
-                                        },
-                                        onTap: () {
-                                          if (transferBW_project_Controller
-                                              .Itemlist_Rate_ListController[
-                                          index]
-                                              .text !=
-                                              "" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_Rate_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_Rate_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0.0") {
-                                            return;
-                                          } else {
-                                            transferBW_project_Controller
-                                                .Itemlist_Rate_ListController[
-                                            index]
-                                                .text = "";
-                                          }
-                                        },
                                       ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                        right: 11,
-                                      ),
-                                      height: BaseUtitiles.getheightofPercentage(
-                                          context, 4),
-                                      width: BaseUtitiles.getWidthtofPercentage(
-                                          context, 38),
-                                      child: TextFormField(
-                                        readOnly: true,
-                                        onTap: () {
-                                          if (transferBW_project_Controller
-                                              .Itemlist_Amt_ListController[
-                                          index]
-                                              .text !=
-                                              "" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_Amt_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0" &&
-                                              transferBW_project_Controller
-                                                  .Itemlist_Amt_ListController[
-                                              index]
-                                                  .text !=
-                                                  "0.0") {
-                                            return;
-                                          } else {
-                                            transferBW_project_Controller
-                                                .Itemlist_Amt_ListController[
-                                            index]
-                                                .text = "";
-                                          }
-                                        },
-                                        cursorColor:
-                                        Theme.of(context).primaryColor,
-                                        textAlign: TextAlign.center,
-                                        controller: transferBW_project_Controller
-                                            .Itemlist_Amt_ListController[index],
-                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                        inputFormatters: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                                ? newValue
-                                                : oldValue;
-                                          }),
-                                        ],
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                          const EdgeInsets.fromLTRB(
-                                              8.0, 0.0, 8.0, 0.0),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(10))),
-                                        ),
-                                        style: const TextStyle(
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      flex:10,
+                                      child: SizedBox(
+                                        height: BaseUtitiles.getheightofPercentage(context, 4),
+                                        child: TextFormField(
+                                          controller: c.Itemlist_approxDays_ListController[index],
+                                          cursorColor: Theme.of(context).primaryColor,
+                                          textAlign: TextAlign.center,
+                                          keyboardType: Platform.isAndroid
+                                              ? const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          )
+                                              : TextInputType.text,
+                                          inputFormatters: _qtyFormatters,
+                                          decoration: _boxDecoration(context),
+                                          style: const TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          onTap: () => _clearIfEmptyOrZero(
+                                            c.Itemlist_approxDays_ListController[index],
+                                          ),
+                                          onChanged: (value) {
+                                            c.updateItemlistTable();
+                                            setState(() {});
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -1524,482 +1766,424 @@ class _TrasferBetweenProjects_EntryState
                               ),
                             ],
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Column(
-              children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 5 / 100),
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 10,
-                    left: 4,
-                    right: 4,
-                  ),
-                  height: MediaQuery.of(context).size.height * 80 / 100,
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: transferBW_project_Controller
-                        .ItemGetTableListdata.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      transferBW_project_Controller
-                          .itemlist_textControllersInitiate();
-                      return Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.white,
                         ),
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                                margin: const EdgeInsets.only(
-                                    left: 10, right: 10, top: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "${transferBW_project_Controller.ItemGetTableListdata[index].materialName} ( ${transferBW_project_Controller.ItemGetTableListdata[index].scale} ) ",
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    if (transferBW_project_Controller
-                                            .type.value !=
-                                        "Direct")
-                                      Text(
-                                        "Bal Qty ( ${transferBW_project_Controller.ItemGetTableListdata[index].balQty} ) ",
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    if (transferBW_project_Controller
-                                            .type.value ==
-                                        "Direct")
-                                      SizedBox(
-                                        width: 50,
-                                        child: InkWell(
-                                          onTap: () {
-                                            showDialog(
-                                              context:
-                                              context,
-                                              builder:
-                                                  (context) =>
-                                                  AlertDialog(
-                                                    title:
-                                                    const Text(
-                                                      RequestConstant.DO_YOU_WANT_DELETE,
-                                                      style:
-                                                      TextStyle(color: Colors.black),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      Container(
-                                                        // margin: const EdgeInsets.only(left: 20, right: 20),
-                                                        child: IntrinsicHeight(
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Expanded(
-                                                                child: TextButton(
-                                                                  onPressed: () {
-                                                                    Navigator.pop(context);
-                                                                  },
-                                                                  child: const Text(
-                                                                    "Cancel",
-                                                                    style: TextStyle(
-                                                                      color: Colors.grey,
-                                                                      fontWeight: FontWeight.bold,
-                                                                      fontSize: RequestConstant.Lable_Font_SIZE,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              VerticalDivider(
-                                                                color: Colors.grey.shade400,
-                                                                width: 5,
-                                                                thickness: 2,
-                                                                indent: 15,
-                                                                endIndent: 15,
-                                                              ),
-                                                              Expanded(
-                                                                child: TextButton(
-                                                                    onPressed: () {
-                                                                      setState(() {
-                                                                        transferBW_project_Controller.deleteParticularList(transferBW_project_Controller.ItemGetTableListdata[index]);
-                                                                        transferBW_project_Controller.ItemGetTableListdata.remove(transferBW_project_Controller.ItemGetTableListdata[index]);
-                                                                        transferBW_project_Controller.getItemlistTablesDatas();
-                                                                        Navigator.pop(context);
-                                                                      });
-                                                                    },
-                                                                    child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                            );
-                                          },
-                                          child: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                )),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 5, right: 4, bottom: 5, top: 5),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    "Stock Quantity",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    "Transfer Qty",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  //   Text(inward_controller.inwardItemListdatas[index].inwQty.toString(),style: TextStyle(color: Colors.white),)),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 7, right: 4, bottom: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 11),
-                                    height: BaseUtitiles.getheightofPercentage(
-                                        context, 4),
-                                    width: BaseUtitiles.getWidthtofPercentage(
-                                        context, 38),
-                                    child: TextField(
-                                      readOnly: true,
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                      textAlign: TextAlign.center,
-                                      controller: transferBW_project_Controller
-                                              .Itemlist_stockQty_ListController[
-                                          index],
-                                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      // Container(
+                      //   margin: const EdgeInsets.only(
+                      //       left: 5, right: 4, bottom: 5, top: 5),
+                      //   child: const Row(
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.spaceAround,
+                      //     children: <Widget>[
+                      //       Text(
+                      //         "Stock Quantity",
+                      //         style: TextStyle(color: Colors.black),
+                      //       ),
+                      //       Text(
+                      //         "Transfer Qty",
+                      //         style: TextStyle(color: Colors.black),
+                      //       ),
+                      //       //   Text(inward_controller.inwardItemListdatas[index].inwQty.toString(),style: TextStyle(color: Colors.white),)),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(
+                      //       left: 7, right: 4, bottom: 8),
+                      //   child: Row(
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.spaceAround,
+                      //     children: <Widget>[
+                      //       Container(
+                      //         margin: const EdgeInsets.only(right: 11),
+                      //         height: BaseUtitiles.getheightofPercentage(
+                      //             context, 4),
+                      //         width: BaseUtitiles.getWidthtofPercentage(
+                      //             context, 38),
+                      //         child: TextField(
+                      //           readOnly: true,
+                      //           cursorColor:
+                      //               Theme.of(context).primaryColor,
+                      //           textAlign: TextAlign.center,
+                      //           controller: transferBW_project_Controller
+                      //                   .Itemlist_stockQty_ListController[
+                      //               index],
+                      //           keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      //
+                      //           inputFormatters: [
+                      //             TextInputFormatter.withFunction((oldValue, newValue) {
+                      //               return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                      //                   ? newValue
+                      //                   : oldValue;
+                      //             }),
+                      //           ],
+                      //           decoration: InputDecoration(
+                      //             contentPadding:
+                      //                 const EdgeInsets.fromLTRB(
+                      //                     8.0, 0.0, 8.0, 0.0),
+                      //             focusedBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //             enabledBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //           ),
+                      //           style: const TextStyle(
+                      //               color: Colors.black,
+                      //               fontWeight: FontWeight.bold),
+                      //           onChanged: (value) {},
+                      //         ),
+                      //       ),
+                      //       Container(
+                      //         margin: const EdgeInsets.only(
+                      //             right: 11, left: 8, bottom: 0),
+                      //         height: BaseUtitiles.getheightofPercentage(
+                      //             context, 4),
+                      //         width: BaseUtitiles.getWidthtofPercentage(
+                      //             context, 38),
+                      //         child: TextFormField(
+                      //           onTap: () {
+                      //             if (transferBW_project_Controller
+                      //                         .Itemlist_TransQty_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_TransQty_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_TransQty_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0.0") {
+                      //               return;
+                      //             } else {
+                      //               transferBW_project_Controller
+                      //                   .Itemlist_TransQty_ListController[
+                      //                       index]
+                      //                   .text = "";
+                      //             }
+                      //           },
+                      //           cursorColor:
+                      //               Theme.of(context).primaryColor,
+                      //           textAlign: TextAlign.center,
+                      //           controller: transferBW_project_Controller
+                      //                   .Itemlist_TransQty_ListController[
+                      //               index],
+                      //           keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      //
+                      //           inputFormatters: [
+                      //             TextInputFormatter.withFunction((oldValue, newValue) {
+                      //               return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                      //                   ? newValue
+                      //                   : oldValue;
+                      //             }),
+                      //           ],
+                      //           decoration: InputDecoration(
+                      //             contentPadding:
+                      //                 const EdgeInsets.fromLTRB(
+                      //                     8.0, 0.0, 8.0, 0.0),
+                      //             focusedBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //             enabledBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //           ),
+                      //           style: const TextStyle(
+                      //               color: Colors.black,
+                      //               fontWeight: FontWeight.bold),
+                      //           onChanged: (value) async {
+                      //             transferBW_project_Controller
+                      //                 .ItemListclickEdit();
+                      //             transferBW_project_Controller
+                      //                 .transportAmtCalculation();
+                      //
+                      //             setState(() {});
+                      //           },
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(
+                      //       left: 5, right: 4, bottom: 5, top: 5),
+                      //   child: const Row(
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.spaceAround,
+                      //     children: <Widget>[
+                      //       Text(
+                      //         "Rate",
+                      //         style: TextStyle(color: Colors.black),
+                      //       ),
+                      //       Text(
+                      //         "Amount",
+                      //         style: TextStyle(color: Colors.black),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: const EdgeInsets.only(
+                      //       left: 7, right: 4, bottom: 8),
+                      //   child: Row(
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.spaceAround,
+                      //     children: <Widget>[
+                      //       Container(
+                      //         margin: const EdgeInsets.only(right: 11),
+                      //         height: BaseUtitiles.getheightofPercentage(
+                      //             context, 4),
+                      //         width: BaseUtitiles.getWidthtofPercentage(
+                      //             context, 38),
+                      //         child: TextField(
+                      //           cursorColor:
+                      //               Theme.of(context).primaryColor,
+                      //           textAlign: TextAlign.center,
+                      //           controller: transferBW_project_Controller
+                      //               .Itemlist_Rate_ListController[index],
+                      //           keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      //
+                      //           inputFormatters: [
+                      //             TextInputFormatter.withFunction((oldValue, newValue) {
+                      //               return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                      //                   ? newValue
+                      //                   : oldValue;
+                      //             }),
+                      //           ],
+                      //           decoration: InputDecoration(
+                      //             contentPadding:
+                      //                 const EdgeInsets.fromLTRB(
+                      //                     8.0, 0.0, 8.0, 0.0),
+                      //             focusedBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //             enabledBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //           ),
+                      //           style: const TextStyle(
+                      //               color: Colors.black,
+                      //               fontWeight: FontWeight.bold),
+                      //           onChanged: (value) {
+                      //             transferBW_project_Controller
+                      //                 .ItemListclickEdit();
+                      //             transferBW_project_Controller
+                      //                 .transportAmtCalculation();
+                      //             setState(() {});
+                      //           },
+                      //           onTap: () {
+                      //             if (transferBW_project_Controller
+                      //                         .Itemlist_Rate_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_Rate_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_Rate_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0.0") {
+                      //               return;
+                      //             } else {
+                      //               transferBW_project_Controller
+                      //                   .Itemlist_Rate_ListController[
+                      //                       index]
+                      //                   .text = "";
+                      //             }
+                      //           },
+                      //         ),
+                      //       ),
+                      //       Container(
+                      //         margin: const EdgeInsets.only(
+                      //           right: 11,
+                      //         ),
+                      //         height: BaseUtitiles.getheightofPercentage(
+                      //             context, 4),
+                      //         width: BaseUtitiles.getWidthtofPercentage(
+                      //             context, 38),
+                      //         child: TextFormField(
+                      //           readOnly: true,
+                      //           onTap: () {
+                      //             if (transferBW_project_Controller
+                      //                         .Itemlist_Amt_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_Amt_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0" &&
+                      //                 transferBW_project_Controller
+                      //                         .Itemlist_Amt_ListController[
+                      //                             index]
+                      //                         .text !=
+                      //                     "0.0") {
+                      //               return;
+                      //             } else {
+                      //               transferBW_project_Controller
+                      //                   .Itemlist_Amt_ListController[
+                      //                       index]
+                      //                   .text = "";
+                      //             }
+                      //           },
+                      //           cursorColor:
+                      //               Theme.of(context).primaryColor,
+                      //           textAlign: TextAlign.center,
+                      //           controller: transferBW_project_Controller
+                      //               .Itemlist_Amt_ListController[index],
+                      //           keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      //
+                      //           inputFormatters: [
+                      //             TextInputFormatter.withFunction((oldValue, newValue) {
+                      //               return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                      //                   ? newValue
+                      //                   : oldValue;
+                      //             }),
+                      //           ],
+                      //           decoration: InputDecoration(
+                      //             contentPadding:
+                      //                 const EdgeInsets.fromLTRB(
+                      //                     8.0, 0.0, 8.0, 0.0),
+                      //             focusedBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //             enabledBorder: OutlineInputBorder(
+                      //                 borderSide: BorderSide(
+                      //                     color: Theme.of(context)
+                      //                         .primaryColor),
+                      //                 borderRadius:
+                      //                     const BorderRadius.all(
+                      //                         Radius.circular(10))),
+                      //           ),
+                      //           style: const TextStyle(
+                      //               color: Colors.black,
+                      //               fontWeight: FontWeight.bold),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
 
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction((oldValue, newValue) {
-                                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        }),
-                                      ],
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                      ),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      onChanged: (value) {},
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        right: 11, left: 8, bottom: 0),
-                                    height: BaseUtitiles.getheightofPercentage(
-                                        context, 4),
-                                    width: BaseUtitiles.getWidthtofPercentage(
-                                        context, 38),
-                                    child: TextFormField(
-                                      onTap: () {
-                                        if (transferBW_project_Controller
-                                                    .Itemlist_TransQty_ListController[
-                                                        index]
-                                                    .text !=
-                                                "" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_TransQty_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_TransQty_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0.0") {
-                                          return;
-                                        } else {
-                                          transferBW_project_Controller
-                                              .Itemlist_TransQty_ListController[
-                                                  index]
-                                              .text = "";
-                                        }
-                                      },
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                      textAlign: TextAlign.center,
-                                      controller: transferBW_project_Controller
-                                              .Itemlist_TransQty_ListController[
-                                          index],
-                                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction((oldValue, newValue) {
-                                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        }),
-                                      ],
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                      ),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      onChanged: (value) async {
-                                        transferBW_project_Controller
-                                            .ItemListclickEdit();
-                                        transferBW_project_Controller
-                                            .transportAmtCalculation();
-
-                                        setState(() {});
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 5, right: 4, bottom: 5, top: 5),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    "Rate",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    "Amount",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 7, right: 4, bottom: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 11),
-                                    height: BaseUtitiles.getheightofPercentage(
-                                        context, 4),
-                                    width: BaseUtitiles.getWidthtofPercentage(
-                                        context, 38),
-                                    child: TextField(
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                      textAlign: TextAlign.center,
-                                      controller: transferBW_project_Controller
-                                          .Itemlist_Rate_ListController[index],
-                                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction((oldValue, newValue) {
-                                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        }),
-                                      ],
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                      ),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      onChanged: (value) {
-                                        transferBW_project_Controller
-                                            .ItemListclickEdit();
-                                        transferBW_project_Controller
-                                            .transportAmtCalculation();
-                                        setState(() {});
-                                      },
-                                      onTap: () {
-                                        if (transferBW_project_Controller
-                                                    .Itemlist_Rate_ListController[
-                                                        index]
-                                                    .text !=
-                                                "" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_Rate_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_Rate_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0.0") {
-                                          return;
-                                        } else {
-                                          transferBW_project_Controller
-                                              .Itemlist_Rate_ListController[
-                                                  index]
-                                              .text = "";
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                      right: 11,
-                                    ),
-                                    height: BaseUtitiles.getheightofPercentage(
-                                        context, 4),
-                                    width: BaseUtitiles.getWidthtofPercentage(
-                                        context, 38),
-                                    child: TextFormField(
-                                      readOnly: true,
-                                      onTap: () {
-                                        if (transferBW_project_Controller
-                                                    .Itemlist_Amt_ListController[
-                                                        index]
-                                                    .text !=
-                                                "" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_Amt_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0" &&
-                                            transferBW_project_Controller
-                                                    .Itemlist_Amt_ListController[
-                                                        index]
-                                                    .text !=
-                                                "0.0") {
-                                          return;
-                                        } else {
-                                          transferBW_project_Controller
-                                              .Itemlist_Amt_ListController[
-                                                  index]
-                                              .text = "";
-                                        }
-                                      },
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                      textAlign: TextAlign.center,
-                                      controller: transferBW_project_Controller
-                                          .Itemlist_Amt_ListController[index],
-                                      keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                      inputFormatters: [
-                                        TextInputFormatter.withFunction((oldValue, newValue) {
-                                          return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        }),
-                                      ],
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                8.0, 0.0, 8.0, 0.0),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))),
-                                      ),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- helpers (inside your State class) ----------
+
+  InputDecoration _boxDecoration(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+    );
+    return InputDecoration(
+      contentPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+      focusedBorder: border,
+      enabledBorder: border,
+    );
+  }
+
+  final _qtyFormatters = <TextInputFormatter>[
+    TextInputFormatter.withFunction((oldValue, newValue) {
+      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+          ? newValue
+          : oldValue;
+    }),
+  ];
+
+  void _clearIfEmptyOrZero(TextEditingController c) {
+    if (c.text != "" && c.text != "0" && c.text != "0.0") return;
+    c.text = "";
+  }
+
+  /// One pair: label on the LEFT, box on the RIGHT
+  Widget _labelBoxPair(
+      BuildContext context, {
+        required String label,
+        required TextEditingController controller,
+        bool readOnly = false,
+        VoidCallback? onChanged,
+      }) {
+    return Expanded(
+      child: Row(
+        children: [
+          // label (left)
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.black, fontSize: 12),
+            ),
+          ),
+          const SizedBox(width: 4),
+          // box (right)
+          Expanded(
+            flex: 7,
+            child: SizedBox(
+              height: BaseUtitiles.getheightofPercentage(context, 4),
+              child: TextFormField(
+                readOnly: readOnly,
+                controller: controller,
+                cursorColor: Theme.of(context).primaryColor,
+                textAlign: TextAlign.center,
+                keyboardType: Platform.isAndroid
+                    ? const TextInputType.numberWithOptions(decimal: true)
+                    : TextInputType.text,
+                inputFormatters: _qtyFormatters,
+                decoration: _boxDecoration(context),
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+                onTap: () => _clearIfEmptyOrZero(controller),
+                onChanged: (value) {
+                  if (onChanged != null) onChanged();
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -2058,9 +2242,9 @@ class _TrasferBetweenProjects_EntryState
                         transferBW_project_Controller.vechicleNoText.text = "";
                         transferBW_project_Controller.dcNoText.text = "";
                         transferBW_project_Controller.transportCostText.text =
-                            "0.0";
+                        "0.0";
                         transferBW_project_Controller.transportAmtText.text =
-                            "0.0";
+                        "0.0";
                         transferBW_project_Controller.remarksText.text = "";
                         transferBW_project_Controller.ItemGetTableListdata.value
                             .clear();
@@ -2141,10 +2325,10 @@ class _TrasferBetweenProjects_EntryState
                                 projectController.selectedProjectIdAll.value !=
                                     0 &&
                                 transferBW_project_Controller
-                                        .vechicleNoText.text !=
+                                    .vechicleNoText.text !=
                                     "") {
                               if (fromprojectController
-                                      .selectedProjectId.value ==
+                                  .selectedProjectId.value ==
                                   projectController
                                       .selectedProjectIdAll.value) {
                                 BaseUtitiles.showToast(
@@ -2159,8 +2343,9 @@ class _TrasferBetweenProjects_EntryState
                                       .getItemlistTablesDatas();
                                   await transferBW_project_Controller
                                       .Save_EntryScreen(
-                                          context,
-                                          transferBW_project_Controller.saveButton.value == RequestConstant.RESUBMIT ? transferBW_project_Controller.transferId : 0,
+                                      context,
+                                      transferBW_project_Controller.saveButton.value == RequestConstant.RESUBMIT
+                                          || transferBW_project_Controller.saveButton.value == RequestConstant.APPROVAL ? transferBW_project_Controller.transferId : 0,
                                       transferBW_project_Controller.AgMRNAppreqMasid.value,
                                       transferBW_project_Controller.AgTransReqMasid.value);
                                 }

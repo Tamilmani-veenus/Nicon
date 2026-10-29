@@ -258,6 +258,9 @@ class PendingListProvider {
             : "A";
         response = await ApiManager.getAPICall("${ApiConstant.GETPO_SUPTRADERSAGEN_PENDLIST}?supplierCategory=$supplierCategory");
       }
+      else if (formName == "DIRECT TRANSFER APPROVAL PENDING") {
+        response = await ApiManager.getAPICall(ApiConstant.DIRECT_TRANSFERBETPROJECTS_PENDING);
+      }
       return onclickPendingListResponseFromJson(response);
     } catch (error, stackTrace) {
       print("ERROR...${error}");

@@ -727,7 +727,7 @@ class _TransferBtweenProjects_EntrylistState extends State<TransferBtweenProject
                                                                               .value[
                                                                           index]
                                                                               .transferId,widget.heading,
-                                                                          context);
+                                                                          context,"Edit");
                                                                     }),
                                                               ),
                                                               Container(

@@ -28,6 +28,7 @@ class TransferbetSaveApiReq {
   double? transportAmount;
   String? createdDt;
   String? updatedDt;
+  String? approveStatus;
   List<MaterialTransLink>? materialTransLinks;
 
   TransferbetSaveApiReq({
@@ -50,6 +51,7 @@ class TransferbetSaveApiReq {
     this.createdDt,
     this.updatedBy,
     this.updatedDt,
+    this.approveStatus,
     this.materialTransLinks,
   });
 
@@ -73,31 +75,33 @@ class TransferbetSaveApiReq {
     createdDt: json["createdDt"],
     updatedBy: json["updatedBy"],
     updatedDt: json["updatedDt"],
+    approveStatus: json["approveStatus"],
     materialTransLinks: List<MaterialTransLink>.from(json["materialTransLinks"].map((x) => MaterialTransLink.fromJson(x))),
   );
 
   Map<String, dynamic> toJson()  {
     final data = {
-    "id": id,
-    "transferNo": transferNo,
-    "fromProjectId": fromProjectId,
-    "toProjectId": toProjectId,
-    "fromSiteid": fromSiteid,
-    "matReqMasId": matReqMasId,
-    "matTransReqMasId": matTransReqMasId,
-    "remarks": remarks,
-    "vehicleName": vehicleName,
-    "reqOrdNo": reqOrdNo,
-    "entryType": entryType,
-    "entryDate": entryDate,
-    "dcNo": dcNo,
-    "transportAmount": transportAmount,
-    "totalAmount": totalAmount,
-    "createdBy": createdBy,
-    "createdDt": createdDt,
-    "updatedBy": updatedBy,
-    "updatedDt": updatedDt,
-    "materialTransLinks": materialTransLinks?.map((x) => x.toJson()).toList(),
+      "id": id,
+      "transferNo": transferNo,
+      "fromProjectId": fromProjectId,
+      "toProjectId": toProjectId,
+      "fromSiteid": fromSiteid,
+      "matReqMasId": matReqMasId,
+      "matTransReqMasId": matTransReqMasId,
+      "remarks": remarks,
+      "vehicleName": vehicleName,
+      "reqOrdNo": reqOrdNo,
+      "entryType": entryType,
+      "entryDate": entryDate,
+      "dcNo": dcNo,
+      "transportAmount": transportAmount,
+      "totalAmount": totalAmount,
+      "createdBy": createdBy,
+      "createdDt": createdDt,
+      "updatedBy": updatedBy,
+      "updatedDt": updatedDt,
+      "approveStatus": approveStatus,
+      "materialTransLinks": materialTransLinks?.map((x) => x.toJson()).toList(),
     };
 
     data.removeWhere((key, value) => value == null);
@@ -114,6 +118,8 @@ class MaterialTransLink {
   int? transReqDetId;
   double? rate;
   double? amount;
+  double? approxDays;
+
 
   MaterialTransLink({
     this.id,
@@ -124,17 +130,21 @@ class MaterialTransLink {
     this.transReqDetId,
     this.rate,
     this.amount,
+    this.approxDays
+
   });
 
   factory MaterialTransLink.fromJson(Map<String, dynamic> json) => MaterialTransLink(
-    id: json["id"],
-    materialTransferMasId: json["materialTransferMasId"],
-    materialId: json["materialId"],
-    qty: json["qty"],
-    reqMasDetId: json["reqMasDetId"],
-    transReqDetId: json["transReqDetId"],
-    rate: json["rate"],
-    amount: json["amount"],
+      id: json["id"],
+      materialTransferMasId: json["materialTransferMasId"],
+      materialId: json["materialId"],
+      qty: json["qty"],
+      reqMasDetId: json["reqMasDetId"],
+      transReqDetId: json["transReqDetId"],
+      rate: json["rate"],
+      amount: json["amount"],
+      approxDays: json["approxDays"]
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -146,5 +156,7 @@ class MaterialTransLink {
     "transReqDetId": transReqDetId,
     "rate": rate,
     "amount": amount,
+    "approxDays": approxDays
+
   };
 }

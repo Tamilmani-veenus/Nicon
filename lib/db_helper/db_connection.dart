@@ -67,7 +67,7 @@ class DatabaseConnection {
     String inwardPendingItemlistTable = "CREATE TABLE inwardPendingItemlistTable (id INTEGER PRIMARY KEY UNIQUE,poDetId INTEGER,materialId INTEGER,materialName TEXT,unit TEXT,poQty REAL,balQty REAL,rate REAL,inwQty REAL,amdCheck INTEGER,addQty REAL,lessQty REAL,scaleId INTEGER)";
     await database.execute(inwardPendingItemlistTable);
 
-    String transferbetweenItemlistTable = "CREATE TABLE transferbetweenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,materialId INTEGER,materialName TEXT,scale TEXT,stockQty REAL,Qty REAL,balQty REAL,reqDetId INTEGER,rate REAL,amount REAL,scaleId INTEGER,transReqDetId INTEGER,reqMasDetId INTEGER)";
+    String transferbetweenItemlistTable = "CREATE TABLE transferbetweenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,materialId INTEGER,materialName TEXT,scale TEXT,stockQty REAL,Qty REAL,balQty REAL,reqDetId INTEGER,rate REAL,amount REAL,scaleId INTEGER,transReqDetId INTEGER,reqMasDetId INTEGER,approxDays REAL)";
     await database.execute(transferbetweenItemlistTable);
 
     String transferbetweenSiteWiseItemlistTable = "CREATE TABLE transferbetweenSiteWiseItemlistTable (id INTEGER PRIMARY KEY UNIQUE,materialId INTEGER,materialName TEXT,scale TEXT,stockQty REAL,Qty REAL,balQty REAL,reqDetId INTEGER,StSDetId INTEGER,rate REAL,amount REAL)";

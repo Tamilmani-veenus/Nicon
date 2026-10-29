@@ -160,6 +160,7 @@ class transEditDetResult {
   double? amount;
   double? rate;
   String? ackDiffStatus;
+  double? approxDays;
 
   transEditDetResult({
     this.reqDetId,
@@ -177,24 +178,28 @@ class transEditDetResult {
     this.amount,
     this.rate,
     this.ackDiffStatus,
+    this.approxDays
+
   });
 
   factory transEditDetResult.fromJson(Map<String, dynamic> json) => transEditDetResult(
-    reqDetId: json["id"],
-    materialTransferMasId: json["materialTransferMasId"],
-    materialId: json["materialId"],
-    materialName: json["materialName"],
-    qty: json["qty"],
-    stockQty: json["stockQty"],
-    balQty: json["balQty"],
-    balTfrQty: json["balTfrQty"],
-    reqMasDetId: json["reqMasDetId"],
-    transReqDetId: json["transReqDetId"],
-    scaleId: json["scaleId"],
-    scale: json["scaleName"],
-    amount: json["amount"],
-    rate: json["rate"],
-    ackDiffStatus: json["ackDiffStatus"],
+      reqDetId: json["id"],
+      materialTransferMasId: json["materialTransferMasId"],
+      materialId: json["materialId"],
+      materialName: json["materialName"],
+      qty: json["qty"],
+      stockQty: json["stockQty"],
+      balQty: json["balQty"],
+      balTfrQty: json["balTfrQty"],
+      reqMasDetId: json["reqMasDetId"],
+      transReqDetId: json["transReqDetId"],
+      scaleId: json["scaleId"],
+      scale: json["scaleName"],
+      amount: json["amount"],
+      rate: json["rate"],
+      ackDiffStatus: json["ackDiffStatus"],
+      approxDays: json["approxDays"]
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -213,5 +218,7 @@ class transEditDetResult {
     "amount": amount,
     "rate": rate,
     "ackDiffStatus": ackDiffStatus,
+    "approxDays": approxDays
+
   };
 }

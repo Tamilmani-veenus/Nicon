@@ -1,5 +1,3 @@
-import 'package:fluttertoast/fluttertoast.dart';
-
 import '../controller/fromproject_ccontroller.dart';
 import '../controller/fromsite_controller.dart';
 import '../controller/pendinglistcontroller.dart';
@@ -8,9 +6,6 @@ import '../db_model/transbet_itemlistTable_model.dart';
 import '../db_services/transferbet_itemlist_service.dart';
 import '../home/menu/materials/transfer_between_projects/transfer_between_project_itemlist.dart';
 import '../home/menu/materials/transfer_between_projects/transferbetween_projects_entry.dart';
-import '../home/menu/materials/transfer_between_projects/transferbetween_projects_list.dart';
-import '../home/pending_list/pending_list.dart';
-import '../models/cons_type_list_model.dart';
 import '../models/transferbet_editapires_model.dart';
 import '../models/transferbet_save_apireq_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,11 +40,15 @@ class TransferBW_project_Controller extends GetxController {
   List<TextEditingController> Itemlist_TransQty_ListController = [];
   List<TextEditingController> Itemlist_Rate_ListController = [];
   List<TextEditingController> Itemlist_Amt_ListController = [];
+  List<TextEditingController> Itemlist_approxDays_ListController = [];
+
 
   List<TextEditingController> Show_Itemlist_stockQtyControllers = [];
   List<TextEditingController> Show_Itemlist_TransQtyController = [];
   List<TextEditingController> Show_Itemlist_RateController = [];
   List<TextEditingController> Show_Itemlist_AmtController = [];
+  List<TextEditingController> Show_Itemlist_ApproxDaysController = [];
+
 
   bool get isSubmit => saveButton.value == RequestConstant.SUBMIT;
   bool get isResubmit => saveButton.value == RequestConstant.RESUBMIT;
@@ -58,11 +57,11 @@ class TransferBW_project_Controller extends GetxController {
 
   LoginController loginController = Get.put(LoginController());
   FromProjectController fromprojectController =
-      Get.put(FromProjectController());
+  Get.put(FromProjectController());
   FromSiteController fromsiteController = Get.put(FromSiteController());
   ProjectController projectController = Get.put(ProjectController());
   PendingListController pendingListController =
-      Get.put(PendingListController());
+  Get.put(PendingListController());
 
   RxList transferAllDatasList = [].obs;
   RxList transReqPendingViewList = [].obs;
@@ -78,13 +77,13 @@ class TransferBW_project_Controller extends GetxController {
   RxString selectedFrProjectName = "".obs;
 
   late List<TransferBetItemListTableModel> ItemListTableModelList =
-      <TransferBetItemListTableModel>[];
+  <TransferBetItemListTableModel>[];
   late List<TransferBetItemListTableModel> detTransReqItemListTableList =
-      <TransferBetItemListTableModel>[];
+  <TransferBetItemListTableModel>[];
   late List<TransferBetItemListTableModel> itemListUpdateModelList =
-      <TransferBetItemListTableModel>[];
+  <TransferBetItemListTableModel>[];
   late List<TransferBetItemListTableModel> deleteModelList =
-      <TransferBetItemListTableModel>[];
+  <TransferBetItemListTableModel>[];
 
   var ItemListTableModel = TransferBetItemListTableModel();
   var transfer_ItemlistService = Transferbet_ItemlistService();
@@ -141,27 +140,27 @@ class TransferBW_project_Controller extends GetxController {
     transferAllDatasList.value = [];
     transferItemListdatas.value = [];
     await ClickUtils.run(() async {
-    final value =
-        await TransferBetweenProject_provider.getTransferProj_ALLDatas(reqId);
-    if (value != null) {
-      if (value.success == true) {
-        if (value.result!.isNotEmpty) {
-          transferAllDatasList.value = value.result!;
-          saveButton.value = RequestConstant.SUBMIT;
-          FocusScope.of(context).unfocus();
-          await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName,)));
+      final value =
+      await TransferBetweenProject_provider.getTransferProj_ALLDatas(reqId);
+      if (value != null) {
+        if (value.success == true) {
+          if (value.result!.isNotEmpty) {
+            transferAllDatasList.value = value.result!;
+            saveButton.value = RequestConstant.SUBMIT;
+            FocusScope.of(context).unfocus();
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName,)));
+          } else {
+            BaseUtitiles.showToast("No Data Found");
+          }
         } else {
-          BaseUtitiles.showToast("No Data Found");
+          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
         }
       } else {
-        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+        BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
       }
-    } else {
-      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
-    }
     });
   }
 
@@ -170,29 +169,29 @@ class TransferBW_project_Controller extends GetxController {
     transferAllDatasList.value = [];
     transferItemListdatas.value = [];
     await ClickUtils.run(() async {
-    final value =
-        await TransferBetweenProject_provider.getTransPendingViewAPI(trId);
-    if (value != null) {
-      if (value.success == true) {
-        if (value.transferEditDet!.isNotEmpty) {
-          transferAllDatasList.value = value.transferEditDet!;
-          saveButton.value = RequestConstant.SUBMIT;
-          await detTransReqPendingViewTable();
-          await getItemlistTablesDatas();
-          FocusScope.of(context).unfocus();
-          await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName,)));
+      final value =
+      await TransferBetweenProject_provider.getTransPendingViewAPI(trId);
+      if (value != null) {
+        if (value.success == true) {
+          if (value.transferEditDet!.isNotEmpty) {
+            transferAllDatasList.value = value.transferEditDet!;
+            saveButton.value = RequestConstant.SUBMIT;
+            await detTransReqPendingViewTable();
+            await getItemlistTablesDatas();
+            FocusScope.of(context).unfocus();
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName,)));
+          } else {
+            BaseUtitiles.showToast("No Data Found");
+          }
         } else {
-          BaseUtitiles.showToast("No Data Found");
+          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
         }
       } else {
-        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+        BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
       }
-    } else {
-      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
-    }
     });
   }
 
@@ -215,8 +214,8 @@ class TransferBW_project_Controller extends GetxController {
       detTransReqItemListTableList.add(ItemListTableModel);
     });
     var savedatas =
-        await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
-            detTransReqItemListTableList);
+    await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
+        detTransReqItemListTableList);
     return savedatas;
   }
 
@@ -224,11 +223,11 @@ class TransferBW_project_Controller extends GetxController {
     mainEntrylist.value.clear();
     TRPEtyList.value.clear();
     var response =
-        await TransferBetweenProject_provider.getTransProjectEntryList(
-            loginController.user.value.userId,
-            loginController.UserType(),
-            TRPEntrylistFrDate.text,
-            TRPEntrylistToDate.text);
+    await TransferBetweenProject_provider.getTransProjectEntryList(
+        loginController.user.value.userId,
+        loginController.UserType(),
+        TRPEntrylistFrDate.text,
+        TRPEntrylistToDate.text);
     if (response != null) {
       if (response.success == true) {
         if (response.result!.isNotEmpty) {
@@ -250,30 +249,30 @@ class TransferBW_project_Controller extends GetxController {
     mainlist.value = [];
     transferItemListdatas.value = [];
     await ClickUtils.run(() async {
-    final value = await Consumption_provider.getStockmaterial(prid, siteId,
-        type: type.value == "Direct" ? "D" : "A", reqId: reqId);
-    if (value != null) {
-      if (value.success == true) {
-        if (value.result!.isNotEmpty) {
-          transferItemListdatas.value = value.result ?? [];
-          if (type.value == "Direct" ||
-              type.value == "Against Transfer Request") {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => Transfer_Between_Project_ItemList(),
-              ),
-            );
+      final value = await Consumption_provider.getStockmaterial(prid, siteId,
+          type: type.value == "Direct" ? "D" : "A", reqId: reqId);
+      if (value != null) {
+        if (value.success == true) {
+          if (value.result!.isNotEmpty) {
+            transferItemListdatas.value = value.result ?? [];
+            if (type.value == "Direct" ||
+                type.value == "Against Transfer Request") {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => Transfer_Between_Project_ItemList(),
+                ),
+              );
+            }
+          } else {
+            BaseUtitiles.showToast("No Data Found");
           }
         } else {
-          BaseUtitiles.showToast("No Data Found");
+          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
         }
       } else {
-        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+        BaseUtitiles.showToast("Something Went Wrong...");
       }
-    } else {
-      BaseUtitiles.showToast("Something Went Wrong...");
-    }
     });
   }
 
@@ -297,12 +296,13 @@ class TransferBW_project_Controller extends GetxController {
       ItemListTableModel.transReqDetId = element.transReqDetId;
       ItemListTableModel.rate = 0.0;
       ItemListTableModel.amount = 0.0;
+      ItemListTableModel.approxDays = 0.0;
       ItemListTableModelList.add(ItemListTableModel);
       // }
     });
     var savedatas =
-        await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
-            ItemListTableModelList);
+    await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
+        ItemListTableModelList);
     return savedatas;
   }
 
@@ -314,7 +314,7 @@ class TransferBW_project_Controller extends GetxController {
     }
     Itemlist_TransQty_ListController.clear();
     var datas =
-        await transfer_ItemlistService.Transferbet_ItemlistTable_readAll();
+    await transfer_ItemlistService.Transferbet_ItemlistTable_readAll();
     ItemListTableModelReadList = <TransferBetItemListTableModel>[];
     datas.forEach((value) {
       ItemListTableModel = TransferBetItemListTableModel();
@@ -332,6 +332,7 @@ class TransferBW_project_Controller extends GetxController {
       ItemListTableModel.rate = value['rate'];
       ItemListTableModel.amount = value['amount'];
       ItemListTableModel.transReqDetId = value['transReqDetId'];
+      ItemListTableModel.approxDays = value['approxDays'];
       ItemListTableModelReadList.add(ItemListTableModel);
       ItemGetTableListdata.value = ItemListTableModelReadList;
     });
@@ -344,11 +345,14 @@ class TransferBW_project_Controller extends GetxController {
     Itemlist_TransQty_ListController.add(new TextEditingController());
     Itemlist_Rate_ListController.add(new TextEditingController());
     Itemlist_Amt_ListController.add(new TextEditingController());
+    Itemlist_approxDays_ListController.add(new TextEditingController());
 
     Show_Itemlist_stockQtyControllers.add(new TextEditingController());
     Show_Itemlist_TransQtyController.add(new TextEditingController());
     Show_Itemlist_RateController.add(new TextEditingController());
     Show_Itemlist_AmtController.add(new TextEditingController());
+    Show_Itemlist_ApproxDaysController.add(new TextEditingController());
+
   }
 
   setItemListListTextValue(vale) {
@@ -360,6 +364,7 @@ class TransferBW_project_Controller extends GetxController {
       Itemlist_TransQty_ListController[i].text = datas.Qty.toString();
       Itemlist_Rate_ListController[i].text = datas.rate.toString();
       Itemlist_Amt_ListController[i].text = datas.amount.toString();
+      Itemlist_approxDays_ListController[i].text = datas.approxDays.toString();
       i++;
     });
   }
@@ -435,9 +440,9 @@ class TransferBW_project_Controller extends GetxController {
       if (double.parse(Show_Itemlist_TransQtyController[i].text) <=
           element.stockQty) {
         Show_Itemlist_AmtController[i].text =
-            ((double.parse(Show_Itemlist_RateController[i].text) *
-                    double.parse(Show_Itemlist_TransQtyController[i].text))
-                .toString());
+        ((double.parse(Show_Itemlist_RateController[i].text) *
+            double.parse(Show_Itemlist_TransQtyController[i].text))
+            .toString());
       } else {
         Show_Itemlist_TransQtyController[i].text = "0.0";
         Show_Itemlist_AmtController[i].text = "0.0";
@@ -485,6 +490,7 @@ class TransferBW_project_Controller extends GetxController {
       ItemListTableModel.stockQty = element.stockQty;
       ItemListTableModel.reqDetId = element.reqDetId;
       ItemListTableModel.transReqDetId = element.transReqDetId;
+
       ItemListTableModel.Qty = double.parse(
           Itemlist_TransQty_ListController[i].text == ""
               ? "0"
@@ -494,6 +500,10 @@ class TransferBW_project_Controller extends GetxController {
           double.parse(Itemlist_Rate_ListController[i].text);
       ItemListTableModel.amount =
           double.parse(Itemlist_Amt_ListController[i].text);
+
+      ItemListTableModel.approxDays = type.value == "Direct" ? double.parse(Itemlist_approxDays_ListController[i].text == "" ? "0"
+          : Itemlist_approxDays_ListController[i].text) : 0;
+
       itemListUpdateModelList.add(ItemListTableModel);
       i++;
     });
@@ -513,7 +523,7 @@ class TransferBW_project_Controller extends GetxController {
       fromSiteid: fromsiteController.selectedsiteId.value,
       matReqMasId: type.value == "Against Mrn Approval" ? matReqMasId : 0,
       matTransReqMasId:
-          type.value == "Against Transfer Request" ? matTransReqMasId : 0,
+      type.value == "Against Transfer Request" ? matTransReqMasId : 0,
       remarks: remarksText.text,
       vehicleName: vechicleNoText.text,
       totalAmount: double.tryParse(transportAmtText.text),
@@ -521,12 +531,14 @@ class TransferBW_project_Controller extends GetxController {
       entryType: type.value == "Direct"
           ? "D"
           : type.value == "Against Transfer Request"
-              ? "R"
-              : "A",
+          ? "R"
+          : "A",
       entryDate: entryDateText.text,
       dcNo: dcNoText.text,
       reqOrdNo: appNoText.text,
       createdBy: isSubmit?int.parse(loginController.EmpId()):createdById.value,
+      approveStatus: saveButton.value == RequestConstant.APPROVAL ? "Y" : "N",
+
       // createdDt: BaseUtitiles().convertToUtcIso(entryDateText.text),
       materialTransLinks: getTransfferbetDetList.value.isEmpty
           ? getDetDetails(id)
@@ -564,20 +576,21 @@ class TransferBW_project_Controller extends GetxController {
     for (int index = 0; index < ItemGetTableListdata.length; index++) {
       if (ItemGetTableListdata[index].Qty > 0) {
         var list = MaterialTransLink(
-          id: saveButton.value == RequestConstant.RESUBMIT
-              ? ItemGetTableListdata[index].reqDetId
-              : 0,
-          materialTransferMasId: id != 0 ? id : 0,
-          materialId: ItemGetTableListdata[index].materialId,
-          qty: ItemGetTableListdata[index].Qty,
-          reqMasDetId: type.value == "Against Mrn Approval"
-              ? ItemGetTableListdata[index].reqDetId
-              : 0,
-          transReqDetId: type.value == "Against Transfer Request"
-              ? ItemGetTableListdata[index].transReqDetId
-              : 0,
-          rate: ItemGetTableListdata[index].rate,
-          amount: ItemGetTableListdata[index].amount,
+            id: saveButton.value == RequestConstant.RESUBMIT || saveButton.value == RequestConstant.APPROVAL
+                ? ItemGetTableListdata[index].reqDetId
+                : 0,
+            materialTransferMasId: id != 0 ? id : 0,
+            materialId: ItemGetTableListdata[index].materialId,
+            qty: ItemGetTableListdata[index].Qty,
+            reqMasDetId: type.value == "Against Mrn Approval"
+                ? ItemGetTableListdata[index].reqDetId
+                : 0,
+            transReqDetId: type.value == "Against Transfer Request"
+                ? ItemGetTableListdata[index].transReqDetId
+                : 0,
+            rate: ItemGetTableListdata[index].rate,
+            amount: ItemGetTableListdata[index].amount,
+            approxDays: type.value == "Direct" ? ItemGetTableListdata[index].approxDays : 0
         );
         getTransfferbetDetList.add(list);
       }
@@ -585,31 +598,35 @@ class TransferBW_project_Controller extends GetxController {
     return getTransfferbetDetList.value;
   }
 
-  Future EntryList_EditApi(int workid,String MenuName,BuildContext context) async {
+  Future EntryList_EditApi(int workid,String MenuName,BuildContext context,name) async {
     await ClickUtils.run(() async {
-    final value =
-        await TransferBetweenProject_provider.entryList_editAPI(workid);
-    if (value != null) {
-      if (value.success == true) {
-        type.value = value.result!.entryType == "D"
-            ? "Direct"
-            : value.result!.entryType == "R"
-                ? "Against Transfer Request"
-                : "Against Mrn Approval";
-        editListApiDatas.value = [value.result!];
-        saveButton.value = RequestConstant.RESUBMIT;
-        EditTable_SaveTable();
-        getItemlistTablesDatas();
-        await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName)));
+      final value =
+      await TransferBetweenProject_provider.entryList_editAPI(workid);
+      if (value != null) {
+        if (value.success == true) {
+          type.value = value.result!.entryType == "D"
+              ? "Direct"
+              : value.result!.entryType == "R"
+              ? "Against Transfer Request"
+              : "Against Mrn Approval";
+          editListApiDatas.value = [value.result!];
+          if(name == "Approval"){
+            saveButton.value = RequestConstant.APPROVAL;
+          }else {
+            saveButton.value = RequestConstant.RESUBMIT;
+          }
+          EditTable_SaveTable();
+          getItemlistTablesDatas();
+          await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TrasferBetweenProjects_Entry(heading: MenuName)));
+        } else {
+          BaseUtitiles.showToast(value.message ?? "Something went wrong..");
+        }
       } else {
-        BaseUtitiles.showToast(value.message ?? "Something went wrong..");
+        BaseUtitiles.showToast('Something went wrong..');
       }
-    } else {
-      BaseUtitiles.showToast('Something went wrong..');
-    }
     });
   }
 
@@ -630,12 +647,13 @@ class TransferBW_project_Controller extends GetxController {
         ItemListTableModel.rate = value.rate;
         ItemListTableModel.reqMasDetId = value.reqMasDetId;
         ItemListTableModel.transReqDetId = value.transReqDetId;
+        ItemListTableModel.approxDays = value.approxDays;
         ItemListTableModelList.add(ItemListTableModel);
       });
     });
     var savedatas =
-        await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
-            ItemListTableModelList);
+    await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
+        ItemListTableModelList);
     return savedatas;
   }
 
@@ -672,6 +690,7 @@ class TransferBW_project_Controller extends GetxController {
         ItemListTableModel.reqDetId = 0;
         ItemListTableModel.rate = 0.0;
         ItemListTableModel.amount = 0.0;
+        ItemListTableModel.approxDays = 0.0;
         ItemGetTableListdata.value.forEach((element) {
           if (element.materialId == ItemListTableModel.materialId) {
             j = 1;
@@ -686,8 +705,8 @@ class TransferBW_project_Controller extends GetxController {
       }
     });
     var savedatas =
-        await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
-            ItemListTableModelList);
+    await transfer_ItemlistService.Transferbet_ItemlistTable_Save(
+        ItemListTableModelList);
     return Navigator.pop(context, savedatas);
   }
 
