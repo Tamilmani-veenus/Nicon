@@ -29,7 +29,10 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
   double originalNetCgst = 0.0;
   double originalNetIgst = 0.0;
   bool originalGstAmountsInitialized = false;
-
+  double previousValidRoundOff = 0.0;
+  double previousValidDeduction = 0.0;
+  bool isUpdatingAmount = false;
+  double originalDeductionAmount = 0.0;
 
   void handleGstChange(String label, String value) {
     final controllers = supplierBillApprovalController.controllers;
@@ -82,6 +85,8 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
 
     originalNetAmount = getInitial('Net Amount');
     originalNetPayAmount = getInitial('Net Pay Amount');
+    originalDeductionAmount = getInitial('Deduction Amount');
+    previousValidDeduction = originalDeductionAmount;
 
     originalNetSgst = getInitial('Net S-GST');
     originalNetCgst = getInitial('Net C-GST');
@@ -89,6 +94,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
 
     originalAmountsInitialized = true;
   }
+
   final Map<String, IconData> fieldIcons = {
     'Freight Charges': Icons.local_shipping_outlined,
     'Labour Charges': Icons.engineering_outlined,
@@ -131,11 +137,100 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     'Deduction Amount',
   };
 
+  bool validateDeduction(String value) {
+    if (isUpdatingAmount) return false;
+
+    final controllers = supplierBillApprovalController.controllers;
+
+    final deduction = double.tryParse(value.trim()) ?? 0.0;
+
+    final netPayAmount = double.tryParse(
+      controllers['Net Pay Amount']?.text.trim() ?? '0',
+    ) ??
+        0.0;
+
+    final netPayBeforeDeduction = netPayAmount + previousValidDeduction;
+
+    if (deduction < 0 || deduction > netPayBeforeDeduction) {
+      isUpdatingAmount = true;
+
+      controllers['Deduction Amount']?.text =
+          previousValidDeduction.toStringAsFixed(2);
+
+      controllers['Deduction Amount']?.selection =
+          TextSelection.collapsed(
+            offset: controllers['Deduction Amount']!.text.length,
+          );
+
+      isUpdatingAmount = false;
+
+      BaseUtitiles.showToast(
+        'Deduction should not exceed Net Pay Amount.',
+      );
+
+      calculateSupplierBillAmounts();
+      return false;
+    }
+
+    previousValidDeduction = deduction;
+    return true;
+  }
 
   final Color primaryColor = Color(0xFF4A3AFF);
 
-  SupplierBillApprovalController supplierBillApprovalController = Get.put(SupplierBillApprovalController());
+  SupplierBillApprovalController supplierBillApprovalController = Get.put(
+      SupplierBillApprovalController());
 
+  void calculateGstInclusive() {
+    final controllers = supplierBillApprovalController.controllers;
+
+    double getAmount(String key) =>
+        double.tryParse(controllers[key]?.text.trim() ?? '0') ?? 0.0;
+
+    final totalNetGst = getAmount('Net S-GST') +
+        getAmount('Net C-GST') +
+        getAmount('Net I-GST');
+
+    final gstAdjustment = supplierBillApprovalController.isGstInclusive.value ? -totalNetGst : 0.0;
+
+    final additionalCharges = getAmount('Freight Charges') +
+        getAmount('Labour Charges') +
+        getAmount('Other Charges');
+
+    final totalGst = getAmount('S-GST Amt') +
+        getAmount('C-GST Amt') +
+        getAmount('I-GST Amt');
+
+    final tcsAmount = getAmount('TCS Amt');
+    final tdsAmount = getAmount('TDS Amt');
+    final discountAmount = getAmount('Disc Amt');
+    final roundOffAmount = getAmount('Round Off');
+    final deductionAmount = getAmount('Deduction Amount');
+
+    final netAmount = originalNetAmount +
+        additionalCharges +
+        totalGst +
+        tcsAmount +
+        tdsAmount -
+        discountAmount +
+        roundOffAmount +
+        gstAdjustment;
+
+    final netPayAmount = originalNetPayAmount +
+        additionalCharges +
+        totalGst +
+        tcsAmount +
+        tdsAmount -
+        discountAmount +
+        roundOffAmount +
+        originalDeductionAmount -
+        deductionAmount +
+        gstAdjustment;
+
+    controllers['Net Amount']?.text = netAmount.toStringAsFixed(2);
+    controllers['Net Pay Amount']?.text =
+        netPayAmount.toStringAsFixed(2);
+  }
 
   @override
   void initState() {
@@ -148,6 +243,39 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
       top: false,
       child: Scaffold(
         backgroundColor: Setmybackground,
+        bottomNavigationBar: Container(
+          height: BaseUtitiles.getheightofPercentage(context, 4),
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20, right: 20),
+                  width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                  height: BaseUtitiles.getheightofPercentage(context, 4),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Theme.of(context).primaryColor
+
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Approve",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: RequestConstant.Lable_Font_SIZE,
+                        color: Colors.white
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  ApproveAlert(context);
+                },
+              ),
+            ],
+          ),
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -320,9 +448,10 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                         activeColor: primaryColor,
                         onChanged: (value) {
                           setState(() {
-                            supplierBillApprovalController
-                                .isGstInclusive.value = value ?? false;
+                            supplierBillApprovalController.isGstInclusive.value = value ?? false;
                           });
+
+                          calculateSupplierBillAmounts();
                         },
                       ),
                       const Text(
@@ -378,6 +507,13 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     final bool isNetPay = label == 'Net Pay Amount';
     final bool isRemarks = label == 'Remarks';
 
+    final advanceAmount = double.tryParse(
+      supplierBillApprovalController.controllers['Advance Amount']?.text ?? '0',
+    ) ??
+        0.0;
+
+    final isDeductionEnabled = advanceAmount > 0;
+
     final Color fieldColor = isEditable
         ? Colors.white
         : isNetPay
@@ -407,6 +543,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
         child: TextFormField(
           controller: supplierBillApprovalController.controllers[label],
           readOnly: !isEditable ||
+              (label == 'Deduction Amount' && !isDeductionEnabled) ||
               (label == 'I-GST %' && isSgstMode) ||
               (label == 'S-GST %' && isIgstMode) ||
               (label == 'C-GST %'),
@@ -417,7 +554,16 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
             decimal: true,
           ),
           onTap: () {
-            final textController = supplierBillApprovalController.controllers[label];
+            final isFrozen =
+                (label == 'I-GST %' && isSgstMode) ||
+                    (label == 'S-GST %' && isIgstMode) ||
+                    (label == 'C-GST %');
+
+            if (!isEditable || isFrozen) return;
+
+            final textController =
+            supplierBillApprovalController.controllers[label];
+
             final value = double.tryParse(textController?.text.trim() ?? '');
 
             if (value == 0) {
@@ -425,11 +571,19 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
             }
           },
           onChanged: (value) {
-            if (label == 'S-GST %' || label == 'I-GST %') {
+            if (label == 'Deduction Amount') {
+              if (validateDeduction(value)) {
+                calculateSupplierBillAmounts();
+              }
+            } else if (label == 'S-GST %' || label == 'I-GST %') {
               handleGstChange(label, value);
             } else if (label == 'Freight Charges' ||
                 label == 'Labour Charges' ||
-                label == 'Other Charges') {
+                label == 'Other Charges' ||
+                label == 'TCS %' ||
+                label == 'TDS %' ||
+                label == 'Discount %' ||
+                label == 'Round Off') {
               calculateSupplierBillAmounts();
             }
           },
@@ -495,7 +649,10 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     final controllers = supplierBillApprovalController.controllers;
 
     double getAmount(String key) {
-      return double.tryParse(controllers[key]?.text.trim() ?? '') ?? 0.0;
+      return double.tryParse(
+        controllers[key]?.text.trim() ?? '',
+      ) ??
+          0.0;
     }
 
     void setAmount(String key, double value) {
@@ -520,10 +677,9 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
       setAmount('S-GST Amt', sgstAmount);
 
       controllers['C-GST %']?.text =
-          controllers['S-GST %']?.text ?? '0';
+          controllers['S-GST %']?.text ?? '0.00';
 
       setAmount('C-GST Amt', sgstAmount);
-
       setAmount('I-GST Amt', 0);
     }
 
@@ -536,11 +692,46 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
 
       setAmount('S-GST Amt', 0);
       setAmount('C-GST Amt', 0);
+
       controllers['S-GST %']?.text = '0.00';
       controllers['C-GST %']?.text = '0.00';
     }
 
-    // 5. Net GST = original API value + current GST amount
+    // 5. TCS and TDS calculation
+    final originalTotalAmount = double.tryParse(
+      supplierBillApprovalController
+          .suppBillAppEditListValue[0].result.totalAmount
+          .toString(),
+    ) ??
+        0.0;
+
+    final tcsPercentage = getAmount('TCS %');
+    final tdsPercentage = getAmount('TDS %');
+
+    final tcsBaseAmount = additionalCharges + originalTotalAmount;
+
+    final tcsAmount = tcsBaseAmount * tcsPercentage / 100;
+    final tdsAmount = tcsBaseAmount * tdsPercentage / 100;
+
+    setAmount('TCS Amt', tcsAmount);
+    setAmount('TDS Amt', tdsAmount);
+
+    // 6. Discount calculation
+    final discountBaseAmount = double.tryParse(
+      supplierBillApprovalController
+          .suppBillAppEditListValue[0].result.netAmount
+          .toString(),
+    ) ??
+        0.0;
+
+    final discountPercentage = getAmount('Discount %');
+
+    final discountAmount =
+        discountBaseAmount * discountPercentage / 100;
+
+    setAmount('Disc Amt', discountAmount);
+
+    // 7. Net GST = original API value + current GST amount
     setAmount(
       'Net S-GST',
       originalNetSgst + getAmount('S-GST Amt'),
@@ -556,22 +747,152 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
       originalNetIgst + getAmount('I-GST Amt'),
     );
 
-    // 6. Total GST added during this edit
+    // 8. Total GST added during this edit
     final sgstAmount = getAmount('S-GST Amt');
     final cgstAmount = getAmount('C-GST Amt');
     final igstAmount = getAmount('I-GST Amt');
 
     final totalGst = sgstAmount + cgstAmount + igstAmount;
 
-    // 7. Net Amount = original API amount + additional charges + GST
-    final netAmount =
-        originalNetAmount + additionalCharges + totalGst;
+    final gstAdjustment = supplierBillApprovalController.isGstInclusive.value
+        ? -(getAmount('Net S-GST') +
+        getAmount('Net C-GST') +
+        getAmount('Net I-GST'))
+        : 0.0;
 
+
+// 9. Round Off
+    double roundOffAmount = getAmount('Round Off');
+
+// 10. Deduction
+    final deductionAmount = getAmount('Deduction Amount');
+
+// 11. Calculate Net Amount
+    double netAmount = originalNetAmount +
+        additionalCharges +
+        totalGst +
+        tcsAmount +
+        tdsAmount -
+        discountAmount +
+        roundOffAmount + gstAdjustment;
+
+// 12. Calculate Net Pay Amount
+    double netPayAmount = originalNetPayAmount +
+        additionalCharges +
+        totalGst +
+        tcsAmount +
+        tdsAmount -
+        discountAmount +
+        roundOffAmount +
+        originalDeductionAmount -
+        deductionAmount + gstAdjustment;
+
+// 13. Validate negative values
+    if (netAmount < 0 || netPayAmount < 0) {
+      roundOffAmount = previousValidRoundOff;
+
+      controllers['Round Off']?.text =
+          previousValidRoundOff.toStringAsFixed(2);
+
+      BaseUtitiles.showToast(
+        "The Net Amount should not be negative value",
+      );
+
+      // Recalculate Net Amount
+      netAmount = originalNetAmount +
+          additionalCharges +
+          totalGst +
+          tcsAmount +
+          tdsAmount -
+          discountAmount +
+          roundOffAmount;
+
+      // Recalculate Net Pay Amount
+      netPayAmount = originalNetPayAmount +
+          additionalCharges +
+          totalGst +
+          tcsAmount +
+          tdsAmount -
+          discountAmount +
+          roundOffAmount -
+          deductionAmount;
+    } else {
+      previousValidRoundOff = roundOffAmount;
+    }
+
+// 14. Update both totals
     setAmount('Net Amount', netAmount);
-
-    // 8. Net Pay Amount = original API amount + additional charges + GST
-    final netPayAmount =
-        originalNetPayAmount + additionalCharges + totalGst;
-
     setAmount('Net Pay Amount', netPayAmount);
-  }}
+  }
+
+  Future ApproveAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: Text( 'Are you sure to Approve?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: RequestConstant.Lable_Font_SIZE,
+                        ),
+                      ),
+                    ),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    width: 5,
+                    thickness: 2,
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                  Expanded(
+                    child: StatefulBuilder(
+                      builder: (context, setState) => TextButton(
+                        onPressed: () async {
+                          if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            await supplierBillApprovalController
+                                .getSupplierBillSaveDetData();
+                            await supplierBillApprovalController
+                                .approveSuppBillApi(
+                                context,
+                                supplierBillApprovalController.suppBillAppEditListValue[0].result.id
+                            );
+                          }
+                        },
+                        child: Text(
+                          "Approve",
+                          style: TextStyle(
+                            color:  Theme.of(context).primaryColor,
+                            // Change color when disabled
+                            fontWeight: FontWeight.bold,
+                            fontSize: RequestConstant.Lable_Font_SIZE,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+}

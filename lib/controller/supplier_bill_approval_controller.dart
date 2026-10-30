@@ -111,6 +111,96 @@ class SupplierBillApprovalController extends GetxController {
     });
   }
 
+  Future approveSuppBillApi( context, int id) async {
+    getRequestDetList.value.clear();
+    await Future.delayed(const Duration(seconds: 0));
+    String body = materiasaveResponseToJson(MateriasaveResponse(
+      //common
+        id: id != 0 ? id : 0,
+        reqOrdNo: autoYearWiseNoController.text.trim(),
+        reqOrdDate: RequestDateController.text,
+        reqdueDate: DuedateController.text,
+        projectId: projectController.selectedProjectId.value,
+        siteId: siteController.selectedsiteId.value,
+        reqRemarks: RemarksController.text,
+        requestType: ReqType.value.toString(),
+        isEdit: isResubmit ? true :  false,
+
+        //save
+        createdBy: isSubmit ? int.parse(loginController.EmpId()) : null,
+        createdDt: isSubmit
+            ? BaseUtitiles().convertToUtcIso(RequestDateController.text)
+            : null,
+
+        //update
+        updatedBy: isResubmit ? int.parse(loginController.EmpId()) : null,
+        updatedDate: isResubmit
+            ? BaseUtitiles().convertToUtcIso(RequestDateController.text)
+            : null,
+
+        //verify
+        verifyBy: isVerify ? int.parse(loginController.EmpId()) : null,
+        verifyDate: isVerify
+            ? BaseUtitiles().convertToUtcIso(RequestDateController.text)
+            : null,
+        verifyStatus: isResubmit ?Material_EditListApiValue[0].verifyStatus:isVerify ? "Y" : "N",
+        preApproveStatus: isResubmit ?Material_EditListApiValue[0].preApproveStatus:"N",
+        approveStatus: isResubmit ?Material_EditListApiValue[0].approveStatus:"N",
+
+        //det
+        mMatReqMasLink:  getRequestDet(id)
+    ));
+
+    // final list = await Mrn_Req_provider.SaveMaterialScreenEntryAPI(
+    //     body, id, saveButton.value, context);
+    //
+    // if (list != null) {
+    //   if (list["success"] == true) {
+    //     if (saveButton.value == RequestConstant.VERIFY) {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await pendingListController.getPendingList();
+    //       BaseUtitiles.popMultiple(context, count: 4);
+    //     } else {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await getMrn_Req_EntryList();
+    //       delete_MaterialIntent_itemlist_Table();
+    //       Material_itemview_GetDbList.clear();
+    //       BaseUtitiles.popMultiple(context, count: 3);
+    //     }
+    //   } else {
+    //     BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+    //     BaseUtitiles.popMultiple(context, count: 2);
+    //   }
+    // } else {
+    //   BaseUtitiles.showToast("Something went wrong..");
+    //   BaseUtitiles.popMultiple(context, count: 2);
+    // }
+  }
+
+  // List<MMatReqMasLink>? getRequestDet(materialReqOrdMasid) {
+  //   getRequestDetList.value.clear();
+  //   Material_itemview_GetDbList.value.forEach((element) {
+  //     if (element.qty > 0) {
+  //       var list = MMatReqMasLink(
+  //           id: element.reqDetId,
+  //           materialReqOrdMasid: materialReqOrdMasid != 0 ? materialReqOrdMasid : 0,
+  //           materialId: element.materialid,
+  //           qty: element.qty,
+  //           scaleId: element.scaleId,
+  //           siteId: siteController.selectedsiteId.value,
+  //           reqQty: isSubmit || isResubmit ? element.qty : isVerify ? element.reqQty : element.qty,
+  //           remarks: element.remarks,
+  //           reqDescription: element.desc,
+  //           preApproveStatus: "N",
+  //           approveStatus: "N",
+  //           approxDays: ReqType.value=="CP"? element.approxdays:0
+  //       );
+  //       getRequestDetList.value.add(list);
+  //     }
+  //   });
+  //   return getRequestDetList.value;
+  // }
+
   Future supplierBillSaveDetTable() async {
     materialTableList.clear();
 
@@ -232,14 +322,12 @@ class SupplierBillApprovalController extends GetxController {
     Itemlist_qtyControllers.add(TextEditingController());
   }
 
-
   setTextControllersValue() async {
     for (var index = 0; index < getSupplierBillItemViewDbList.length; index++) {
       textControllersInitiate();
       Itemlist_qtyControllers[index].text = getSupplierBillItemViewDbList[index].billQty.toString();
     }
   }
-
 
   delete_SuppBill_itemlist_Table() async {
     await suppBillAppService.suppBillAppList_table_delete();
