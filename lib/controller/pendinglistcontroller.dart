@@ -1062,7 +1062,7 @@ class PendingListController extends GetxController {
                                                         heading: entryTypeName!,
                                                         checkheading: name)),
                                           )
-                                        : name == "WORK PRE APPROVAL PENDING"
+                : name == "WORK PRE APPROVAL PENDING"
                                             ? Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -1199,11 +1199,11 @@ class PendingListController extends GetxController {
                                                                                                             context,
                                                                                                             MaterialPageRoute(builder: (context) => TransferVerification(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                           )
-                                                                                                        : name == "DIRECT TRANSFER APPROVAL PENDING"
-                                                                                                            ? Navigator.push(
-                                                                                                                context,
-                                                                                                                MaterialPageRoute(builder: (context) => DirectTransferApprovarl(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
-                                                                                                              )
+                                                                                                        // : name == "DIRECT TRANSFER APPROVAL PENDING"
+                                                                                                        //     ? Navigator.push(
+                                                                                                        //         context,
+                                                                                                        //         MaterialPageRoute(builder: (context) => DirectTransferApprovarl(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                        //       )
                                                                                                             : name == "TRANSFER ACKNOWLEDGMENT PENDING"
                                                                                                                 ? Navigator.push(
                                                                                                                     context,
@@ -1299,17 +1299,22 @@ class PendingListController extends GetxController {
                                                                                                                                                                                             context,
                                                                                                                                                                                             MaterialPageRoute(builder: (context) => SiteVoucherApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                                                                                                           )
-                                                                                                                                                                                        : name == "MAN POWER APPROVAL PENDING"
+                                                                                                                                                                                        : name == "DIRECT TRANSFER APPROVAL PENDING"
                                                                                                                                                                                             ? Navigator.push(
                                                                                                                                                                                                 context,
-                                                                                                                                                                                                MaterialPageRoute(builder: (context) => ManPowerApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                                                                                                                MaterialPageRoute(builder: (context) => DirectTransferProjectsApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                                                                                                               )
-                                                                                                                                                                                            : name == "SUPPLIER BILL APPROVAL"
+                                                                                                                                                                                            : name == "MAN POWER APPROVAL PENDING"
                                                                                                                                                                                                 ? Navigator.push(
                                                                                                                                                                                                     context,
-                                                                                                                                                                                                    MaterialPageRoute(builder: (context) => SupplierBillApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                                                                                                                    MaterialPageRoute(builder: (context) => ManPowerApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                                                                                                                   )
-                                                                                                                                                                                                : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)));
+                                                                                                                                                                                                : name == "SUPPLIER BILL APPROVAL"
+                                                                                                                                                                                                    ? Navigator.push(
+                                                                                                                                                                                                        context,
+                                                                                                                                                                                                        MaterialPageRoute(builder: (context) => SupplierBillApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                                                                                                                      )
+                                                                                                                                                                                                    : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)));
           }
         } else {
           BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);

@@ -12,6 +12,7 @@ class TransferBetItemListTableModel{
   int? scaleId;
   double? rate;
   double? amount;
+  double? approxDays;
 
   TransferBetItemListTableMap() {
     var mapping = Map<String, dynamic>();
@@ -28,6 +29,7 @@ class TransferBetItemListTableModel{
     mapping['scaleId'] = scaleId != null ? scaleId : null;
     mapping['rate'] = rate != null ? rate : null;
     mapping['amount'] = amount != null ? amount : null;
+    mapping['approxDays'] = approxDays != null ? approxDays : null;
     return mapping;
   }
 }

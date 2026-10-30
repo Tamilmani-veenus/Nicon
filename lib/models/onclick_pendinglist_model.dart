@@ -239,6 +239,8 @@ class OnClickListResult {
   String? LeaveType;
   String? LeaveTypeDesc;
   bool? isHalfDay;
+  String? transNo;
+  String? transdate;
 
   OnClickListResult({
     this.id,
@@ -444,6 +446,8 @@ class OnClickListResult {
     this.LeaveType,
     this.LeaveTypeDesc,
     this.isHalfDay,
+    this.transNo,
+    this.transdate,
   });
 
   factory OnClickListResult.fromJson(Map<String, dynamic> json) => OnClickListResult(
@@ -648,7 +652,9 @@ class OnClickListResult {
     rentalWrkType: json["type"],
     LeaveType: json["LeaveType"],
     LeaveTypeDesc: json["LeaveTypeDesc"],
-    isHalfDay: json["IsHalfDay"]
+    isHalfDay: json["IsHalfDay"],
+    transNo: json["Transfer_No"],
+    transdate: json["Transdate"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -853,5 +859,7 @@ class OnClickListResult {
     "LeaveType": LeaveType,
     "LeaveTypeDesc": LeaveTypeDesc,
     "IsHalfDay": isHalfDay,
+    "Transfer_No": transNo,
+    "Transdate": transdate,
   };
 }
