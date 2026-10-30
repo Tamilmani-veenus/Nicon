@@ -9,183 +9,145 @@ ApproveSuppBillApiModel approveSuppBillApiModelFromJson(String str) => ApproveSu
 String approveSuppBillApiModelToJson(ApproveSuppBillApiModel data) => json.encode(data.toJson());
 
 class ApproveSuppBillApiModel {
-  int id;
-  String billNo;
-  DateTime entrydate;
-  String billType;
-  String billDesc;
-  String poBillType;
-  String poBillDesc;
-  int projectId;
-  int siteId;
-  int supplierId;
-  String dcNo;
-  DateTime dcDate;
-  String invoiceNo;
-  DateTime billDate;
-  int purOrdMasId;
-  int workOrdMasId;
-  int reqOrdMasId;
-  int frieghtCharges;
-  int labourCharges;
-  int otherCharges;
-  int roundOff;
-  int sgstPercentage;
-  int sgstAmount;
-  int netSgstAmount;
-  int cgstPercentage;
-  int cgstAmount;
-  int netCgstAmount;
-  int igstPercentage;
-  int igstAmount;
-  int netIgstAmount;
-  int tdsPercentage;
-  int tdsAmount;
-  int tcsPercentage;
-  int tcsAmount;
-  int totalAmount;
-  int discntAmount;
-  int advanceAmount;
-  int netAmount;
-  int netPayAmount;
-  String remarks;
-  int createdBy;
-  DateTime createdDt;
-  int verifyBy;
-  String verifyStatus;
-  DateTime verifydate;
-  int approveBy;
-  String approveStatus;
-  DateTime approveDate;
-  DateTime purchaseOrdDate;
-  DateTime workOrdDate;
-  DateTime reqOrdDate;
-  String projectName;
-  String siteName;
-  String supplierName;
-  String purOrdMasNo;
-  String workOrdMasNo;
-  String reqOrdMasNo;
-  String createdName;
-  String verifyName;
-  String approvedName;
-  int debitNoteAmt;
-  String debitNoteRemarks;
-  String debitNoteType;
-  bool eWayBill;
-  int eWayBillNo;
-  int subContractorId;
-  String eWayBillImage;
-  DateTime eWayBillDate;
-  String tallyType;
-  String materialInwMasId;
-  int companyId;
-  String companyName;
-  int advanceAmountEdit;
-  bool hasImage;
-  int workOrderId;
-  String billTypeDesc;
-  DateTime fromDate;
-  DateTime toDate;
-  List<MaterialPurOrdBilldetLink> materialPurOrdBilldetLink;
+  int? id;
+  String? billNo;
+  String? entrydate;
+  String? billType;
+  String? poBillType;
+  int? projectId;
+  int? siteId;
+  int? supplierId;
+  String? dcNo;
+  String? dcDate;
+  String? invoiceNo;
+  String? billDate;
+  int? purOrdMasId;
+  int? workOrdMasId;
+  int? reqOrdMasId;
+  double? frieghtCharges;
+  double? labourCharges;
+  double? otherCharges;
+  double? roundOff;
+  double? sgstPercentage;
+  double? sgstAmount;
+  double? netSgstAmount;
+  double? cgstPercentage;
+  double? cgstAmount;
+  double? netCgstAmount;
+  double? igstPercentage;
+  double? igstAmount;
+  double? netIgstAmount;
+  double? tdsPercentage;
+  double? tdsAmount;
+  double? tcsPercentage;
+  double? tcsAmount;
+  double? totalAmount;
+  double? discntAmount;
+  double? advanceAmount;
+  double? netAmount;
+  double? netPayAmount;
+  String? remarks;
+  int? createdBy;
+  String? createdDt;
+  int? verifyBy;
+  String? verifyStatus;
+  String? verifydate;
+  int? approveBy;
+  String? approveStatus;
+  String? approveDate;
+  double? debitNoteAmt;
+  String? debitNoteRemarks;
+  String? debitNoteType;
+  bool? eWayBill;
+  int? eWayBillNo;
+  int? subContractorId;
+  String? eWayBillImage;
+  String? eWayBillDate;
+  String? tallyType;
+  String? materialInwMasId;
+  int? companyId;
+  int? workOrderId;
+  String? fromDate;
+  String? toDate;
+  List<MaterialPurOrdBilldetLink>? materialPurOrdBilldetLink;
 
   ApproveSuppBillApiModel({
-    required this.id,
-    required this.billNo,
-    required this.entrydate,
-    required this.billType,
-    required this.billDesc,
-    required this.poBillType,
-    required this.poBillDesc,
-    required this.projectId,
-    required this.siteId,
-    required this.supplierId,
-    required this.dcNo,
-    required this.dcDate,
-    required this.invoiceNo,
-    required this.billDate,
-    required this.purOrdMasId,
-    required this.workOrdMasId,
-    required this.reqOrdMasId,
-    required this.frieghtCharges,
-    required this.labourCharges,
-    required this.otherCharges,
-    required this.roundOff,
-    required this.sgstPercentage,
-    required this.sgstAmount,
-    required this.netSgstAmount,
-    required this.cgstPercentage,
-    required this.cgstAmount,
-    required this.netCgstAmount,
-    required this.igstPercentage,
-    required this.igstAmount,
-    required this.netIgstAmount,
-    required this.tdsPercentage,
-    required this.tdsAmount,
-    required this.tcsPercentage,
-    required this.tcsAmount,
-    required this.totalAmount,
-    required this.discntAmount,
-    required this.advanceAmount,
-    required this.netAmount,
-    required this.netPayAmount,
-    required this.remarks,
-    required this.createdBy,
-    required this.createdDt,
-    required this.verifyBy,
-    required this.verifyStatus,
-    required this.verifydate,
-    required this.approveBy,
-    required this.approveStatus,
-    required this.approveDate,
-    required this.purchaseOrdDate,
-    required this.workOrdDate,
-    required this.reqOrdDate,
-    required this.projectName,
-    required this.siteName,
-    required this.supplierName,
-    required this.purOrdMasNo,
-    required this.workOrdMasNo,
-    required this.reqOrdMasNo,
-    required this.createdName,
-    required this.verifyName,
-    required this.approvedName,
-    required this.debitNoteAmt,
-    required this.debitNoteRemarks,
-    required this.debitNoteType,
-    required this.eWayBill,
-    required this.eWayBillNo,
-    required this.subContractorId,
-    required this.eWayBillImage,
-    required this.eWayBillDate,
-    required this.tallyType,
-    required this.materialInwMasId,
-    required this.companyId,
-    required this.companyName,
-    required this.advanceAmountEdit,
-    required this.hasImage,
-    required this.workOrderId,
-    required this.billTypeDesc,
-    required this.fromDate,
-    required this.toDate,
-    required this.materialPurOrdBilldetLink,
+    this.id,
+    this.billNo,
+    this.entrydate,
+    this.billType,
+    this.poBillType,
+    this.projectId,
+    this.siteId,
+    this.supplierId,
+    this.dcNo,
+    this.dcDate,
+    this.invoiceNo,
+    this.billDate,
+    this.purOrdMasId,
+    this.workOrdMasId,
+    this.reqOrdMasId,
+    this.frieghtCharges,
+    this.labourCharges,
+    this.otherCharges,
+    this.roundOff,
+    this.sgstPercentage,
+    this.sgstAmount,
+    this.netSgstAmount,
+    this.cgstPercentage,
+    this.cgstAmount,
+    this.netCgstAmount,
+    this.igstPercentage,
+    this.igstAmount,
+    this.netIgstAmount,
+    this.tdsPercentage,
+    this.tdsAmount,
+    this.tcsPercentage,
+    this.tcsAmount,
+    this.totalAmount,
+    this.discntAmount,
+    this.advanceAmount,
+    this.netAmount,
+    this.netPayAmount,
+    this.remarks,
+    this.createdBy,
+    this.createdDt,
+    this.verifyBy,
+    this.verifyStatus,
+    this.verifydate,
+    this.approveBy,
+    this.approveStatus,
+    this.approveDate,
+    this.debitNoteAmt,
+    this.debitNoteRemarks,
+    this.debitNoteType,
+    this.eWayBill,
+    this.eWayBillNo,
+    this.subContractorId,
+    this.eWayBillImage,
+    this.eWayBillDate,
+    this.tallyType,
+    this.materialInwMasId,
+    this.companyId,
+    this.workOrderId,
+    this.fromDate,
+    this.toDate,
+    this.materialPurOrdBilldetLink,
   });
 
   factory ApproveSuppBillApiModel.fromJson(Map<String, dynamic> json) => ApproveSuppBillApiModel(
     id: json["id"],
     billNo: json["billNo"],
-    entrydate: DateTime.parse(json["entrydate"]),
+    entrydate: json["entrydate"],
     billType: json["billType"],
-    billDesc: json["billDesc"],
     poBillType: json["poBillType"],
-    poBillDesc: json["poBillDesc"],
     projectId: json["projectID"],
     siteId: json["siteID"],
     supplierId: json["supplierID"],
     dcNo: json["dcNo"],
-    dcDate: DateTime.parse(json["dcDate"]),
+    dcDate: json["dcDate"],
     invoiceNo: json["invoiceNo"],
-    billDate: DateTime.parse(json["billDate"]),
+    billDate: json["billDate"],
     purOrdMasId: json["purOrdMasId"],
     workOrdMasId: json["workOrdMasId"],
     reqOrdMasId: json["reqOrdMasId"],
@@ -213,25 +175,13 @@ class ApproveSuppBillApiModel {
     netPayAmount: json["netPayAmount"],
     remarks: json["remarks"],
     createdBy: json["createdBy"],
-    createdDt: DateTime.parse(json["createdDt"]),
+    createdDt: json["createdDt"],
     verifyBy: json["verifyBy"],
     verifyStatus: json["verifyStatus"],
-    verifydate: DateTime.parse(json["verifydate"]),
+    verifydate: json["verifydate"],
     approveBy: json["approveBy"],
     approveStatus: json["approveStatus"],
-    approveDate: DateTime.parse(json["approveDate"]),
-    purchaseOrdDate: DateTime.parse(json["purchaseOrdDate"]),
-    workOrdDate: DateTime.parse(json["workOrdDate"]),
-    reqOrdDate: DateTime.parse(json["reqOrdDate"]),
-    projectName: json["projectName"],
-    siteName: json["siteName"],
-    supplierName: json["supplierName"],
-    purOrdMasNo: json["purOrdMasNo"],
-    workOrdMasNo: json["workOrdMasNo"],
-    reqOrdMasNo: json["reqOrdMasNo"],
-    createdName: json["createdName"],
-    verifyName: json["verifyName"],
-    approvedName: json["approvedName"],
+    approveDate: json["approveDate"],
     debitNoteAmt: json["debitNoteAmt"],
     debitNoteRemarks: json["debitNoteRemarks"],
     debitNoteType: json["debitNoteType"],
@@ -239,35 +189,29 @@ class ApproveSuppBillApiModel {
     eWayBillNo: json["eWayBillNo"],
     subContractorId: json["subContractorId"],
     eWayBillImage: json["eWayBillImage"],
-    eWayBillDate: DateTime.parse(json["eWayBillDate"]),
+    eWayBillDate: json["eWayBillDate"],
     tallyType: json["tallyType"],
     materialInwMasId: json["materialInwMasId"],
     companyId: json["companyId"],
-    companyName: json["companyName"],
-    advanceAmountEdit: json["advanceAmountEdit"],
-    hasImage: json["hasImage"],
     workOrderId: json["workOrderId"],
-    billTypeDesc: json["billTypeDesc"],
-    fromDate: DateTime.parse(json["fromDate"]),
-    toDate: DateTime.parse(json["toDate"]),
+    fromDate: json["fromDate"],
+    toDate: json["toDate"],
     materialPurOrdBilldetLink: List<MaterialPurOrdBilldetLink>.from(json["materialPurOrdBilldetLink"].map((x) => MaterialPurOrdBilldetLink.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "billNo": billNo,
-    "entrydate": "${entrydate.year.toString().padLeft(4, '0')}-${entrydate.month.toString().padLeft(2, '0')}-${entrydate.day.toString().padLeft(2, '0')}",
+    "entrydate": entrydate,
     "billType": billType,
-    "billDesc": billDesc,
     "poBillType": poBillType,
-    "poBillDesc": poBillDesc,
     "projectID": projectId,
     "siteID": siteId,
     "supplierID": supplierId,
     "dcNo": dcNo,
-    "dcDate": "${dcDate.year.toString().padLeft(4, '0')}-${dcDate.month.toString().padLeft(2, '0')}-${dcDate.day.toString().padLeft(2, '0')}",
+    "dcDate": dcDate,
     "invoiceNo": invoiceNo,
-    "billDate": "${billDate.year.toString().padLeft(4, '0')}-${billDate.month.toString().padLeft(2, '0')}-${billDate.day.toString().padLeft(2, '0')}",
+    "billDate": billDate,
     "purOrdMasId": purOrdMasId,
     "workOrdMasId": workOrdMasId,
     "reqOrdMasId": reqOrdMasId,
@@ -295,25 +239,13 @@ class ApproveSuppBillApiModel {
     "netPayAmount": netPayAmount,
     "remarks": remarks,
     "createdBy": createdBy,
-    "createdDt": createdDt.toIso8601String(),
+    "createdDt": createdDt,
     "verifyBy": verifyBy,
     "verifyStatus": verifyStatus,
-    "verifydate": verifydate.toIso8601String(),
+    "verifydate": verifydate,
     "approveBy": approveBy,
     "approveStatus": approveStatus,
-    "approveDate": approveDate.toIso8601String(),
-    "purchaseOrdDate": "${purchaseOrdDate.year.toString().padLeft(4, '0')}-${purchaseOrdDate.month.toString().padLeft(2, '0')}-${purchaseOrdDate.day.toString().padLeft(2, '0')}",
-    "workOrdDate": "${workOrdDate.year.toString().padLeft(4, '0')}-${workOrdDate.month.toString().padLeft(2, '0')}-${workOrdDate.day.toString().padLeft(2, '0')}",
-    "reqOrdDate": "${reqOrdDate.year.toString().padLeft(4, '0')}-${reqOrdDate.month.toString().padLeft(2, '0')}-${reqOrdDate.day.toString().padLeft(2, '0')}",
-    "projectName": projectName,
-    "siteName": siteName,
-    "supplierName": supplierName,
-    "purOrdMasNo": purOrdMasNo,
-    "workOrdMasNo": workOrdMasNo,
-    "reqOrdMasNo": reqOrdMasNo,
-    "createdName": createdName,
-    "verifyName": verifyName,
-    "approvedName": approvedName,
+    "approveDate": approveDate,
     "debitNoteAmt": debitNoteAmt,
     "debitNoteRemarks": debitNoteRemarks,
     "debitNoteType": debitNoteType,
@@ -321,78 +253,68 @@ class ApproveSuppBillApiModel {
     "eWayBillNo": eWayBillNo,
     "subContractorId": subContractorId,
     "eWayBillImage": eWayBillImage,
-    "eWayBillDate": "${eWayBillDate.year.toString().padLeft(4, '0')}-${eWayBillDate.month.toString().padLeft(2, '0')}-${eWayBillDate.day.toString().padLeft(2, '0')}",
+    "eWayBillDate": eWayBillDate,
     "tallyType": tallyType,
     "materialInwMasId": materialInwMasId,
     "companyId": companyId,
-    "companyName": companyName,
-    "advanceAmountEdit": advanceAmountEdit,
-    "hasImage": hasImage,
     "workOrderId": workOrderId,
-    "billTypeDesc": billTypeDesc,
-    "fromDate": "${fromDate.year.toString().padLeft(4, '0')}-${fromDate.month.toString().padLeft(2, '0')}-${fromDate.day.toString().padLeft(2, '0')}",
-    "toDate": "${toDate.year.toString().padLeft(4, '0')}-${toDate.month.toString().padLeft(2, '0')}-${toDate.day.toString().padLeft(2, '0')}",
-    "materialPurOrdBilldetLink": List<dynamic>.from(materialPurOrdBilldetLink.map((x) => x.toJson())),
+    "fromDate": fromDate,
+    "toDate": toDate,
+    "materialPurOrdBilldetLink": List<dynamic>.from(materialPurOrdBilldetLink!.map((x) => x.toJson())),
   };
 }
 
 class MaterialPurOrdBilldetLink {
-  int id;
-  int materialPurOrdBillMasId;
-  int purOrdDetId;
-  int workOrdDetId;
-  int reqOrdDetId;
-  int materialId;
-  int scaleId;
-  int qty;
-  int rate;
-  int amount;
-  int sgstPercentage;
-  int sgstAmount;
-  int cgstPercentage;
-  int cgstAmount;
-  int igstPercentage;
-  int igstAmount;
-  int discntPercentage;
-  int discntAmount;
-  int netAmount;
-  int inwQty;
-  int poRate;
-  String poBillDescription;
-  String materialName;
-  String scaleName;
-  String remarks;
-  int approxDays;
-  DateTime expiryDate;
+  int? id;
+  int? materialPurOrdBillMasId;
+  int? purOrdDetId;
+  int? workOrdDetId;
+  int? reqOrdDetId;
+  int? materialId;
+  int? scaleId;
+  double? qty;
+  double? rate;
+  double? amount;
+  double? sgstPercentage;
+  double? sgstAmount;
+  double? cgstPercentage;
+  double? cgstAmount;
+  double? igstPercentage;
+  double? igstAmount;
+  double? discntPercentage;
+  double? discntAmount;
+  double? netAmount;
+  double? inwQty;
+  double? poRate;
+  String? remarks;
+  double? approxDays;
+  String? expiryDate;
 
   MaterialPurOrdBilldetLink({
-    required this.id,
-    required this.materialPurOrdBillMasId,
-    required this.purOrdDetId,
-    required this.workOrdDetId,
-    required this.reqOrdDetId,
-    required this.materialId,
-    required this.scaleId,
-    required this.qty,
-    required this.rate,
-    required this.amount,
-    required this.sgstPercentage,
-    required this.sgstAmount,
-    required this.cgstPercentage,
-    required this.cgstAmount,
-    required this.igstPercentage,
-    required this.igstAmount,
-    required this.discntPercentage,
-    required this.discntAmount,
-    required this.netAmount,
-    required this.inwQty,
-    required this.poRate,
-    required this.poBillDescription,
-    required this.materialName,
-    required this.scaleName,
-    required this.remarks,
-    required this.approxDays,
-    required this.expiryDate,
+    this.id,
+    this.materialPurOrdBillMasId,
+    this.purOrdDetId,
+    this.workOrdDetId,
+    this.reqOrdDetId,
+    this.materialId,
+    this.scaleId,
+    this.qty,
+    this.rate,
+    this.amount,
+    this.sgstPercentage,
+    this.sgstAmount,
+    this.cgstPercentage,
+    this.cgstAmount,
+    this.igstPercentage,
+    this.igstAmount,
+    this.discntPercentage,
+    this.discntAmount,
+    this.netAmount,
+    this.inwQty,
+    this.poRate,
+    this.remarks,
+    this.approxDays,
+    this.expiryDate,
   });
 
   factory MaterialPurOrdBilldetLink.fromJson(Map<String, dynamic> json) => MaterialPurOrdBilldetLink(
@@ -417,12 +339,9 @@ class MaterialPurOrdBilldetLink {
     netAmount: json["netAmount"],
     inwQty: json["inwQty"],
     poRate: json["poRate"],
-    poBillDescription: json["poBillDescription"],
-    materialName: json["materialName"],
-    scaleName: json["scaleName"],
     remarks: json["remarks"],
     approxDays: json["approxDays"],
-    expiryDate: DateTime.parse(json["expiryDate"]),
+    expiryDate: json["expiryDate"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -447,11 +366,8 @@ class MaterialPurOrdBilldetLink {
     "netAmount": netAmount,
     "inwQty": inwQty,
     "poRate": poRate,
-    "poBillDescription": poBillDescription,
-    "materialName": materialName,
-    "scaleName": scaleName,
     "remarks": remarks,
     "approxDays": approxDays,
-    "expiryDate": "${expiryDate.year.toString().padLeft(4, '0')}-${expiryDate.month.toString().padLeft(2, '0')}-${expiryDate.day.toString().padLeft(2, '0')}",
+    "expiryDate": expiryDate,
   };
 }

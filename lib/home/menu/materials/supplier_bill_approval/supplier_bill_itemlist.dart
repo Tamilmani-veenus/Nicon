@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../app_theme/app_colors.dart';
+import '../../../../controller/punch_in_controller.dart';
 import '../../../../controller/supplier_bill_approval_controller.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
@@ -33,6 +34,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
   double previousValidDeduction = 0.0;
   bool isUpdatingAmount = false;
   double originalDeductionAmount = 0.0;
+  PunchInController punchInController = Get.put(PunchInController());
 
   void handleGstChange(String label, String value) {
     final controllers = supplierBillApprovalController.controllers;
@@ -865,12 +867,13 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                       builder: (context, setState) => TextButton(
                         onPressed: () async {
                           if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            await punchInController.getNetworkTime();
                             await supplierBillApprovalController
                                 .getSupplierBillSaveDetData();
                             await supplierBillApprovalController
                                 .approveSuppBillApi(
                                 context,
-                                supplierBillApprovalController.suppBillAppEditListValue[0].result.id
+                                supplierBillApprovalController.suppBillAppEditListValue[0].result
                             );
                           }
                         },
