@@ -72,7 +72,6 @@ class SupplierBillApprovalController extends GetxController {
 
           getSupplierBillItemViewDbList.clear();
           suppBillAppEditListValue.value = [value];
-          print("eeeeeeeeeeeeeeeeee...${suppBillAppEditListValue.value[0].result.sgstAmount}");
 
           if (suppBillAppEditListValue.isNotEmpty) {
             await supplierBillSaveDetTable();

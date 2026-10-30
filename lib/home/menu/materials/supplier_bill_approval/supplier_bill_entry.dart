@@ -108,7 +108,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           (result.netAmount ?? 0).toString();
 
       controllers['Advance Amount']!.text =
-          (result.advanceAmount ?? 0).toString();
+          (result.advanceAmountEdit ?? 0).toString();
 
       controllers['Net Pay Amount']!.text =
           (result.netPayAmount ?? 0).toString();
