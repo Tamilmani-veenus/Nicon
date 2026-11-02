@@ -234,9 +234,28 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
         netPayAmount.toStringAsFixed(2);
   }
 
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Get latest item totals
+      supplierBillApprovalController.syncSupplierBillItemTotals();
+
+      // Reset original values
+      originalAmountsInitialized = false;
+
+      // Initialize with latest totals
+      initializeOriginalAmounts();
+
+      // Recalculate Net Amount and Net Pay Amount
+      calculateSupplierBillAmounts();
+
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -700,32 +719,40 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     }
 
     // 5. TCS and TDS calculation
-    final originalTotalAmount = double.tryParse(
-      supplierBillApprovalController
-          .suppBillAppEditListValue[0].result.totalAmount
-          .toString(),
-    ) ??
-        0.0;
+
+    double amountTotal = 0.0;
+
+    final apiItems = supplierBillApprovalController
+        .suppBillAppEditListValue[0]
+        .materialPurOrdBilldetLink;
+
+// Get total Amount (sum of item.amount)
+    for (final item in apiItems) {
+      amountTotal += double.tryParse(
+        item.amount.toString(),
+      ) ??
+          0.0;
+    }
 
     final tcsPercentage = getAmount('TCS %');
     final tdsPercentage = getAmount('TDS %');
 
-    final tcsBaseAmount = additionalCharges + originalTotalAmount;
+// Amount + Additional Charges
+    final tcsBaseAmount = amountTotal + additionalCharges;
 
-    final tcsAmount = tcsBaseAmount * tcsPercentage / 100;
-    final tdsAmount = tcsBaseAmount * tdsPercentage / 100;
+    final tcsAmount = double.parse(
+      (tcsBaseAmount * tcsPercentage / 100).toStringAsFixed(2),
+    );
+
+    final tdsAmount = double.parse(
+      (tcsBaseAmount * tdsPercentage / 100).toStringAsFixed(2),
+    );
 
     setAmount('TCS Amt', tcsAmount);
     setAmount('TDS Amt', tdsAmount);
 
     // 6. Discount calculation
-    final discountBaseAmount = double.tryParse(
-      supplierBillApprovalController
-          .suppBillAppEditListValue[0].result.netAmount
-          .toString(),
-    ) ??
-        0.0;
-
+    final discountBaseAmount = originalNetAmount;
     final discountPercentage = getAmount('Discount %');
 
     final discountAmount =

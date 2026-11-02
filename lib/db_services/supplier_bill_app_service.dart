@@ -15,17 +15,20 @@ class SuppBillAppService {
   suppBillAppList_table_Save(
       List<SupplierBillAppDet> materiallistTableModel) async {
     materiallistTableModel.forEach((element) async {
-      return await _dbManager.insertData('supplierBillAppDetTable', element.SupplierBillAppDetmodelmap());
+      return await _dbManager.insertData(
+          'supplierBillAppDetTable', element.SupplierBillAppDetmodelmap());
     });
   }
 
   suppBillApplist_table_readAll() async {
-    return  _dbManager.readData('supplierBillAppDetTable');
+    return _dbManager.readData('supplierBillAppDetTable');
   }
-  Future<int?> updateBillQty(int detId, double billQty) async {
+
+  Future<int?> updateBillItemCalculation(int detId,
+      Map<String, dynamic> values,) async {
     return await _dbManager.update(
       'supplierBillAppDetTable',
-      {'billQty': billQty},
+      values,
       where: 'detId = ?',
       whereArgs: [detId],
     );
