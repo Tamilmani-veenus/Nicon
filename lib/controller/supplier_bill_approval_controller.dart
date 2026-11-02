@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:nicon/controller/punch_in_controller.dart';
 import '../db_model/supp_bill_app_model.dart';
 import '../db_services/supplier_bill_app_service.dart';
 import '../home/menu/materials/supplier_bill_approval/supplier_bill_entry.dart';
+import '../models/supplier_bill_approve_model.dart';
 import '../provider/supplier_bill_approval_provider.dart';
 import '../utilities/baseutitiles.dart';
+import 'logincontroller.dart';
 
 class SupplierBillApprovalController extends GetxController {
   RxList suppBillAppEditListValue = [].obs;
@@ -14,12 +19,16 @@ class SupplierBillApprovalController extends GetxController {
   late List<SupplierBillAppDet> materialTableList = <SupplierBillAppDet>[];
   late List<SupplierBillAppDet> updateListData = <SupplierBillAppDet>[];
   late List<SupplierBillAppDet> deleteModelList = <SupplierBillAppDet>[];
+  RxList<MaterialPurOrdBilldetLink> getRequestDetList = <MaterialPurOrdBilldetLink>[].obs;
+
   var supplierBillAppDetModel = SupplierBillAppDet();
   List<TextEditingController> Itemlist_qtyControllers = [];
   int reqId = 0;
   RxInt selectedSupplierId = 0.obs;
   var suppBillAppService = SuppBillAppService();
   RxBool isGstInclusive = false.obs;
+  LoginController loginController = Get.put(LoginController());
+  PunchInController punchInController = Get.put(PunchInController());
 
   @override
   void onClose() {
@@ -110,6 +119,121 @@ class SupplierBillApprovalController extends GetxController {
       }
     });
   }
+
+  Future approveSuppBillApi( context, value) async {
+    await Future.delayed(const Duration(seconds: 0));
+    String body = approveSuppBillApiModelToJson(ApproveSuppBillApiModel(
+      id: value.id,
+      billNo: value.billNo,
+      entrydate: value.entrydate,
+      billType: value.billType,
+      poBillType: value.poBillType,
+      projectId: value.projectId,
+      siteId: value.siteId,
+      supplierId: value.supplierId,
+      dcNo: value.dcNo,
+      dcDate: value.dcDate,
+      invoiceNo: value.invoiceNo,
+      billDate: value.billDate,
+      purOrdMasId: value.purOrdMasId,
+      workOrdMasId: value.workOrdMasId,
+      reqOrdMasId: value.reqOrdMasId,
+      frieghtCharges: double.tryParse(controllers['Freight Charges']!.text) ?? 0.0,
+      labourCharges: double.tryParse(controllers['Labour Charges']!.text) ?? 0.0,
+      otherCharges: double.tryParse(controllers['Other Charges']!.text) ?? 0.0,
+      roundOff: double.tryParse(controllers['Round Off']!.text) ?? 0.0,
+      sgstPercentage: double.tryParse(controllers['S-GST %']!.text) ?? 0.0,
+      sgstAmount: double.tryParse(controllers['S-GST Amt']!.text) ?? 0.0,
+      netSgstAmount: double.tryParse(controllers['Net S-GST']!.text) ?? 0.0,
+      cgstPercentage: double.tryParse(controllers['C-GST %']!.text) ?? 0.0,
+      cgstAmount: double.tryParse(controllers['C-GST Amt']!.text) ?? 0.0,
+      netCgstAmount: double.tryParse(controllers['Net C-GST']!.text) ?? 0.0,
+      igstPercentage: double.tryParse(controllers['I-GST %']!.text) ?? 0.0,
+      igstAmount: double.tryParse(controllers['I-GST Amt']!.text) ?? 0.0,
+      netIgstAmount: double.tryParse(controllers['Net I-GST']!.text) ?? 0.0,
+      tdsPercentage: double.tryParse(controllers['TDS %']!.text) ?? 0.0,
+      tdsAmount: double.tryParse(controllers['TDS Amt']!.text) ?? 0.0,
+      tcsPercentage: double.tryParse(controllers['TCS %']!.text) ?? 0.0,
+      tcsAmount: double.tryParse(controllers['TCS Amt']!.text) ?? 0.0,
+      discntAmount: double.tryParse(controllers['Disc Amt']!.text) ?? 0.0,
+      netAmount: double.tryParse(controllers['Net Amount']!.text) ?? 0.0,
+      netPayAmount: double.tryParse(controllers['Net Pay Amount']!.text) ?? 0.0,
+      advanceAmount: double.tryParse(controllers['Deduction Amount']!.text) ?? 0.0,
+      remarks: controllers['Remarks']!.text,
+      createdBy: value.createdBy,
+      createdDt: value.createdDt,
+      verifyBy: value.verifyBy,
+      verifyStatus: value.verifyStatus,
+      verifydate: value.verifydate,
+      approveStatus: "Y",
+      approveBy: int.tryParse(loginController.EmpId()),
+      approveDate: BaseUtitiles().convertToUtcIso(punchInController.currentDate!),
+      debitNoteAmt: value.debitNoteAmt,
+      debitNoteRemarks: value.debitNoteRemarks,
+      debitNoteType: value.debitNoteType,
+      eWayBill: value.eWayBill,
+      eWayBillNo: value.eWayBillNo,
+      subContractorId: value.subContractorId,
+      eWayBillImage: value.eWayBillImage,
+      eWayBillDate: value.eWayBillDate,
+      tallyType: value.tallyType,
+      materialInwMasId: value.materialInwMasId,
+      companyId: value.companyId,
+      workOrderId: value.workOrderId,
+      fromDate: value.fromDate,
+      toDate: value.toDate,
+      // materialPurOrdBilldetLink: getPurOrdBillDet(value.id)
+    ));
+
+    // final list = await Mrn_Req_provider.SaveMaterialScreenEntryAPI(
+    //     body, id, saveButton.value, context);
+    //
+    // if (list != null) {
+    //   if (list["success"] == true) {
+    //     if (saveButton.value == RequestConstant.VERIFY) {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await pendingListController.getPendingList();
+    //       BaseUtitiles.popMultiple(context, count: 4);
+    //     } else {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await getMrn_Req_EntryList();
+    //       delete_MaterialIntent_itemlist_Table();
+    //       Material_itemview_GetDbList.clear();
+    //       BaseUtitiles.popMultiple(context, count: 3);
+    //     }
+    //   } else {
+    //     BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+    //     BaseUtitiles.popMultiple(context, count: 2);
+    //   }
+    // } else {
+    //   BaseUtitiles.showToast("Something went wrong..");
+    //   BaseUtitiles.popMultiple(context, count: 2);
+    // }
+  }
+
+  // List<MaterialPurOrdBilldetLink>? getPurOrdBillDet(materialReqOrdMasid) {
+  //   getRequestDetList.value=[];
+  //   getSupplierBillItemViewDbList.value.forEach((element) {
+  //     if (element.qty > 0) {
+  //       var list = MMatReqMasLink(
+  //           id: element.reqDetId,
+  //           materialReqOrdMasid: materialReqOrdMasid != 0 ? materialReqOrdMasid : 0,
+  //           materialId: element.materialid,
+  //           qty: element.qty,
+  //           scaleId: element.scaleId,
+  //           siteId: siteController.selectedsiteId.value,
+  //           reqQty: isSubmit || isResubmit ? element.qty : isVerify ? element.reqQty : element.qty,
+  //           remarks: element.remarks,
+  //           reqDescription: element.desc,
+  //           preApproveStatus: "N",
+  //           approveStatus: "N",
+  //           approxDays: ReqType.value=="CP"? element.approxdays:0
+  //       );
+  //       getRequestDetList.value.add(list);
+  //     }
+  //   });
+  //   return getRequestDetList.value;
+  // }
 
   Future supplierBillSaveDetTable() async {
     materialTableList.clear();
@@ -232,14 +356,12 @@ class SupplierBillApprovalController extends GetxController {
     Itemlist_qtyControllers.add(TextEditingController());
   }
 
-
   setTextControllersValue() async {
     for (var index = 0; index < getSupplierBillItemViewDbList.length; index++) {
       textControllersInitiate();
       Itemlist_qtyControllers[index].text = getSupplierBillItemViewDbList[index].billQty.toString();
     }
   }
-
 
   delete_SuppBill_itemlist_Table() async {
     await suppBillAppService.suppBillAppList_table_delete();

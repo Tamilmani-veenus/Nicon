@@ -103,6 +103,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
 
       controllers['Discount %']!.text =
           "0.0";
+
       // Payment Details
       controllers['Net Amount']!.text =
           (result.netAmount ?? 0).toString();
@@ -113,7 +114,8 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       controllers['Net Pay Amount']!.text =
           (result.netPayAmount ?? 0).toString();
 
-      controllers['Deduction Amount']!.text = "0.0";
+      controllers['Deduction Amount']!.text =
+          (result.advanceAmount ?? 0).toString();
 
       // Remarks — if this controller exists
       controllers['Remarks']?.text = result.remarks ?? '';
