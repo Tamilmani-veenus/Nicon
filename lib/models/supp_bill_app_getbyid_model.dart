@@ -11,7 +11,7 @@ String suppBillAppGetByIdToJson(SuppBillAppGetById data) => json.encode(data.toJ
 class SuppBillAppGetById {
   bool? success;
   Result? result;
-  String ? message;
+  String? message;
   List<MaterialPurOrdBilldetLink>? materialPurOrdBilldetLink;
 
   SuppBillAppGetById({
@@ -21,18 +21,35 @@ class SuppBillAppGetById {
     this.materialPurOrdBilldetLink,
   });
 
-  factory SuppBillAppGetById.fromJson(Map<String, dynamic> json) => SuppBillAppGetById(
-    success: json["success"],
-    message: json["message"],
-    result: Result.fromJson(json["result"]),
-    materialPurOrdBilldetLink: List<MaterialPurOrdBilldetLink>.from(json["materialPurOrdBilldetLink"].map((x) => MaterialPurOrdBilldetLink.fromJson(x))),
-  );
+  factory SuppBillAppGetById.fromJson(Map<String, dynamic> json) {
+    final resultJson =
+        json["result"] as Map<String, dynamic>? ?? {};
+
+    final topItems = json["materialPurOrdBilldetLink"] as List?;
+    final nestedItems = resultJson["materialPurOrdBilldetLink"] as List?;
+
+    // P flow: top-level list
+    // G flow: result-level list
+    final itemList = (topItems != null && topItems.isNotEmpty)
+        ? topItems
+        : (nestedItems ?? []);
+
+    return SuppBillAppGetById(
+      success: json["success"],
+      message: json["message"],
+      result: Result.fromJson(resultJson),
+      materialPurOrdBilldetLink: itemList
+          .map((x) => MaterialPurOrdBilldetLink.fromJson(x))
+          .toList(),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
     "result": result?.toJson(),
-    "materialPurOrdBilldetLink": List<dynamic>.from(materialPurOrdBilldetLink!.map((x) => x.toJson())),
+    "materialPurOrdBilldetLink":
+    materialPurOrdBilldetLink?.map((x) => x.toJson()).toList() ?? [],
   };
 }
 
@@ -73,6 +90,7 @@ class Result {
   double? tcsAmount;
   double? totalAmount;
   double? discntAmount;
+  double? discntPercentage;
   double? advanceAmount;
   double? netAmount;
   double? netPayAmount;
@@ -113,6 +131,9 @@ class Result {
   dynamic hasImage;
   int? workOrderId;
   dynamic billTypeDesc;
+  bool? gstApply;
+  String? fromDate;
+  String? toDate;
 
   Result({
     this.id,
@@ -151,6 +172,7 @@ class Result {
     this.tcsAmount,
     this.totalAmount,
     this.discntAmount,
+    this.discntPercentage,
     this.advanceAmount,
     this.netAmount,
     this.netPayAmount,
@@ -191,6 +213,9 @@ class Result {
     this.hasImage,
     this.workOrderId,
     this.billTypeDesc,
+    this.gstApply,
+    this.fromDate,
+    this.toDate
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -230,6 +255,7 @@ class Result {
     tcsAmount: json["tcsAmount"],
     totalAmount: json["totalAmount"],
     discntAmount: json["discntAmount"],
+    discntPercentage: json["discntPercentage"],
     advanceAmount: json["advanceAmount"],
     netAmount: json["netAmount"]?.toDouble(),
     netPayAmount: json["netPayAmount"]?.toDouble(),
@@ -270,6 +296,9 @@ class Result {
     hasImage: json["hasImage"],
     workOrderId: json["workOrderId"],
     billTypeDesc: json["billTypeDesc"],
+    gstApply: json["gstApply"],
+    fromDate: json["fromDate"],
+    toDate: json["toDate"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -309,6 +338,7 @@ class Result {
     "tcsAmount": tcsAmount,
     "totalAmount": totalAmount,
     "discntAmount": discntAmount,
+    "discntPercentage": discntPercentage,
     "advanceAmount": advanceAmount,
     "netAmount": netAmount,
     "netPayAmount": netPayAmount,
@@ -349,6 +379,9 @@ class Result {
     "hasImage": hasImage,
     "workOrderId": workOrderId,
     "billTypeDesc": billTypeDesc,
+    "gstApply": gstApply,
+    "fromDate": fromDate,
+    "toDate": toDate,
   };
 }
 
@@ -383,6 +416,7 @@ class MaterialPurOrdBilldetLink {
   double?amount;
   double? netAmount;
   int? status;
+  int? approxDays;
 
   MaterialPurOrdBilldetLink({
     this.detId,
@@ -415,41 +449,64 @@ class MaterialPurOrdBilldetLink {
     this.amount,
     this.netAmount,
     this.status,
+    this.approxDays,
   });
 
-  factory MaterialPurOrdBilldetLink.fromJson(Map<String, dynamic> json) => MaterialPurOrdBilldetLink(
-    detId: json["DetId"],
-    materialInwarddetid: json["MaterialInwarddetid"],
-    purOrdMasId: json["PurOrdMasId"],
-    purOrdDetId: json["PurOrdDetId"],
-    workOrdDetId: json["WorkOrdDetId"],
-    reqOrdDetId: json["ReqOrdDetId"],
-    materialId: json["MaterialId"],
-    materialName: json["MaterialName"],
-    scaleId: json["ScaleID"],
-    scaleName: json["ScaleName"],
-    inwardQty: json["InwardQty"],
-    billQty: json["BillQty"],
-    balInwQty: json["BalInwQty"],
-    balQty: json["BalQty"],
-    description: json["Description"],
-    rate: json["Rate"],
-    poRate: json["poRate"],
-    discPer: json["Disc_Per"],
-    discAmt: json["Disc_Amt"],
-    remarks: json["remarks"],
-    sgstPer: json["SGSTPer"],
-    sgstAmt: json["SGSTAmt"]?.toDouble(),
-    cgstPer: json["CGSTPer"],
-    cgstAmt: json["CGSTAmt"]?.toDouble(),
-    igstPer: json["IGSTPer"],
-    igstAmt: json["IGSTAmt"],
-    vatType: json["Vat_Type"],
-    amount: json["Amount"],
-    netAmount: json["NetAmount"]?.toDouble(),
-    status: json["Status"],
-  );
+  factory MaterialPurOrdBilldetLink.fromJson(
+      Map<String, dynamic> json) {
+    return MaterialPurOrdBilldetLink(
+      detId: json["DetId"] ?? json["id"],
 
+      materialInwarddetid:
+      json["MaterialInwarddetid"] ?? json["materialInwarddetid"],
+
+      purOrdMasId:
+      json["PurOrdMasId"] ?? json["materialPurOrdMasID"],
+
+      purOrdDetId: json["PurOrdDetId"] ?? json["purOrdDetId"],
+      workOrdDetId: json["WorkOrdDetId"] ?? json["workOrdDetId"],
+      reqOrdDetId: json["ReqOrdDetId"] ?? json["reqOrdDetId"],
+
+      materialId: json["MaterialId"] ?? json["materialID"],
+      materialName: json["MaterialName"] ?? json["materialName"],
+
+      scaleId: json["ScaleID"] ?? json["scaleID"],
+      scaleName: json["ScaleName"] ?? json["scaleName"],
+
+      inwardQty: toDoubleValue(json["InwardQty"] ?? json["inwQty"]),
+      billQty: toDoubleValue(json["BillQty"] ?? json["qty"]),
+
+      balInwQty: toDoubleValue(json["BalInwQty"] ?? json["balInwQty"]),
+      balQty: toDoubleValue(json["BalQty"] ?? json["balQty"]),
+
+      description: json["Description"] ?? json["poBillDescription"],
+
+      rate: toDoubleValue(json["Rate"] ?? json["rate"]),
+      poRate: toDoubleValue(json["poRate"]),
+
+      discPer: toDoubleValue(json["Disc_Per"] ?? json["discntPercentage"]),
+      discAmt: toDoubleValue(json["Disc_Amt"] ?? json["discntAmount"]),
+
+      remarks: json["remarks"] ?? json["Remarks"],
+
+      sgstPer: toDoubleValue(json["SGSTPer"] ?? json["sgstPercentage"]),
+      sgstAmt: toDoubleValue(json["SGSTAmt"] ?? json["sgstAmount"]),
+
+      cgstPer: toDoubleValue(json["CGSTPer"] ?? json["cgstPercentage"]),
+      cgstAmt: toDoubleValue(json["CGSTAmt"] ?? json["cgstAmount"]),
+
+      igstPer: toDoubleValue(json["IGSTPer"] ?? json["igstPercentage"]),
+      igstAmt: toDoubleValue(json["IGSTAmt"] ?? json["igstAmount"]),
+
+      vatType: json["Vat_Type"] ?? json["vatType"],
+
+      amount: toDoubleValue(json["Amount"] ?? json["amount"]),
+      netAmount: toDoubleValue(json["NetAmount"] ?? json["netAmount"]),
+
+      status: json["Status"] ?? json["status"],
+      approxDays: json["approxDays"],
+    );
+  }
   Map<String, dynamic> toJson() => {
     "DetId": detId,
     "MaterialInwarddetid": materialInwarddetid,
@@ -481,7 +538,14 @@ class MaterialPurOrdBilldetLink {
     "Amount": amount,
     "NetAmount": netAmount,
     "Status": status,
+    "approxDays": approxDays,
   };
+}
+
+double? toDoubleValue(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
 }
 
 

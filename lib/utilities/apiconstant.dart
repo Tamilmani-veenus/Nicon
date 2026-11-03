@@ -241,6 +241,7 @@ class ApiConstant{
   static String GETMRNREQUEST_ENTRY_LIST = BASE_URL_CORE + "api/MaterialReqOrdMas/GetAllReqOrdMas";
   static String GET_MATERIAL_EDIT_API = BASE_URL_CORE + "api/MaterialReqOrdMas/GetReqOrdMasById";
   static String GET_SUPP_BILL_APP_EDIT_API = BASE_URL_CORE + "api/MaterialPurOrdBill/GetMaterialPurchaseOrdBillById";
+  static String GET_SUPP_BILL_DIRECT_APP_EDIT_API = BASE_URL_CORE + "api/MaterialPurOrdBillDirect/GetbyIdMaterialPurchaseOrdBillDirect";
   static String GET_MATTRANSREQ_EDIT_API = BASE_URL_CORE + "api/MaterialTransferRequest/GetByIdMTR";
   static String GET_COMPANY_NMRALLLISTAPI = BASE_URL_CORE + "api/NMRLabourAttendance/GetLabourCategoryDetails";
   static String GET_CHECKAPPROVALLEVELAPI = BASE_URL_CORE + "api/MaterialReqOrdMas/CheckApprovalLevel";
@@ -400,6 +401,7 @@ class ApiConstant{
   static String PUT_BOQREVISED_APPROVE_API = BASE_URL_CORE + "api/BOQRevised/ApproveBoqRevise";
   static String PUT_REQUISITIONSLIP_UPDATE_API = BASE_URL_CORE + "api/StaffRequisition/UpdateStaffRequisitionSlip";
   static String PUT_MRNFINALAPPROVAL_APPROVE_API = BASE_URL_CORE + "api/MaterialPreApprovalRequest/UpdateFinalApprovalMas";
+  static String PUT_SUPP_BILL_APPROVE_API = BASE_URL_CORE + "api/MaterialPurOrdBill/UpdatematerialPurOrdBillMas";
 
   static String PROJECT_NAME_TRANSFER = BASE_URL_CORE + "api/GenericMaster/ToProDiff";
   static String TOPROJECT_NAME_TRANSFER = BASE_URL_CORE + "api/GenericMaster/GetAllToPro";

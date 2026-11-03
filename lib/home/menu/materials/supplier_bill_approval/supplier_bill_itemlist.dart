@@ -291,6 +291,32 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                   ),
                 ),
                 onTap: () async {
+                  await supplierBillApprovalController.getSupplierBillSaveDetData();
+                  final netAmt =
+                      double.tryParse(supplierBillApprovalController.controllers['Net Amount']?.text ?? '0') ?? 0.0;
+
+                  if (netAmt <= 0) {
+                    BaseUtitiles.showToast('Net Amount should be greater than 0');
+                    return;
+                  }
+
+                  for (int i = 0;
+                  i < supplierBillApprovalController.Itemlist_qtyControllers.length;
+                  i++) {
+                    final qty = double.tryParse(
+                      supplierBillApprovalController
+                          .Itemlist_qtyControllers[i].text.trim(),
+                    ) ??
+                        0.0;
+
+                    if (qty <= 0) {
+                      BaseUtitiles.showToast(
+                        'Bill Quantity should be greater than 0',
+                      );
+                      return;
+                    }
+                  }
+
                   ApproveAlert(context);
                 },
               ),
@@ -343,8 +369,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                         fields: const [
                           'Freight Charges',
                           'Labour Charges',
-                          'Other Charges',
-                          'Remarks'
+                          'Other Charges'
                         ],
                       ),
                       const SizedBox(height: 14),
@@ -381,6 +406,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                           'Advance Amount',
                           'Deduction Amount',
                           'Net Pay Amount',
+                          'Remarks'
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -458,32 +484,33 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
               ),
               if (title == 'Additional Charges') ...[
                 const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: supplierBillApprovalController
-                            .isGstInclusive.value,
-                        activeColor: primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            supplierBillApprovalController.isGstInclusive.value = value ?? false;
-                          });
+                Obx(()=> Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          value: supplierBillApprovalController
+                              .isGstInclusive.value,
+                          activeColor: primaryColor,
+                          onChanged: (value) {
+                            setState(() {
+                              supplierBillApprovalController.isGstInclusive.value = value ?? false;
+                            });
 
-                          calculateSupplierBillAmounts();
-                        },
-                      ),
-                      const Text(
-                        'GST Inclusive',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF29234D),
+                            calculateSupplierBillAmounts();
+                          },
                         ),
-                      ),
-                    ],
+                        const Text(
+                          'GST Inclusive',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF29234D),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
