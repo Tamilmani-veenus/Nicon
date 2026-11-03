@@ -906,189 +906,210 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
         SizedBox(height: MediaQuery.of(context).size.height * 5 / 100),
         SizedBox(
           height: MediaQuery.of(context).size.height * 75 / 100,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.only(
-              bottom: BaseUtitiles.getheightofPercentage(context, 10),
-            ),
-            itemCount: supplierBillApprovalController
-                .getSupplierBillItemViewDbList.length,
-            itemBuilder: (BuildContext context, int index) {
-              final value = supplierBillApprovalController
-                  .getSupplierBillItemViewDbList.value;
+          child: Obx(() {
+            final items = supplierBillApprovalController
+                .getSupplierBillItemViewDbList;
 
-              final item = value[index];
-              final primary = Theme.of(context).primaryColor;
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.only(
+                bottom: BaseUtitiles.getheightofPercentage(context, 10),
+              ),
+              itemCount: items.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = items[index];
+                final primary = Theme.of(context).primaryColor;
 
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                elevation: 5,
-                color: Colors.white,
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 10,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 7,
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Column(
-                    children: [
-                      // Material name and View Details
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 6,
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                left: 5,
-                                right: 12,
+                  elevation: 5,
+                  color: Colors.white,
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    bottom: 10,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                      vertical: 7,
+                    ),
+                    child: Column(
+                      children: [
+                        // Material name and View Details
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  left: 5,
+                                  right: 12,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        '${item.materialName}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        ' (${item.scaleName.toString().trim()})',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      '${item.materialName}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                            ),
+                            InkWell(
+                              onTap: () => showAmountDetailsDialog(context, item),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'View Details',
                                       style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
                                         color: primary,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      ' (${item.scaleName.toString().trim()})',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => showAmountDetailsDialog(context,item),
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: primary.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'View Details',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
+                                    const SizedBox(width: 5),
+                                    Icon(
+                                      Icons.remove_red_eye_outlined,
                                       color: primary,
+                                      size: 16,
                                     ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Icon(
-                                    Icons.remove_red_eye_outlined,
-                                    color: primary,
-                                    size: 16,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-
-                      // PO BalQty and Bill Qty
-                      _supplierFieldRow(
-                        context,
-                        leftLabel: 'PO BalQty',
-                        leftField: _supplierInput(
-                          context,
-                          initialValue: item.balQty.toString(),
-                          readOnly: true,
-                          validateNumber: false,
+                          ],
                         ),
 
-                        rightLabel: 'PO Rate',
-                        rightField: _supplierInput(
+                        // PO BalQty and PO Rate
+                        _supplierFieldRow(
                           context,
-                          initialValue: item.poRate.toString(),
-                          readOnly: true,
-                          validateNumber: false,
-                          margin: const EdgeInsets.only(left: 8),
-                        ),
-                      ),
-
-                      // PO Rate and Rate
-                      _supplierFieldRow(
-                        context,
-                        leftLabel: 'Bill Qty',
-                        leftField: _supplierInput(
+                          leftLabel: 'PO BalQty',
+                          leftField: _supplierInput(
                             context,
-                          initialValue: item.billQty.toString(),
-                          controller:
-                          supplierBillApprovalController.Itemlist_qtyControllers[index],
-                          onChanged: (value) {
-                            supplierBillApprovalController.updateBillQty(index, value);
-                          },
-                          onTap: () {
-                            final controller =
-                            supplierBillApprovalController.Itemlist_qtyControllers[index];
-
-                            if (controller.text == '0.0' || controller.text =="0") {
-                              controller.clear();
-                            }
-                          },
-                        ),
-                        rightLabel: 'Rate',
-                        rightField: _supplierInput(
-                          context,
-                          initialValue: item.rate.toString(),
-                          readOnly: true,
-                          margin: const EdgeInsets.only(left: 8),
-                        ),
-                      ),
-
-                      // Desc and Amount
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: _supplierFieldRow(
-                          context,
-                          leftLabel: 'Desc',
-                          leftField: _supplierInput(context,
-                              initialValue: item.description.toString(),
-                              readOnly: true,
-                              validateNumber: false),
-                          rightLabel: 'Amount',
+                            initialValue: item.balQty.toString(),
+                            readOnly: true,
+                            validateNumber: false,
+                          ),
+                          rightLabel: 'PO Rate',
                           rightField: _supplierInput(
                             context,
-                            initialValue: item.amount.toString(),
+                            initialValue: item.poRate.toString(),
+                            readOnly: true,
+                            validateNumber: false,
+                            margin: const EdgeInsets.only(left: 8),
+                          ),
+                        ),
+
+                        // Bill Qty and Rate
+                        _supplierFieldRow(
+                          context,
+                          leftLabel: 'Bill Qty',
+                          leftField: _supplierInput(
+                            context,
+                            controller: supplierBillApprovalController
+                                .Itemlist_qtyControllers[index],
+                            readOnly: false,
+                            onChanged: (value) {
+                              supplierBillApprovalController.updateBillQty(
+                                index,
+                                value,
+                              );
+                            },
+                            onTap: () {
+                              final controller =
+                              supplierBillApprovalController
+                                  .Itemlist_qtyControllers[index];
+
+                              if (controller.text == '0.0' ||
+                                  controller.text == '0') {
+                                controller.clear();
+                              }
+                            },
+                          ),
+                          rightLabel: 'Rate',
+                          rightField: _supplierInput(
+                            context,
+                            initialValue: item.rate.toString(),
                             readOnly: true,
                             margin: const EdgeInsets.only(left: 8),
                           ),
                         ),
-                      ),
-                    ],
+
+                        // Description and Amount
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: _supplierFieldRow(
+                            context,
+                            leftLabel: 'Desc',
+                            leftField: _supplierInput(
+                              context,
+                              initialValue: item.description.toString(),
+                              readOnly: true,
+                              validateNumber: false,
+                            ),
+                            rightLabel: 'Amount',
+                            rightField: Container(
+                          margin: const EdgeInsets.only(left: 8),
+                          height: BaseUtitiles.getheightofPercentage(context, 4),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          child: Text(
+                            (item.amount ?? 0).toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          )
+                );
+              },
+            );
+          }),
         ),
         SizedBox(height: BaseUtitiles.getheightofPercentage(context, 4)),
       ],

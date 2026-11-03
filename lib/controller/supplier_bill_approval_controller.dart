@@ -27,6 +27,8 @@ class SupplierBillApprovalController extends GetxController {
   RxInt selectedSupplierId = 0.obs;
   var suppBillAppService = SuppBillAppService();
   RxBool isGstInclusive = false.obs;
+  double supplierBillItemGrossTotal = 0.0;
+  double supplierBillItemNetTotal = 0.0;
   LoginController loginController = Get.put(LoginController());
   PunchInController punchInController = Get.put(PunchInController());
 
@@ -329,28 +331,233 @@ class SupplierBillApprovalController extends GetxController {
     setTextControllersValue();
   }
 
+
+  void syncSupplierBillItemTotals() {
+    double totalNet = 0.0;
+    double totalSgst = 0.0;
+    double totalCgst = 0.0;
+    double totalIgst = 0.0;
+
+    double toTwoDecimal(double value) =>
+        double.parse(value.toStringAsFixed(2));
+
+    for (final item in getSupplierBillItemViewDbList) {
+      totalNet += _toDouble(item.netAmount);
+      totalSgst += _toDouble(item.sgstAmt);
+      totalCgst += _toDouble(item.cgstAmt);
+      totalIgst += _toDouble(item.igstAmt);
+    }
+
+    totalNet = toTwoDecimal(totalNet);
+    totalSgst = toTwoDecimal(totalSgst);
+    totalCgst = toTwoDecimal(totalCgst);
+    totalIgst = toTwoDecimal(totalIgst);
+
+    // Update total fields
+    controllers['Net Amount']!.text =
+        totalNet.toStringAsFixed(2);
+
+    controllers['Net S-GST']!.text =
+        totalSgst.toStringAsFixed(2);
+
+    controllers['Net C-GST']!.text =
+        totalCgst.toStringAsFixed(2);
+
+    controllers['Net I-GST']!.text =
+        totalIgst.toStringAsFixed(2);
+
+    // Get Deduction Amount
+    final deductionAmount =
+    _toDouble(controllers['Deduction Amount']!.text);
+
+    // Net Pay Amount = Net Amount - Deduction Amount
+    final netPayAmount = toTwoDecimal(
+      totalNet - deductionAmount,
+    );
+
+    controllers['Net Pay Amount']!.text =
+        netPayAmount.toStringAsFixed(2);
+  }
+
+  double _toDouble(dynamic value) {
+    return double.tryParse(value?.toString() ?? '') ?? 0.0;
+  }
+
+
+
   Future<void> updateBillQty(int index, String value) async {
-    final qty = double.tryParse(value);
-
-    if (qty == null) return;
-
-    final item =
-    suppBillAppEditListValue[0].materialPurOrdBilldetLink[index];
-
-    final double balQty =
-        double.tryParse(item.balQty.toString()) ?? 0.0;
-
-    if (qty > balQty) {
-      Itemlist_qtyControllers[index].text = '0.0';
-      BaseUtitiles.showToast('Bill Qty should not exceed PO Bal Qty');
+    if (index < 0 || index >= getSupplierBillItemViewDbList.length) {
       return;
     }
 
-    await suppBillAppService.updateBillQty(
-      item.detId,
-      qty,
+    // Get current item
+    final item = getSupplierBillItemViewDbList[index];
+
+    // Convert dynamic values to double
+    double toDouble(dynamic value) =>
+        double.tryParse(value?.toString() ?? '') ?? 0.0;
+
+    // Round to 2 decimal places
+    double roundToTwo(double value) =>
+        double.parse(value.toStringAsFixed(2));
+
+    // Get PO balance quantity
+    final balQty = toDouble(item.balQty);
+
+    // Get entered Bill Qty
+    final qtyText = value.trim();
+    final qty = qtyText.isEmpty ? 0.0 : double.tryParse(qtyText);
+
+    if (qty == null) return;
+
+    // Validate Bill Qty
+    if (qty < 0 || qty > balQty) {
+      BaseUtitiles.showToast(
+        'Bill Qty should not exceed PO Bal Qty',
+      );
+
+      Itemlist_qtyControllers[index].text = "0.0";
+
+      // Reset local item calculations
+      item.billQty = 0.0;
+      item.amount = 0.0;
+      item.disc_Amt = 0.0;
+      item.sgstAmt = 0.0;
+      item.cgstAmt = 0.0;
+      item.igstAmt = 0.0;
+      item.netAmount = 0.0;
+
+      // Update matching API item
+      final apiItems =
+          suppBillAppEditListValue[0].materialPurOrdBilldetLink;
+
+      final apiIndex = apiItems.indexWhere(
+            (e) => e.detId == item.detId,
+      );
+
+      if (apiIndex != -1) {
+        final apiItem = apiItems[apiIndex];
+
+        apiItem.billQty = 0.0;
+        apiItem.amount = 0.0;
+        apiItem.discAmt = 0.0;
+        apiItem.sgstAmt = 0.0;
+        apiItem.cgstAmt = 0.0;
+        apiItem.igstAmt = 0.0;
+        apiItem.netAmount = 0.0;
+      }
+
+      getSupplierBillItemViewDbList.refresh();
+      suppBillAppEditListValue.refresh();
+
+      // Save zero values to database
+      await suppBillAppService.updateBillItemCalculation(
+        item.detId,
+        {
+          'billQty': 0.0,
+          'amount': 0.0,
+          'disc_Amt': 0.0,
+          'sgstAmt': 0.0,
+          'cgstAmt': 0.0,
+          'igstAmt': 0.0,
+          'netAmount': 0.0,
+        },
+      );
+
+      syncSupplierBillItemTotals();
+      return;
+    }
+
+    // Calculate Amount
+    final rate = toDouble(item.rate);
+    final amount = roundToTwo(qty * rate);
+
+    // Calculate Discount
+    final discountPercentage = toDouble(item.disc_Per);
+
+    final discountAmount = roundToTwo(
+      amount * discountPercentage / 100,
     );
+
+    // Calculate Taxable Amount
+    final taxableAmount = roundToTwo(
+      amount - discountAmount,
+    );
+
+    // Calculate SGST
+    final sgstAmount = roundToTwo(
+      taxableAmount * toDouble(item.sgstPer) / 100,
+    );
+
+    // Calculate CGST
+    final cgstAmount = roundToTwo(
+      taxableAmount * toDouble(item.cgstPer) / 100,
+    );
+
+    // Calculate IGST
+    final igstAmount = roundToTwo(
+      taxableAmount * toDouble(item.igstPer) / 100,
+    );
+
+    // Calculate Net Amount
+    final netAmount = roundToTwo(
+      taxableAmount +
+          sgstAmount +
+          cgstAmount +
+          igstAmount,
+    );
+
+    // Update local item
+    item.billQty = qty;
+    item.amount = amount;
+    item.disc_Amt = discountAmount;
+    item.sgstAmt = sgstAmount;
+    item.cgstAmt = cgstAmount;
+    item.igstAmt = igstAmount;
+    item.netAmount = netAmount;
+
+    // Update matching API item
+    final apiItems =
+        suppBillAppEditListValue[0].materialPurOrdBilldetLink;
+
+    final apiIndex = apiItems.indexWhere(
+          (e) => e.detId == item.detId,
+    );
+
+    if (apiIndex != -1) {
+      final apiItem = apiItems[apiIndex];
+
+      apiItem.billQty = qty;
+      apiItem.amount = amount;
+      apiItem.discAmt = discountAmount;
+      apiItem.sgstAmt = sgstAmount;
+      apiItem.cgstAmt = cgstAmount;
+      apiItem.igstAmt = igstAmount;
+      apiItem.netAmount = netAmount;
+    }
+
+    // Refresh reactive lists
+    getSupplierBillItemViewDbList.refresh();
+    suppBillAppEditListValue.refresh();
+
+    // Save database
+    await suppBillAppService.updateBillItemCalculation(
+      item.detId,
+      {
+        'billQty': qty,
+        'amount': amount,
+        'disc_Amt': discountAmount,
+        'sgstAmt': sgstAmount,
+        'cgstAmt': cgstAmount,
+        'igstAmt': igstAmount,
+        'netAmount': netAmount,
+      },
+    );
+
+    // Update aggregate totals
+    syncSupplierBillItemTotals();
   }
+
 
   textControllersInitiate() {
     Itemlist_qtyControllers.add(TextEditingController());
