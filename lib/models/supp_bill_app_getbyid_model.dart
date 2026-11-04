@@ -416,7 +416,8 @@ class MaterialPurOrdBilldetLink {
   double?amount;
   double? netAmount;
   int? status;
-  int? approxDays;
+  double? approxDays;
+  String? expiryDate;
 
   MaterialPurOrdBilldetLink({
     this.detId,
@@ -450,6 +451,7 @@ class MaterialPurOrdBilldetLink {
     this.netAmount,
     this.status,
     this.approxDays,
+    this.expiryDate
   });
 
   factory MaterialPurOrdBilldetLink.fromJson(
@@ -505,6 +507,7 @@ class MaterialPurOrdBilldetLink {
 
       status: json["Status"] ?? json["status"],
       approxDays: json["approxDays"],
+      expiryDate: json["expiryDate"],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -539,6 +542,7 @@ class MaterialPurOrdBilldetLink {
     "NetAmount": netAmount,
     "Status": status,
     "approxDays": approxDays,
+    "expiryDate": expiryDate
   };
 }
 

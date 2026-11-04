@@ -1022,8 +1022,11 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                               ),
                             ),
                             InkWell(
-                              onTap: () =>
-                                  showAmountDetailsDialog(context, item),
+                              onTap: () => showAmountDetailsDialog(
+                                context,
+                                item,
+                                index,
+                              ),
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -1089,18 +1092,21 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           leftField: _supplierInput(
                             context,
                             controller: supplierBillApprovalController
-                                .Itemlist_qtyControllers[index],
+                                .itemlist_qtyControllers[index],
                             readOnly: false,
                             onChanged: (value) async {
                               await supplierBillApprovalController
                                   .updateBillQty(
-                                index,
-                                value,
-                              );
+                                      index,
+                                      value,
+                                      supplierBillApprovalController
+                                          .suppBillAppEditListValue[0]
+                                          .result
+                                          .poBillType);
                             },
                             onTap: () {
                               final controller = supplierBillApprovalController
-                                  .Itemlist_qtyControllers[index];
+                                  .itemlist_qtyControllers[index];
 
                               if (controller.text == '0.0' ||
                                   controller.text == '0') {
@@ -1112,7 +1118,19 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           rightField: _supplierInput(
                             context,
                             initialValue: item.rate.toString(),
-                            readOnly: true,
+                            readOnly: supplierBillApprovalController
+                                .suppBillAppEditListValue[0]
+                                .result
+                                .poBillType == "P",
+                            onChanged: (value) {
+                              if (supplierBillApprovalController
+                                  .suppBillAppEditListValue[0]
+                                  .result
+                                  .poBillType == "G") {
+                                supplierBillApprovalController
+                                    .updateGeneralBillItem(index, 'rate', value);
+                              }
+                            },
                             margin: const EdgeInsets.only(left: 8),
                           ),
                         ),
@@ -1125,34 +1143,49 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                             leftLabel: 'Desc',
                             leftField: _supplierInput(
                               context,
-                              initialValue: item.description.toString(),
-                              readOnly: true,
+                              initialValue: item.description ?? '',
+                              readOnly: supplierBillApprovalController
+                                  .suppBillAppEditListValue[0]
+                                  .result
+                                  .poBillType == "P",
                               validateNumber: false,
+                              onChanged: (value) {
+                                if (supplierBillApprovalController
+                                    .suppBillAppEditListValue[0]
+                                    .result
+                                    .poBillType == "G") {
+                                  supplierBillApprovalController
+                                      .updateGeneralBillItem(index, 'description', value);
+                                }
+                              },
                             ),
                             rightLabel: 'Amount',
                             rightField: Container(
-                              margin: const EdgeInsets.only(left: 8),
-                              height: BaseUtitiles.getheightofPercentage(
-                                  context, 4),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.05),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Theme.of(context).primaryColor,
+                                margin: const EdgeInsets.only(left: 8),
+                                height: BaseUtitiles.getheightofPercentage(
+                                    context, 4),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                (item.amount ?? 0).toString(),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    (item.amount ?? 0).toString(),
+                                    softWrap: false,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                )),
                           ),
                         ),
                       ],
@@ -1168,146 +1201,310 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
     );
   }
 
-  void showAmountDetailsDialog(BuildContext context, item) {
+  final Map<String, TextEditingController> amountDetailControllers = {
+    'Disc %': TextEditingController(),
+    'Disc Amt': TextEditingController(),
+    'SGST %': TextEditingController(),
+    'SGST Amt': TextEditingController(),
+    'CGST %': TextEditingController(),
+    'CGST Amt': TextEditingController(),
+    'IGST %': TextEditingController(),
+    'IGST Amt': TextEditingController(),
+    'Net Amount': TextEditingController(),
+    'Expiry Date': TextEditingController(),
+  };
+
+  final Map<String, IconData> amountDetailIcons = {
+    'Disc %': Icons.percent_rounded,
+    'Disc Amt': Icons.currency_rupee_rounded,
+    'SGST %': Icons.percent_rounded,
+    'SGST Amt': Icons.currency_rupee_rounded,
+    'CGST %': Icons.percent_rounded,
+    'CGST Amt': Icons.currency_rupee_rounded,
+    'IGST %': Icons.percent_rounded,
+    'IGST Amt': Icons.currency_rupee_rounded,
+    'Net Amount': Icons.account_balance_wallet_rounded,
+    'Expiry Date': Icons.calendar_month_sharp,
+  };
+
+  void _syncAmountDetailControllers(item, String currentField) {
+    String amount(dynamic value) {
+      final number = double.tryParse(value?.toString() ?? '') ?? 0.0;
+      return number.toStringAsFixed(2);
+    }
+
+    final updatedValues = {
+      'Disc Amt': item.disc_Amt,
+      'SGST %': item.sgstPer,
+      'SGST Amt': item.sgstAmt,
+      'CGST %': item.cgstPer,
+      'CGST Amt': item.cgstAmt,
+      'IGST %': item.igstPer,
+      'IGST Amt': item.igstAmt,
+      'Net Amount': item.netAmount,
+    };
+
+    updatedValues.forEach((key, value) {
+      // Don't overwrite the field currently being typed
+      if (key == currentField) return;
+
+      amountDetailControllers[key]?.text = amount(value);
+    });
+  }
+
+  void showAmountDetailsDialog(BuildContext context, item, int index) {
     final Color primaryColor = Theme.of(context).primaryColor;
 
-    final List<Map<String, String>> details = [
-      {'label': 'Disc %', 'value': item.disc_Per.toString()},
-      {'label': 'Disc Amt', 'value': item.disc_Amt.toString()},
-      {'label': 'SGST %', 'value': item.sgstPer.toString()},
-      {'label': 'SGST Amt', 'value': item.sgstAmt.toString()},
-      {'label': 'CGST %', 'value': item.cgstPer.toString()},
-      {'label': 'CGST Amt', 'value': item.cgstAmt.toString()},
-      {'label': 'IGST %', 'value': item.igstPer.toString()},
-      {'label': 'IGST Amt', 'value': item.igstAmt.toString()},
-    ];
+    final Map<String, String> values = {
+      'Disc %': item.disc_Per.toString(),
+      'Disc Amt': item.disc_Amt.toString(),
+      'SGST %': item.sgstPer.toString(),
+      'SGST Amt': item.sgstAmt.toString(),
+      'CGST %': item.cgstPer.toString(),
+      'CGST Amt': item.cgstAmt.toString(),
+      'IGST %': item.igstPer.toString(),
+      'IGST Amt': item.igstAmt.toString(),
+      'Net Amount': item.netAmount.toString(),
+      'Expiry Date': item.expiryDate ?? "Not Applicable".toString(),
+    };
+
+    values.forEach((key, value) {
+      amountDetailControllers[key]?.text = value;
+    });
 
     showDialog(
       context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          titlePadding: const EdgeInsets.fromLTRB(18, 10, 12, 4),
-          contentPadding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-          title: Row(
-            children: [
-              Icon(
-                Icons.receipt_long_rounded,
-                color: primaryColor,
+        builder: (dialogContext)
+    {
+      return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
               ),
-              const SizedBox(width: 10),
-              const Expanded(
-                child: Text(
-                  'Amount Details',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                icon: const Icon(Icons.close_rounded),
-              ),
-            ],
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              titlePadding: const EdgeInsets.fromLTRB(18, 12, 12, 4),
+              contentPadding: const EdgeInsets.fromLTRB(18, 8, 18, 16),
+              title: Row(
                 children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: details.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 2.2,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item = details[index];
-
-                      return Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.06),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: primaryColor.withOpacity(0.15),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              item['label']!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  item['value']!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                  Icon(
+                    Icons.receipt_long_rounded,
+                    color: primaryColor,
                   ),
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      'Amount Details',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Net Amount',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '₹ ${item.netAmount}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    icon: const Icon(Icons.close_rounded),
                   ),
                 ],
               ),
-            ),
-          ),
-        );
+              content: SizedBox(
+                width: double.maxFinite,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          const spacing = 10.0;
+                          const columnCount = 2;
+
+                          final fieldWidth =
+                              (constraints.maxWidth -
+                                  spacing * (columnCount - 1)) /
+                                  columnCount;
+
+                          final fields = values.keys
+                              .where((e) =>
+                          e != 'Net Amount' && e != 'Expiry Date')
+                              .toList();
+
+                          return Wrap(
+                            spacing: spacing,
+                            runSpacing: 10,
+                            children: fields.map((field) {
+                              return SizedBox(
+                                width: fieldWidth,
+                               child: _buildAmountDetailField(
+                                field,
+                                primaryColor,
+                                item: item,
+                                index: index,
+                                setDialogState: setDialogState,
+                              ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      // Net Amount
+                      _buildAmountDetailField(
+                        'Expiry Date',
+                        primaryColor,
+                        item: item,
+                        index: index,
+                        setDialogState: setDialogState,
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      _buildAmountDetailField(
+                        'Net Amount',
+                        primaryColor,
+                        item: item,
+                        index: index,
+                        setDialogState: setDialogState,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
       },
+    );
+  }
+
+  Widget _buildAmountDetailField(
+      String label,
+      Color primaryColor, {
+        required dynamic item,
+        required int index,
+        required StateSetter setDialogState,
+      }) {
+    final bool isNetAmount = label == 'Net Amount';
+    final poBillType = supplierBillApprovalController
+        .suppBillAppEditListValue[0].result.poBillType;
+
+    final double sgstValue = double.tryParse(
+      amountDetailControllers['SGST %']?.text.trim() ?? '0',
+    ) ??
+        0.0;
+
+    final double igstValue = double.tryParse(
+      amountDetailControllers['IGST %']?.text.trim() ?? '0',
+    ) ??
+        0.0;
+
+    final bool isEditable = poBillType == "G" &&
+        ['Disc %', 'SGST %', 'IGST %'].contains(label);
+
+    final bool isReadOnly = !isEditable ||
+        (label == 'IGST %' && sgstValue != 0) ||
+        (label == 'SGST %' && igstValue != 0);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isNetAmount
+            ? primaryColor.withOpacity(0.10)
+            : isEditable && !isReadOnly
+            ? Colors.white
+            : const Color(0xFFF5F6FA),
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(
+          color: isNetAmount
+              ? primaryColor.withOpacity(0.30)
+              : isEditable && !isReadOnly
+              ? primaryColor.withOpacity(0.45)
+              : const Color(0xFFE8EAF0),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        child: TextFormField(
+          controller: amountDetailControllers[label],
+          readOnly: isReadOnly,
+          cursorColor: primaryColor,
+
+          onChanged: (value) {
+            if (!isEditable) return;
+
+            final field = label == 'Disc %'
+                ? 'disc'
+                : label == 'SGST %'
+                ? 'sgst'
+                : 'igst';
+
+            supplierBillApprovalController.updateGeneralBillItem(
+              index,
+              field,
+              value,
+            );
+
+            _syncAmountDetailControllers(item, label);
+
+            if (label == 'SGST %' || label == 'IGST %') {
+              setDialogState(() {});
+            }
+          },
+
+          onTap: () {
+            if (!isEditable || isReadOnly) return;
+
+            final controller = amountDetailControllers[label];
+
+            final value = double.tryParse(controller?.text.trim() ?? '');
+
+            if (value == 0) {
+              controller?.clear();
+            }
+          },
+          keyboardType: const TextInputType.numberWithOptions(
+            decimal: true,
+            signed: true,
+          ),
+          style: TextStyle(
+            color: isNetAmount
+                ? primaryColor
+                : const Color(0xFF29234D),
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8),
+            border: InputBorder.none,
+            labelText: label,
+            labelStyle: TextStyle(
+              color: isNetAmount
+                  ? primaryColor
+                  : Colors.grey.shade600,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 30,
+              minHeight: 30,
+            ),
+            prefixIcon: Icon(
+              amountDetailIcons[label] ?? Icons.calculate_rounded,
+              size: 17,
+              color: primaryColor,
+            ),
+            suffixIcon: isNetAmount
+                ? Icon(
+              Icons.check_circle_rounded,
+              size: 17,
+              color: primaryColor,
+            )
+                : null,
+          ),
+        ),
+      ),
     );
   }
 }

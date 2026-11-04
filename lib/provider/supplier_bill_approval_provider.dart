@@ -9,7 +9,8 @@ class SupplierBillAppProvider{
     try {
       final value = await ApiManager.getAPICall(type=="G"?"${ApiConstant.GET_SUPP_BILL_DIRECT_APP_EDIT_API}?id=$reqId":"${ApiConstant.GET_SUPP_BILL_APP_EDIT_API}?id=$reqId");
       return suppBillAppGetByIdFromJson(value);
-    } catch (error) {
+    } catch (error,e) {
+      print("Error == $e");
       print("Error == $error");
       return null;
     }

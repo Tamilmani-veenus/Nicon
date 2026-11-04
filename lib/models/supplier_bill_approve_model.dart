@@ -295,7 +295,7 @@ class MaterialPurOrdBilldetLink {
   double? inwQty;
   double? poRate;
   String? remarks;
-  int? approxDays;
+  double? approxDays;
   String? expiryDate;
   String? poBillDescription;
 
