@@ -89,19 +89,23 @@ class SupplierBillApprovalController extends GetxController {
 
       if (value != null) {
         if (value.success == true) {
-          await delete_SuppBill_itemlist_Table();
+          if(type!="G" && type!="P"){
+            BaseUtitiles.showToast("Rental Bill – Work in Progress");
+          }else {
+            await delete_SuppBill_itemlist_Table();
 
-          suppBillAppEditListValue.value = [value];
+            suppBillAppEditListValue.value = [value];
 
-          await supplierBillSaveDetTable();
-          await getSupplierBillSaveDetData();
+            await supplierBillSaveDetTable();
+            await getSupplierBillSaveDetData();
 
-          await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SupplierBillEntry(heading: MenuName),
-            ),
-          );
+            await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SupplierBillEntry(heading: MenuName),
+              ),
+            );
+          }
         } else {
           BaseUtitiles.showToast(
               value.message ?? 'Something went wrong..');
@@ -114,8 +118,7 @@ class SupplierBillApprovalController extends GetxController {
 
   Future<void> suppBillApprovalImageApi(int reqId, dynamic type) async {
     await ClickUtils.run(() async {
-      final value =
-      await SupplierBillAppProvider.SupplierBillImgListAPI(reqId, type);
+      final value = await SupplierBillAppProvider.SupplierBillImgListAPI(reqId, type);
 
       if (value != null) {
         supplierBillImageList.value = List<String>.from(
