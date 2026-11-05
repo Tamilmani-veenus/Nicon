@@ -59,6 +59,8 @@ class ApproveSuppBillApiModel {
   String? debitNoteRemarks;
   String? debitNoteType;
   bool? eWayBill;
+  bool? gstApply;
+  double? discntPercentage;
   int? eWayBillNo;
   int? subContractorId;
   String? eWayBillImage;
@@ -86,6 +88,8 @@ class ApproveSuppBillApiModel {
     this.billDate,
     this.purOrdMasId,
     this.workOrdMasId,
+    this.gstApply,
+    this.discntPercentage,
     this.reqOrdMasId,
     this.frieghtCharges,
     this.labourCharges,
@@ -147,6 +151,8 @@ class ApproveSuppBillApiModel {
     dcNo: json["dcNo"],
     dcDate: json["dcDate"],
     invoiceNo: json["invoiceNo"],
+    gstApply: json["gstApply"],
+    discntPercentage: json["discntPercentage"],
     billDate: json["billDate"],
     purOrdMasId: json["purOrdMasId"],
     workOrdMasId: json["workOrdMasId"],
@@ -211,6 +217,8 @@ class ApproveSuppBillApiModel {
     "dcNo": dcNo,
     "dcDate": dcDate,
     "invoiceNo": invoiceNo,
+    "gstApply": gstApply,
+    "discntPercentage": discntPercentage,
     "billDate": billDate,
     "purOrdMasId": purOrdMasId,
     "workOrdMasId": workOrdMasId,
@@ -289,6 +297,7 @@ class MaterialPurOrdBilldetLink {
   String? remarks;
   double? approxDays;
   String? expiryDate;
+  String? poBillDescription;
 
   MaterialPurOrdBilldetLink({
     this.id,
@@ -315,6 +324,7 @@ class MaterialPurOrdBilldetLink {
     this.remarks,
     this.approxDays,
     this.expiryDate,
+    this.poBillDescription,
   });
 
   factory MaterialPurOrdBilldetLink.fromJson(Map<String, dynamic> json) => MaterialPurOrdBilldetLink(
@@ -342,6 +352,7 @@ class MaterialPurOrdBilldetLink {
     remarks: json["remarks"],
     approxDays: json["approxDays"],
     expiryDate: json["expiryDate"],
+    poBillDescription: json["poBillDescription"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -369,5 +380,6 @@ class MaterialPurOrdBilldetLink {
     "remarks": remarks,
     "approxDays": approxDays,
     "expiryDate": expiryDate,
+    "poBillDescription": poBillDescription,
   };
 }

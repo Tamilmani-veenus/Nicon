@@ -291,6 +291,32 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                   ),
                 ),
                 onTap: () async {
+                  await supplierBillApprovalController.getSupplierBillSaveDetData();
+                  final netAmt =
+                      double.tryParse(supplierBillApprovalController.controllers['Net Amount']?.text ?? '0') ?? 0.0;
+
+                  if (netAmt <= 0) {
+                    BaseUtitiles.showToast('Net Amount should be greater than 0');
+                    return;
+                  }
+
+                  for (int i = 0;
+                  i < supplierBillApprovalController.itemlist_qtyControllers.length;
+                  i++) {
+                    final qty = double.tryParse(
+                      supplierBillApprovalController
+                          .itemlist_qtyControllers[i].text.trim(),
+                    ) ??
+                        0.0;
+
+                    if (qty <= 0) {
+                      BaseUtitiles.showToast(
+                        'Bill Quantity should be greater than 0',
+                      );
+                      return;
+                    }
+                  }
+
                   ApproveAlert(context);
                 },
               ),
@@ -343,8 +369,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                         fields: const [
                           'Freight Charges',
                           'Labour Charges',
-                          'Other Charges',
-                          'Remarks'
+                          'Other Charges'
                         ],
                       ),
                       const SizedBox(height: 14),
@@ -381,6 +406,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
                           'Advance Amount',
                           'Deduction Amount',
                           'Net Pay Amount',
+                          'Remarks'
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -458,32 +484,33 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
               ),
               if (title == 'Additional Charges') ...[
                 const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: supplierBillApprovalController
-                            .isGstInclusive.value,
-                        activeColor: primaryColor,
-                        onChanged: (value) {
-                          setState(() {
-                            supplierBillApprovalController.isGstInclusive.value = value ?? false;
-                          });
+                Obx(()=> Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          value: supplierBillApprovalController
+                              .isGstInclusive.value,
+                          activeColor: primaryColor,
+                          onChanged: (value) {
+                            setState(() {
+                              supplierBillApprovalController.isGstInclusive.value = value ?? false;
+                            });
 
-                          calculateSupplierBillAmounts();
-                        },
-                      ),
-                      const Text(
-                        'GST Inclusive',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF29234D),
+                            calculateSupplierBillAmounts();
+                          },
                         ),
-                      ),
-                    ],
+                        const Text(
+                          'GST Inclusive',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF29234D),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -524,24 +551,51 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
   }
 
   Widget _buildTextField(String label) {
+    final controllers = supplierBillApprovalController.controllers;
+
     final bool isEditable = editableFields.contains(label);
     final bool isNetPay = label == 'Net Pay Amount';
     final bool isRemarks = label == 'Remarks';
 
+    // Advance Amount condition
     final advanceAmount = double.tryParse(
-      supplierBillApprovalController.controllers['Advance Amount']?.text ?? '0',
+      controllers['Advance Amount']?.text.trim() ?? '0',
     ) ??
         0.0;
 
-    final isDeductionEnabled = advanceAmount > 0;
+    final bool isDeductionEnabled = advanceAmount > 0;
 
-    final Color fieldColor = isEditable
+    // Read current GST values
+    final sgstValue = double.tryParse(
+      controllers['S-GST %']?.text.trim() ?? '0',
+    ) ??
+        0.0;
+
+    final igstValue = double.tryParse(
+      controllers['I-GST %']?.text.trim() ?? '0',
+    ) ??
+        0.0;
+
+    // GST mutual exclusion
+    final bool hasSgstValue = sgstValue != 0;
+    final bool hasIgstValue = igstValue != 0;
+
+    final bool isFrozen =
+        (label == 'I-GST %' && hasSgstValue) ||
+            (label == 'S-GST %' && hasIgstValue) ||
+            (label == 'C-GST %') ||
+            (label == 'Deduction Amount' && !isDeductionEnabled);
+
+    final bool canEdit = isEditable && !isFrozen;
+
+    // Field colors
+    final Color fieldColor = canEdit
         ? Colors.white
         : isNetPay
         ? primaryColor.withOpacity(0.10)
         : const Color(0xFFF5F6FA);
 
-    final Color borderColor = isEditable
+    final Color borderColor = canEdit
         ? primaryColor.withOpacity(0.45)
         : isNetPay
         ? primaryColor.withOpacity(0.30)
@@ -553,7 +607,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
         borderRadius: BorderRadius.circular(13),
         border: Border.all(
           color: borderColor,
-          width: isEditable ? 1.3 : 1,
+          width: canEdit ? 1.3 : 1,
         ),
       ),
       child: Padding(
@@ -562,35 +616,36 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
           vertical: 5,
         ),
         child: TextFormField(
-          controller: supplierBillApprovalController.controllers[label],
-          readOnly: !isEditable ||
-              (label == 'Deduction Amount' && !isDeductionEnabled) ||
-              (label == 'I-GST %' && isSgstMode) ||
-              (label == 'S-GST %' && isIgstMode) ||
-              (label == 'C-GST %'),
+          controller: controllers[label],
+
+          readOnly: !canEdit,
+
           keyboardType: isRemarks
               ? TextInputType.text
               : const TextInputType.numberWithOptions(
             signed: true,
             decimal: true,
           ),
+
           onTap: () {
-            final isFrozen =
-                (label == 'I-GST %' && isSgstMode) ||
-                    (label == 'S-GST %' && isIgstMode) ||
-                    (label == 'C-GST %');
+            if (!canEdit) return;
 
-            if (!isEditable || isFrozen) return;
+            final textController = controllers[label];
 
-            final textController =
-            supplierBillApprovalController.controllers[label];
-
-            final value = double.tryParse(textController?.text.trim() ?? '');
+            final value = double.tryParse(
+              textController?.text.trim() ?? '',
+            );
 
             if (value == 0) {
               textController?.clear();
+
+              // Refresh the opposite GST field's editable state
+              if (label == 'S-GST %' || label == 'I-GST %') {
+                setState(() {});
+              }
             }
           },
+
           onChanged: (value) {
             if (label == 'Deduction Amount') {
               if (validateDeduction(value)) {
@@ -598,6 +653,9 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
               }
             } else if (label == 'S-GST %' || label == 'I-GST %') {
               handleGstChange(label, value);
+
+              // Refresh GST field readOnly states
+              setState(() {});
             } else if (label == 'Freight Charges' ||
                 label == 'Labour Charges' ||
                 label == 'Other Charges' ||
@@ -608,51 +666,61 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
               calculateSupplierBillAmounts();
             }
           },
+
           cursorColor: primaryColor,
+
           style: TextStyle(
             color: isNetPay
                 ? primaryColor
-                : isEditable
+                : canEdit
                 ? const Color(0xFF29234D)
                 : const Color(0xFF4B5060),
             fontSize: 13,
-            fontWeight: isNetPay || isEditable
+            fontWeight: isNetPay || canEdit
                 ? FontWeight.w600
                 : FontWeight.w500,
           ),
+
           decoration: InputDecoration(
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 8),
             border: InputBorder.none,
             labelText: label,
+
             labelStyle: TextStyle(
-              color: isEditable
+              color: canEdit
                   ? primaryColor
                   : Colors.grey.shade600,
               fontSize: 11,
-              fontWeight:
-              isEditable ? FontWeight.w600 : FontWeight.normal,
+              fontWeight: canEdit
+                  ? FontWeight.w600
+                  : FontWeight.normal,
             ),
+
             floatingLabelStyle: TextStyle(
               color: primaryColor,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
+
             prefixIconConstraints: const BoxConstraints(
               minWidth: 30,
               minHeight: 30,
             ),
+
             prefixIcon: Icon(
               fieldIcons[label] ?? Icons.edit_outlined,
               size: 17,
-              color: isEditable || isNetPay
+              color: canEdit || isNetPay
                   ? primaryColor
                   : Colors.grey.shade500,
             ),
+
             suffixIconConstraints: const BoxConstraints(
               minWidth: 20,
               minHeight: 25,
             ),
+
             suffixIcon: isNetPay
                 ? Icon(
               Icons.check_circle_rounded,

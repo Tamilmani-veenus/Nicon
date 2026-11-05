@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:nicon/controller/pendinglistcontroller.dart';
 import 'package:nicon/controller/punch_in_controller.dart';
 import '../db_model/supp_bill_app_model.dart';
 import '../db_services/supplier_bill_app_service.dart';
@@ -22,7 +24,13 @@ class SupplierBillApprovalController extends GetxController {
   RxList<MaterialPurOrdBilldetLink> getRequestDetList = <MaterialPurOrdBilldetLink>[].obs;
 
   var supplierBillAppDetModel = SupplierBillAppDet();
-  List<TextEditingController> Itemlist_qtyControllers = [];
+  List<TextEditingController> itemlist_qtyControllers = [];
+  List<TextEditingController> itemlist_descControllers = [];
+  List<TextEditingController> itemlist_rateControllers = [];
+  List<TextEditingController> itemlist_discPerControllers = [];
+  List<TextEditingController> itemlist_sgstPerControllers = [];
+  List<TextEditingController> itemlist_cgstPerControllers = [];
+  List<TextEditingController> itemlist_igstPerControllers = [];
   int reqId = 0;
   RxInt selectedSupplierId = 0.obs;
   var suppBillAppService = SuppBillAppService();
@@ -31,6 +39,8 @@ class SupplierBillApprovalController extends GetxController {
   double supplierBillItemNetTotal = 0.0;
   LoginController loginController = Get.put(LoginController());
   PunchInController punchInController = Get.put(PunchInController());
+  PendingListController pendingListController = Get.put(PendingListController());
+
 
   @override
   void onClose() {
@@ -73,29 +83,28 @@ class SupplierBillApprovalController extends GetxController {
     'Remarks': TextEditingController(),
   };
 
-  Future suppBillApprovalEditApi(int reqId, context,MenuName) async {
+  Future suppBillApprovalEditApi(int reqId, type, context,MenuName) async {
     await ClickUtils.run(() async {
-      final value = await SupplierBillAppProvider.SupplierBillGetByIdAPI(reqId);
+      final value = await SupplierBillAppProvider.SupplierBillGetByIdAPI(reqId,type);
 
       if (value != null) {
         if (value.success == true) {
-          await delete_SuppBill_itemlist_Table();
+          if(type!="G" && type!="P"){
+            BaseUtitiles.showToast("Rental Bill – Work in Progress");
+          }else {
+            await delete_SuppBill_itemlist_Table();
 
-          getSupplierBillItemViewDbList.clear();
-          suppBillAppEditListValue.value = [value];
+            suppBillAppEditListValue.value = [value];
 
-          if (suppBillAppEditListValue.isNotEmpty) {
             await supplierBillSaveDetTable();
             await getSupplierBillSaveDetData();
+
             await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    SupplierBillEntry(heading: MenuName),
+                builder: (context) => SupplierBillEntry(heading: MenuName),
               ),
             );
-          } else {
-            BaseUtitiles.showToast("No Data Found");
           }
         } else {
           BaseUtitiles.showToast(
@@ -109,8 +118,7 @@ class SupplierBillApprovalController extends GetxController {
 
   Future<void> suppBillApprovalImageApi(int reqId, dynamic type) async {
     await ClickUtils.run(() async {
-      final value =
-      await SupplierBillAppProvider.SupplierBillImgListAPI(reqId, type);
+      final value = await SupplierBillAppProvider.SupplierBillImgListAPI(reqId, type);
 
       if (value != null) {
         supplierBillImageList.value = List<String>.from(
@@ -157,6 +165,7 @@ class SupplierBillApprovalController extends GetxController {
       tdsAmount: double.tryParse(controllers['TDS Amt']!.text) ?? 0.0,
       tcsPercentage: double.tryParse(controllers['TCS %']!.text) ?? 0.0,
       tcsAmount: double.tryParse(controllers['TCS Amt']!.text) ?? 0.0,
+      discntPercentage: double.tryParse(controllers['Discount %']!.text) ?? 0.0,
       discntAmount: double.tryParse(controllers['Disc Amt']!.text) ?? 0.0,
       netAmount: double.tryParse(controllers['Net Amount']!.text) ?? 0.0,
       netPayAmount: double.tryParse(controllers['Net Pay Amount']!.text) ?? 0.0,
@@ -171,77 +180,92 @@ class SupplierBillApprovalController extends GetxController {
       approveBy: int.tryParse(loginController.EmpId()),
       approveDate: BaseUtitiles().convertToUtcIso(punchInController.currentDate!),
       debitNoteAmt: value.debitNoteAmt,
-      debitNoteRemarks: value.debitNoteRemarks,
+      debitNoteRemarks: value.debitNoteRemarks ?? "-",
       debitNoteType: value.debitNoteType,
       eWayBill: value.eWayBill,
-      eWayBillNo: value.eWayBillNo,
+      eWayBillNo: value.eWayBillNo ?? 0,
       subContractorId: value.subContractorId,
       eWayBillImage: value.eWayBillImage,
       eWayBillDate: value.eWayBillDate,
       tallyType: value.tallyType,
-      materialInwMasId: value.materialInwMasId,
+      materialInwMasId: value.materialInwMasId ?? "0",
       companyId: value.companyId,
       workOrderId: value.workOrderId,
       fromDate: value.fromDate,
       toDate: value.toDate,
-      // materialPurOrdBilldetLink: getPurOrdBillDet(value.id)
+      gstApply: isGstInclusive.value,
+      totalAmount: 0,
+      materialPurOrdBilldetLink: getPurOrdBillDet(value.id)
     ));
 
-    // final list = await Mrn_Req_provider.SaveMaterialScreenEntryAPI(
-    //     body, id, saveButton.value, context);
+    final list = await SupplierBillAppProvider.approveSuppBillApproveAPI(body, value.id);
+    final decodedJson = jsonDecode(body);
     //
-    // if (list != null) {
-    //   if (list["success"] == true) {
-    //     if (saveButton.value == RequestConstant.VERIFY) {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await pendingListController.getPendingList();
-    //       BaseUtitiles.popMultiple(context, count: 4);
-    //     } else {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await getMrn_Req_EntryList();
-    //       delete_MaterialIntent_itemlist_Table();
-    //       Material_itemview_GetDbList.clear();
-    //       BaseUtitiles.popMultiple(context, count: 3);
-    //     }
-    //   } else {
-    //     BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
-    //     BaseUtitiles.popMultiple(context, count: 2);
-    //   }
-    // } else {
-    //   BaseUtitiles.showToast("Something went wrong..");
-    //   BaseUtitiles.popMultiple(context, count: 2);
-    // }
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(decodedJson);
+
+    debugPrint(prettyJson, wrapWidth: 1024);
+
+    if (list != null) {
+      if (list["success"] == true) {
+          BaseUtitiles.showToast(list["message"]);
+          await pendingListController.getPendingList();
+          BaseUtitiles.popMultiple(context, count: 4);
+      } else {
+        BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    } else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 2);
+    }
   }
 
-  // List<MaterialPurOrdBilldetLink>? getPurOrdBillDet(materialReqOrdMasid) {
-  //   getRequestDetList.value=[];
-  //   getSupplierBillItemViewDbList.value.forEach((element) {
-  //     if (element.qty > 0) {
-  //       var list = MMatReqMasLink(
-  //           id: element.reqDetId,
-  //           materialReqOrdMasid: materialReqOrdMasid != 0 ? materialReqOrdMasid : 0,
-  //           materialId: element.materialid,
-  //           qty: element.qty,
-  //           scaleId: element.scaleId,
-  //           siteId: siteController.selectedsiteId.value,
-  //           reqQty: isSubmit || isResubmit ? element.qty : isVerify ? element.reqQty : element.qty,
-  //           remarks: element.remarks,
-  //           reqDescription: element.desc,
-  //           preApproveStatus: "N",
-  //           approveStatus: "N",
-  //           approxDays: ReqType.value=="CP"? element.approxdays:0
-  //       );
-  //       getRequestDetList.value.add(list);
-  //     }
-  //   });
-  //   return getRequestDetList.value;
-  // }
+  List<MaterialPurOrdBilldetLink>? getPurOrdBillDet(int materialReqOrdMasId) {
+    getRequestDetList.clear();
+
+    for (var element in getSupplierBillItemViewDbList) {
+      if ((element.billQty ?? 0) > 0) {
+        final list = MaterialPurOrdBilldetLink(
+          id: element.detId,
+          materialPurOrdBillMasId: materialReqOrdMasId,
+          purOrdDetId: element.purOrdDetId,
+          workOrdDetId: element.workOrdDetId,
+          reqOrdDetId: element.reqOrdDetId,
+          materialId: element.materialId,
+          scaleId: element.scaleID,
+          qty: element.billQty ?? 0.0,
+          rate: element.rate ?? 0.0,
+          amount: element.amount ?? 0.0,
+          sgstPercentage: element.sgstPer ?? 0.0,
+          sgstAmount: element.sgstAmt ?? 0.0,
+          cgstPercentage: element.cgstPer ?? 0.0,
+          cgstAmount: element.cgstAmt ?? 0.0,
+          igstPercentage: element.igstPer ?? 0.0,
+          igstAmount: element.igstAmt ?? 0.0,
+          discntPercentage: element.disc_Per ?? 0.0,
+          discntAmount: element.disc_Amt ?? 0.0,
+          netAmount: element.netAmount ?? 0.0,
+          inwQty: element.inwardQty ?? 0.0,
+          poRate: element.poRate ?? 0.0,
+          remarks: element.remarks ?? "-",
+          approxDays: element.approxDays ?? 0,
+          poBillDescription: element.description
+        );
+
+        getRequestDetList.add(list);
+      }
+    }
+
+    return getRequestDetList;
+  }
 
   Future supplierBillSaveDetTable() async {
     materialTableList.clear();
+    debugPrint("API List Length: ${suppBillAppEditListValue.length}");
 
-    suppBillAppEditListValue.forEach((element) {
-      element.materialPurOrdBilldetLink.forEach((val) {
+    for (var element in suppBillAppEditListValue) {
+      for (var val in element.materialPurOrdBilldetLink ?? []) {
         supplierBillAppDetModel = SupplierBillAppDet();
 
         supplierBillAppDetModel.detId = val.detId;
@@ -274,15 +298,16 @@ class SupplierBillApprovalController extends GetxController {
         supplierBillAppDetModel.amount = val.amount;
         supplierBillAppDetModel.netAmount = val.netAmount;
         supplierBillAppDetModel.status = val.status;
+        supplierBillAppDetModel.approxDays = val.approxDays;
+        supplierBillAppDetModel.expiryDate = val.expiryDate;
 
         materialTableList.add(supplierBillAppDetModel);
-      });
-    });
+      }
+    }
 
-    var savedatas =
-    await suppBillAppService.suppBillAppList_table_Save(materialTableList);
-
-    return savedatas;
+    return await suppBillAppService.suppBillAppList_table_Save(
+      materialTableList,
+    );
   }
 
   Future getSupplierBillSaveDetData() async {
@@ -304,33 +329,34 @@ class SupplierBillApprovalController extends GetxController {
       supplierBillAppDetModel.materialName = user['materialName'];
       supplierBillAppDetModel.scaleID = user['scaleID'];
       supplierBillAppDetModel.scaleName = user['scaleName'];
-      supplierBillAppDetModel.inwardQty = user['inwardQty']?.toDouble();
-      supplierBillAppDetModel.billQty = user['billQty']?.toDouble();
-      supplierBillAppDetModel.balInwQty = user['balInwQty']?.toDouble();
-      supplierBillAppDetModel.balQty = user['balQty']?.toDouble();
+      supplierBillAppDetModel.inwardQty = toDoubleValue(user['inwardQty']);
+      supplierBillAppDetModel.billQty = toDoubleValue(user['billQty']);
+      supplierBillAppDetModel.balInwQty = toDoubleValue(user['balInwQty']);
+      supplierBillAppDetModel.balQty = toDoubleValue(user['balQty']);
+      supplierBillAppDetModel.rate = toDoubleValue(user['rate']);
+      supplierBillAppDetModel.poRate = toDoubleValue(user['poRate']);
+      supplierBillAppDetModel.disc_Per = toDoubleValue(user['disc_Per']);
+      supplierBillAppDetModel.disc_Amt = toDoubleValue(user['disc_Amt']);
+      supplierBillAppDetModel.sgstPer = toDoubleValue(user['sgstPer']);
+      supplierBillAppDetModel.sgstAmt = toDoubleValue(user['sgstAmt']);
+      supplierBillAppDetModel.cgstPer = toDoubleValue(user['cgstPer']);
+      supplierBillAppDetModel.cgstAmt = toDoubleValue(user['cgstAmt']);
+      supplierBillAppDetModel.igstPer = toDoubleValue(user['igstPer']);
+      supplierBillAppDetModel.igstAmt = toDoubleValue(user['igstAmt']);
+      supplierBillAppDetModel.amount = toDoubleValue(user['amount']);
+      supplierBillAppDetModel.netAmount = toDoubleValue(user['netAmount']);
       supplierBillAppDetModel.description = user['description'];
-      supplierBillAppDetModel.rate = user['rate']?.toDouble();
-      supplierBillAppDetModel.poRate = user['poRate']?.toDouble();
-      supplierBillAppDetModel.disc_Per = user['disc_Per']?.toDouble();
-      supplierBillAppDetModel.disc_Amt = user['disc_Amt']?.toDouble();
-      supplierBillAppDetModel.remarks = user['remarks'];
-      supplierBillAppDetModel.sgstPer = user['sgstPer']?.toDouble();
-      supplierBillAppDetModel.sgstAmt = user['sgstAmt']?.toDouble();
-      supplierBillAppDetModel.cgstPer = user['cgstPer']?.toDouble();
-      supplierBillAppDetModel.cgstAmt = user['cgstAmt']?.toDouble();
-      supplierBillAppDetModel.igstPer = user['igstPer']?.toDouble();
-      supplierBillAppDetModel.igstAmt = user['igstAmt']?.toDouble();
-      supplierBillAppDetModel.vat_Type = user['vat_Type'];
-      supplierBillAppDetModel.amount = user['amount']?.toDouble();
-      supplierBillAppDetModel.netAmount = user['netAmount']?.toDouble();
       supplierBillAppDetModel.status = user['status'];
+      supplierBillAppDetModel.remarks = user['remarks'];
+      supplierBillAppDetModel.approxDays = user['approxDays'];
+      supplierBillAppDetModel.vat_Type = user['vat_Type'];
+      supplierBillAppDetModel.expiryDate = user['expiryDate'];
 
       getSupplierBillItemViewDbList.add(supplierBillAppDetModel);
     });
 
     setTextControllersValue();
   }
-
 
   void syncSupplierBillItemTotals() {
     double totalNet = 0.0;
@@ -383,9 +409,7 @@ class SupplierBillApprovalController extends GetxController {
     return double.tryParse(value?.toString() ?? '') ?? 0.0;
   }
 
-
-
-  Future<void> updateBillQty(int index, String value) async {
+  Future<void> updateBillQty(int index, String value, type) async {
     if (index < 0 || index >= getSupplierBillItemViewDbList.length) {
       return;
     }
@@ -411,61 +435,63 @@ class SupplierBillApprovalController extends GetxController {
     if (qty == null) return;
 
     // Validate Bill Qty
-    if (qty < 0 || qty > balQty) {
-      BaseUtitiles.showToast(
-        'Bill Qty should not exceed PO Bal Qty',
-      );
+    if(type=="P") {
+      if (qty < 0 || qty > balQty) {
+        BaseUtitiles.showToast(
+          'Bill Qty should not exceed PO Bal Qty',
+        );
 
-      Itemlist_qtyControllers[index].text = "0.0";
+        itemlist_qtyControllers[index].text = "0.0";
 
-      // Reset local item calculations
-      item.billQty = 0.0;
-      item.amount = 0.0;
-      item.disc_Amt = 0.0;
-      item.sgstAmt = 0.0;
-      item.cgstAmt = 0.0;
-      item.igstAmt = 0.0;
-      item.netAmount = 0.0;
+        // Reset local item calculations
+        item.billQty = 0.0;
+        item.amount = 0.0;
+        item.disc_Amt = 0.0;
+        item.sgstAmt = 0.0;
+        item.cgstAmt = 0.0;
+        item.igstAmt = 0.0;
+        item.netAmount = 0.0;
 
-      // Update matching API item
-      final apiItems =
-          suppBillAppEditListValue[0].materialPurOrdBilldetLink;
+        // Update matching API item
+        final apiItems =
+            suppBillAppEditListValue[0].materialPurOrdBilldetLink;
 
-      final apiIndex = apiItems.indexWhere(
-            (e) => e.detId == item.detId,
-      );
+        final apiIndex = apiItems.indexWhere(
+              (e) => e.detId == item.detId,
+        );
 
-      if (apiIndex != -1) {
-        final apiItem = apiItems[apiIndex];
+        if (apiIndex != -1) {
+          final apiItem = apiItems[apiIndex];
 
-        apiItem.billQty = 0.0;
-        apiItem.amount = 0.0;
-        apiItem.discAmt = 0.0;
-        apiItem.sgstAmt = 0.0;
-        apiItem.cgstAmt = 0.0;
-        apiItem.igstAmt = 0.0;
-        apiItem.netAmount = 0.0;
+          apiItem.billQty = 0.0;
+          apiItem.amount = 0.0;
+          apiItem.discAmt = 0.0;
+          apiItem.sgstAmt = 0.0;
+          apiItem.cgstAmt = 0.0;
+          apiItem.igstAmt = 0.0;
+          apiItem.netAmount = 0.0;
+        }
+
+        getSupplierBillItemViewDbList.refresh();
+        suppBillAppEditListValue.refresh();
+
+        // Save zero values to database
+        await suppBillAppService.updateBillItemCalculation(
+          item.detId,
+          {
+            'billQty': 0.0,
+            'amount': 0.0,
+            'disc_Amt': 0.0,
+            'sgstAmt': 0.0,
+            'cgstAmt': 0.0,
+            'igstAmt': 0.0,
+            'netAmount': 0.0,
+          },
+        );
+
+        syncSupplierBillItemTotals();
+        return;
       }
-
-      getSupplierBillItemViewDbList.refresh();
-      suppBillAppEditListValue.refresh();
-
-      // Save zero values to database
-      await suppBillAppService.updateBillItemCalculation(
-        item.detId,
-        {
-          'billQty': 0.0,
-          'amount': 0.0,
-          'disc_Amt': 0.0,
-          'sgstAmt': 0.0,
-          'cgstAmt': 0.0,
-          'igstAmt': 0.0,
-          'netAmount': 0.0,
-        },
-      );
-
-      syncSupplierBillItemTotals();
-      return;
     }
 
     // Calculate Amount
@@ -559,19 +585,164 @@ class SupplierBillApprovalController extends GetxController {
   }
 
 
+  Future<void> updateGeneralBillItem(
+      int index,
+      String field,
+      String value,
+      ) async {
+    if (index < 0 || index >= getSupplierBillItemViewDbList.length) {
+      return;
+    }
+
+    final item = getSupplierBillItemViewDbList[index];
+
+    double toDouble(dynamic value) =>
+        double.tryParse(value?.toString() ?? '') ?? 0.0;
+
+    double roundTwo(double value) =>
+        double.parse(value.toStringAsFixed(2));
+
+    final input = toDouble(value);
+
+    // Update editable fields
+    switch (field) {
+      case 'description':
+        item.description = value;
+        break;
+
+      case 'rate':
+        item.rate = input;
+        break;
+
+      case 'disc':
+        item.disc_Per = input;
+        break;
+
+      case 'sgst':
+        item.sgstPer = input;
+        item.cgstPer = input;
+        item.igstPer = 0.0;
+        break;
+
+      case 'igst':
+        item.igstPer = input;
+        item.sgstPer = 0.0;
+        item.cgstPer = 0.0;
+        break;
+    }
+
+    // Calculate amount
+    final qty = toDouble(item.billQty);
+    final rate = toDouble(item.rate);
+
+    final amount = roundTwo(qty * rate);
+
+    // Discount
+    final discount = roundTwo(
+      amount * toDouble(item.disc_Per) / 100,
+    );
+
+    final taxable = roundTwo(amount - discount);
+
+    // GST
+    final sgst = roundTwo(
+      taxable * toDouble(item.sgstPer) / 100,
+    );
+
+    final cgst = roundTwo(
+      taxable * toDouble(item.cgstPer) / 100,
+    );
+
+    final igst = toDouble(item.igstPer) == 0
+        ? 0.0
+        : roundTwo(
+      taxable * toDouble(item.igstPer) / 100,
+    );
+
+    // Net amount
+    final net = roundTwo(
+      taxable + sgst + cgst + igst,
+    );
+
+    // Update local item
+    item.amount = amount;
+    item.disc_Amt = discount;
+    item.sgstAmt = sgst;
+    item.cgstAmt = cgst;
+    item.igstAmt = igst;
+    item.netAmount = net;
+
+    // Update API model
+    final apiItems =
+        suppBillAppEditListValue[0].materialPurOrdBilldetLink;
+
+    final apiIndex = apiItems.indexWhere(
+          (e) => e.detId == item.detId,
+    );
+
+    if (apiIndex != -1) {
+      final apiItem = apiItems[apiIndex];
+
+      apiItem.description = item.description;
+      apiItem.rate = item.rate;
+      apiItem.discPer = item.disc_Per;
+      apiItem.sgstPer = item.sgstPer;
+      apiItem.cgstPer = item.cgstPer;
+      apiItem.igstPer = item.igstPer;
+
+      apiItem.amount = amount;
+      apiItem.discAmt = discount;
+      apiItem.sgstAmt = sgst;
+      apiItem.cgstAmt = cgst;
+      apiItem.igstAmt = igst;
+      apiItem.netAmount = net;
+    }
+
+    getSupplierBillItemViewDbList.refresh();
+    suppBillAppEditListValue.refresh();
+
+    // Save to local database
+    await suppBillAppService.updateBillItemCalculation(
+      item.detId,
+      {
+        'description': item.description,
+        'rate': item.rate,
+        'disc_Per': item.disc_Per,
+        'disc_Amt': discount,
+        'sgstPer': item.sgstPer,
+        'cgstPer': item.cgstPer,
+        'igstPer': item.igstPer,
+        'amount': amount,
+        'sgstAmt': sgst,
+        'cgstAmt': cgst,
+        'igstAmt': igst,
+        'netAmount': net,
+      },
+    );
+
+    syncSupplierBillItemTotals();
+  }
+
+
   textControllersInitiate() {
-    Itemlist_qtyControllers.add(TextEditingController());
+    itemlist_qtyControllers.add(TextEditingController());
   }
 
   setTextControllersValue() async {
+    itemlist_qtyControllers.clear();
     for (var index = 0; index < getSupplierBillItemViewDbList.length; index++) {
       textControllersInitiate();
-      Itemlist_qtyControllers[index].text = getSupplierBillItemViewDbList[index].billQty.toString();
+      itemlist_qtyControllers[index].text = getSupplierBillItemViewDbList[index].billQty.toString();
     }
   }
 
   delete_SuppBill_itemlist_Table() async {
     await suppBillAppService.suppBillAppList_table_delete();
+  }
+  double? toDoubleValue(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
   }
 
 }

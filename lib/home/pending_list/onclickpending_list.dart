@@ -10750,6 +10750,8 @@ class _SupplierBillApprovalState extends State<SupplierBillApproval> {
                                     .suppBillApprovalEditApi(
                                     pendingListController
                                         .mainlist.value[index].Id!,
+                                  pendingListController
+                                      .mainlist.value[index].PoBillType!,
                                     context,widget.heading);
                             },
                             child: Container(

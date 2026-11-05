@@ -30,6 +30,8 @@ class SupplierBillAppDet {
   double? amount;
   double? netAmount;
   int? status;
+  String? expiryDate;
+  double? approxDays;
 
   SupplierBillAppDetmodelmap() {
     var mapping = Map<String, dynamic>();
@@ -64,6 +66,8 @@ class SupplierBillAppDet {
     mapping['amount'] = amount;
     mapping['netAmount'] = netAmount;
     mapping['status'] = status;
+    mapping['approxDays'] = approxDays;
+    mapping['expiryDate'] = expiryDate;
 
     return mapping;
   }
