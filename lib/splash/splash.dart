@@ -53,57 +53,71 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    var duration = const Duration(seconds: 3);
-    Future.delayed(duration, () async {
-        await BaseUtitiles.getDeviceDetails();
-        SessionCheck();
-        DBManager dbManager = DBManager();
-        dbManager.database;
+
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+
+      await BaseUtitiles.getDeviceDetails();
+
+      DBManager dbManager = DBManager();
+      await dbManager.database;
+
+      if (!mounted) return;
+
+      await SessionCheck();
     });
   }
 
+  Future<void> SessionCheck() async {
+    try {
+      loginController.seassion_values = SessionStorage.readUser();
 
-  void SessionCheck() async {
-    final value = await SessionStorage.readUser();
+      if (loginController.seassion_values == null) {
+        if (!mounted) return;
 
-    loginController.seassion_values = value;
-    if (value != null) {
-      await loginController.getLoginNew_seassionvalues(context);
-      if (loginController.user.value.success == true) {
-        if (loginController.user.value.userId.toString() == loginController.seassion_values.userId.toString() &&
-            loginController.user.value.userType.toString() == loginController.seassion_values.userType.toString() &&
-            loginController.user.value.userPassword.toString() == loginController.seassion_values.userPassword.toString()) {
-          if (loginController.user.value.userType == "A") {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => Dashboard_screen()));
-          }
-          else {
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => DashboardScreen_OtherUser()));
-          }
-        }
-        else {
-          if (loginController.user.value.userType == "A") {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => Dashboard_screen()));
-          }
-          else {
-            Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => DashboardScreen_OtherUser()));
-          }
-        }
-      }
-      else{
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignInPage()));
+          context,
+          MaterialPageRoute(builder: (context) => SignInPage()),
+        );
+        return;
       }
-    }
-    else {
+
+      await loginController.getLoginNew_seassionvalues(context);
+
+      if (!mounted) return;
+
+      if (loginController.user.value.success == true) {
+        if (loginController.user.value.userType == "A") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard_screen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DashboardScreen_OtherUser(),
+            ),
+          );
+        }
+      }
+      else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignInPage()),
+        );
+      }
+    } catch (e) {
+      debugPrint("SessionCheck Error: $e");
+
+      if (!mounted) return;
+
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SignInPage()));
+        context,
+        MaterialPageRoute(builder: (context) => SignInPage()),
+      );
     }
   }
-
 
 
   @override
