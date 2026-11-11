@@ -101,12 +101,24 @@ class LoginController extends GetxController {
       // "isMobileLogin": true
     };
 
-    var value = await AuthendicationProvider.getAuthendication( body, context);
+    var value = await AuthendicationProvider.getAuthendication(
+      body,
+      context,
+    );
+
+    if (value == null) {
+      return;
+    }
 
     user.value = value;
-    await SessionStorage.writeUser(value);
 
     if (value.success == true) {
+      await SessionStorage.writeUser(value);
+
+      await deleteLoginDetails();
+      await storeLoginDetails();
+      await getLoginDetailsShared();
+
       await getDeviceTokenToSendNotification();
       await Savetoken(context);
 
@@ -130,34 +142,54 @@ class LoginController extends GetxController {
       Navigator.pop(context);
       BaseUtitiles.showToast(value.message.toString());
     }
-
-    await deleteLoginDetails();
-    await storeLoginDetails();
-    await getLoginDetailsShared();
-
   }
 
-  Future getLoginNew_seassionvalues(BuildContext context) async {
+  Future<void> getLoginNew_seassionvalues(BuildContext context) async {
+    try {
+      if (seassion_values == null) {
+        user.value = User();
+        return;
+      }
 
-    Map<String, dynamic> body = {
-      "userName": seassion_values.userName.toString().trim(),
-      "password": seassion_values.userPassword.toString().trim(),
-      // "isMobileLogin": true
-    };
+      Map<String, dynamic> body = {
+        "userName": seassion_values.userName.toString().trim(),
+        "password": seassion_values.userPassword.toString().trim(),
+      };
 
-    var value = await AuthendicationProvider.getAuthendication( body, context,from: "session");
+      final value = await AuthendicationProvider.getAuthendication(
+        body,
+        context,
+        from: "session",
+      );
 
-    user.value = value;
+      // IMPORTANT: Check null BEFORE accessing value.success.
+      if (value == null) {
+        user.value = User();
+        return;
+      }
 
-    if (value.success == true) {
-      SessionStorage.writeUser(value);
-      await getDeviceTokenToSendNotification();
-      await Savetoken(context);
-    } else {
-      return null;
+      user.value = value;
+
+      if (value.success == true) {
+        await SessionStorage.writeUser(value);
+
+        // FCM failure should not stop login/session validation.
+        try {
+          await getDeviceTokenToSendNotification();
+
+          if (deviceTokenToSendPushNotification.isNotEmpty) {
+            await Savetoken(context);
+          }
+        } catch (e) {
+          debugPrint("FCM token error: $e");
+        }
+      }
+    } catch (e, stackTrace) {
+      debugPrint("Session login error: $e");
+      debugPrint("$stackTrace");
+      user.value = User();
     }
   }
-
   /// ----- ****************** ------
 
   List logincheck = [];
@@ -185,10 +217,10 @@ class LoginController extends GetxController {
   // }
 
   Future<void> getDeviceTokenToSendNotification() async {
-    FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.requestPermission();
     final FirebaseMessaging _fcm = FirebaseMessaging.instance;
     final token = await _fcm.getToken();
-    deviceTokenToSendPushNotification = token.toString();
+    deviceTokenToSendPushNotification = token ?? "";
     print("PushNotToken--- " + deviceTokenToSendPushNotification);
   }
 
