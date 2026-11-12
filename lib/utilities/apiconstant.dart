@@ -8,7 +8,7 @@ class ApiConfig {
   static const String LIVE_ENDPOINT_2 = "http://122.173.84.247:8080/";
 
   // static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "NiconAPI/";
-  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "ERPNEW/";
+  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "VishaalAPI/";
 
   static late final String APIURL;
 
@@ -20,7 +20,7 @@ class ApiConfig {
 
     if (liveEndpoint != null) {
 
-      APIURL = "${liveEndpoint}ERPNEW/";
+      APIURL = "${liveEndpoint}VishaalAPI/";
 
       WebURL = "${liveEndpoint}Nicon/";
 
@@ -91,6 +91,7 @@ class AppClient {
   static bool get isVrindhavana => packageName == "com.veenus.vrindhavana";
   static bool get isRKCPL => packageName == "com.veenus.rkcpl";
   static bool get isPrahkurti => packageName == "com.veenus.prahkurti";
+  static bool get isNicon => packageName == "com.veenus.nicon";
 }
 
 class ApiConstant{
@@ -327,6 +328,7 @@ class ApiConstant{
   static String GET_WORKORDERAPPROVALLIST = BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderVerifyData";
   static String GET_MANPOWERAPPROVALLIST = BASE_URL_CORE + "api/ManPower/GetManPowerApprovalPending";
 
+  static String GET_PREVIOUSLEAVE_TAKEN_LIST = BASE_URL_CORE + "api/PayRollReport/GetPreviousLeaveAndPermissionTakenCount";
 
 
 

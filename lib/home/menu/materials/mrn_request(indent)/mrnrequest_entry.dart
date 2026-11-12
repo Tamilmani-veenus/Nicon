@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import '../../../../../app_theme/app_colors.dart';
 import '../../../../../constants/ui_constant/icons_const.dart';
 import '../../../../../controller/bottomsheet_Controllers.dart';
-import '../../../../../commonpopup/projectalert.dart';
 import '../../../../../controller/auto_yrwise_no_controller.dart';
 import '../../../../../controller/dailyentries_controller.dart';
 import '../../../../../controller/dailywrk_done_dprnew_controller.dart';
@@ -635,8 +633,9 @@ class _MRNRequest_Indent_EntryState extends State<MRNRequest_Indent_Entry> {
                           height:
                               BaseUtitiles.getheightofPercentage(context, 1)),
                       Visibility(
-                        visible: mrn_request_controller.saveButton.value != RequestConstant.VERIFY
-                            ? true:false,
+                        visible: AppClient.isNicon
+                            ? true  : mrn_request_controller.saveButton.value != RequestConstant.VERIFY
+                            ? true : false,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -987,8 +986,9 @@ class _MRNRequest_Indent_EntryState extends State<MRNRequest_Indent_Entry> {
                                   //   },
                                   // ),
                                   Visibility(
-                                    visible: mrn_request_controller.saveButton.value != RequestConstant.VERIFY
-                                        ? true:false,
+                                    visible: AppClient.isNicon
+                                        ? true  : mrn_request_controller.saveButton.value != RequestConstant.VERIFY
+                                        ? true : false,
                                     child: SizedBox(
                                       child:
                                       InkWell(

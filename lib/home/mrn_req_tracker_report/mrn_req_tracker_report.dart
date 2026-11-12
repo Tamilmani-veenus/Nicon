@@ -304,7 +304,6 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-
                         InkWell(
                           child: Container(
                             margin: EdgeInsets.only(left: 20, right: 20, top: 10),

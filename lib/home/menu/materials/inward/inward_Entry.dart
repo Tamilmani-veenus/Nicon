@@ -8,6 +8,7 @@ import '../../../../controller/logincontroller.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
 import '../../../../controller/subcontcontroller.dart';
+import '../../../../utilities/apiconstant.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/common_date_fields.dart';
 import '../../../../utilities/requestconstant.dart';
@@ -402,7 +403,12 @@ class _InwardState extends State<Inward_entry> {
                         title: "Invoice Date",
                         value: inward_controller.InwardInvoiceDateText.text,
                         controller: inward_controller.InwardInvoiceDateText,
-                        selectable: true
+                      initialDate: DateTime.now(),
+                      firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
+                          ? DateTime.now().subtract(const Duration(days: 2))
+                          : DateTime(2000),
+                      lastDate: DateTime.now(),
+                      selectable: true,
                     ),
                   ),
 
@@ -450,7 +456,12 @@ class _InwardState extends State<Inward_entry> {
                         title: "DC Date",
                         value: inward_controller.InwardDCDateText.text,
                         controller: inward_controller.InwardDCDateText,
-                        selectable: true
+                      initialDate: DateTime.now(),
+                      firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
+                          ? DateTime.now().subtract(const Duration(days: 2))
+                          : DateTime(2000),
+                      lastDate: DateTime.now(),
+                      selectable: true,
                     ),
                   ),
 
@@ -576,12 +587,12 @@ class _InwardState extends State<Inward_entry> {
                                     vertical: 8, horizontal: 8),
                                 child: ConstIcons.vehicleNo),
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
+                          //     return '\u26A0 ${RequestConstant.VALIDATE}';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                     ),
@@ -618,12 +629,12 @@ class _InwardState extends State<Inward_entry> {
                                     vertical: 8, horizontal: 8),
                                 child: ConstIcons.driverName),
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
+                          //     return '\u26A0 ${RequestConstant.VALIDATE}';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                     ),
