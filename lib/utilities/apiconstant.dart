@@ -193,6 +193,7 @@ class ApiConstant{
   static String GET_BOQBILL_ENTRY_LIST = BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetAllSubContractorWorkQty";
   static String GET_MANPOWER_ENTRY_LIST = BASE_URL_CORE + "api/ManPower/GetAllManPower";
   static String GET_MANPOWER_LEVEL3_LIST = BASE_URL_CORE + "api/ManPower/GetLevel3ItemManPower";
+  static String GETMAC_INDENT_ENTRY_LIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryMaterialMRN";
 
   static String GET_WORKORDDIR_ENTRY_LIST = BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderMasData";
   static String GET_WORKORDBOQ_ENTRY_LIST = BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";
@@ -330,6 +331,11 @@ class ApiConstant{
 
   static String GET_PREVIOUSLEAVE_TAKEN_LIST = BASE_URL_CORE + "api/PayRollReport/GetPreviousLeaveAndPermissionTakenCount";
 
+  static String GET_MACHINERY_EDIT_API = BASE_URL_CORE + "api/Machinery/GetMachineryReqOrdMasById";
+  static String GET_MACHINERY_VERIFY_API = BASE_URL_CORE + "api/Machinery/GetMachineryVerifyPendingReqOrdById";
+  static String GET_MACHINERY_PREAPPROVE_API = BASE_URL_CORE + "api/Machinery/GetMachineryTobeApprovalByIDS";
+  static String GET_MACHINERY_APPROVE_API = BASE_URL_CORE + "api/Machinery/GetMachineryFinalApproveMasById";
+  static String GETMACHINERYMATERIALLIST = BASE_URL_CORE + "api/GenericMaster/GetAllMachineryMaterialMas";
 
 
   static String GETPROJECTDROPDOWNLISTALL = BASE_URL_CORE + "api/CommonFile/GetProjectAll";
@@ -398,6 +404,9 @@ class ApiConstant{
   static String PUT_SITEVOUCHER_UPDATE_API = BASE_URL_CORE + "api/SiteVoucher/UpdateAccountSiteVoucher";
   static String PUT_STAFFVOUCHER_UPDATE_API = BASE_URL_CORE + "api/StaffVoucher/UpdateAccountStafVoucher";
   static String PUT_MATERIALREQUEST_UPDATE_API = BASE_URL_CORE + "api/MaterialReqOrdMas/UpdateReqOrdMas";
+  static String PUT_MACHINERY_UPDATE_API = BASE_URL_CORE + "api/Machinery/UpdateMachineryReqOrdMas";
+  static String PUT_MACHINERY_PREAPPROVE_API = BASE_URL_CORE + "api/Machinery/UpdateMachineryPreApprovalMas";
+
   static String PUT_Conum_UPDATE_API = BASE_URL_CORE + "api/MaterialExpenseMas/UpdateMaterialExpenses";
   static String PUT_BOQREVISED_UPDATE_API = BASE_URL_CORE + "api/BOQRevised/UpdateBoqRevise";
   static String PUT_BOQREVISED_APPROVE_API = BASE_URL_CORE + "api/BOQRevised/ApproveBoqRevise";
@@ -438,6 +447,7 @@ class ApiConstant{
   static String STAFFVOUCHER_SAVE = BASE_URL_CORE + "api/StaffVoucher/AddStaffVoc";
   static String MATERIALREQUEST_SAVE = BASE_URL_CORE + "api/MaterialReqOrdMas/AddReqOrdMas";
   static String TERMSANDCONDITION_SAVEAPI = BASE_URL_CORE + "api/TermsAndCondition/AddTermsAndConditionSubcontractorWo";
+  static String MACHINERY_REQUEST_SAVE = BASE_URL_CORE + "api/Machinery/AddMachineryReqOrdMas";
 
   static String COMPANY_NMR_SAVE_API = BASE_URL_CORE + "api/NMRLabourAttendance/AddOrUpdateNMRLabAttendance";
   static String CONSUM_SAVE = BASE_URL_CORE + "api/MaterialExpenseMas/AddMaterialExpenses";
@@ -473,6 +483,7 @@ class ApiConstant{
 
   static String DELETE_BOQBILL_API = BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/DeleteSubContractorWorkQty";
   static String DELETE_MANPOWERLIST_API = BASE_URL_CORE + "api/ManPower/DeleteManPower";
+  static String DELETE_MACHINERY_ENTRYLIST_API = BASE_URL_CORE + "api/Machinery/DeleteMachinery";
 
   static String DELETE_INWARDPENDINGLIST_API = BASE_URL_CORE + "api/MaterialInward/DeleteMaterialInward";
   static String DELETE_TRANSFERBET_API = BASE_URL_CORE + "api/MaterialTransfer/DeleteMaterialTransfer";

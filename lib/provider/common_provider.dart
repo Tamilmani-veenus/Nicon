@@ -361,6 +361,9 @@ class CommonProvider {
       } else if (Url == "MRN PRE INDENT") {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?fieldName=ReqOrdNo&tableName=MaterialReqOrdMas&formName=SiteRequest");
+      } else if (Url == "MACHINERY INDENT") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETAUTONO_YEAR_WISE}?fieldName=ReqOrdNo&tableName=MachineryReqOrdMas&formName=Machinery");
       } else if (Url == "CONSUMPTION") {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?fieldName=ExpenseNo&tableName=MaterialExpenseMas&formName=MaterialExpenses");
@@ -549,12 +552,20 @@ class CommonProvider {
   }
 
   static Future<MateriallistResponse?> getmaterial(
-      bool requestType, projectId, siteId) async {
+      bool requestType, projectId, siteId, {type}) async {
+    String? response;
     try {
-      final response = await ApiManager.getAPICall(ApiConstant.GETMATERIALLIST +
-          "?asset=$requestType&projectId=$projectId&siteId=$siteId&SubId=0");
+      if(type=="machineryIndent"){
+        response = await ApiManager.getAPICall(
+            ApiConstant.GETMACHINERYMATERIALLIST);
+      }
+      else {
+        response = await ApiManager.getAPICall(
+            ApiConstant.GETMATERIALLIST +
+                "?asset=$requestType&projectId=$projectId&siteId=$siteId&SubId=0");
+      }
       print("response...${response}");
-      return materiallistResponseFromJson(response);
+      return materiallistResponseFromJson(response!);
     } catch (error) {
       print("Error == $error");
       return null;

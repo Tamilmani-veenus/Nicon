@@ -26,6 +26,7 @@ class AutoYearWiseNoController extends GetxController {
   RxString BOQRevised_autoYrsWise = "".obs;
   RxString RequisitionSlip_autoYrsWise = "".obs;
   RxString MRNIndentPreIndent_autoYrsWise = "".obs;
+  RxString MachineryIndent_autoYrsWise = "".obs;
   RxString ManPower_autoYrsWise = "".obs;
   RxString WorkOrdDirect_autoYrWise = "".obs;
   RxString WorkOrdBoq_autoYrWise = "".obs;
@@ -42,6 +43,10 @@ class AutoYearWiseNoController extends GetxController {
         else if (Url == "MRN PRE INDENT") {
           MRNIndentPreIndent_autoYrsWise.value = value["entryAutoNo"];
           return MRNIndentPreIndent_autoYrsWise.value;
+        }
+        else if (Url == "MACHINERY INDENT") {
+          MachineryIndent_autoYrsWise.value = value["entryAutoNo"];
+          return MachineryIndent_autoYrsWise.value;
         }
         else if (Url == "CONSUMPTION") {
             Conum_autoYrsWise.value = value["entryAutoNo"];
