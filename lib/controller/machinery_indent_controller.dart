@@ -126,8 +126,6 @@ class MachineryIndentController extends GetxController {
         approveDate: isApprove
             ? BaseUtitiles().convertToUtcIso(requestDateController.text)
             : null,
-
-
         //det
         machineryReqOrdDetLink:  getRequestDet(id)
     ));
@@ -144,13 +142,13 @@ class MachineryIndentController extends GetxController {
         if (saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.PREAPPROVAL || saveButton.value == RequestConstant.APPROVAL) {
           BaseUtitiles.showToast(list["message"]);
           await pendingListController.getPendingList();
-          BaseUtitiles.popMultiple(context, count: 3);
+          BaseUtitiles.popMultiple(context, count: 4);
         } else {
           BaseUtitiles.showToast(list["message"]);
           await getMacIndentEntryList();
           mrn_request_controller.delete_MaterialIntent_itemlist_Table();
           mrn_request_controller.Material_itemview_GetDbList.clear();
-          BaseUtitiles.popMultiple(context, count: 2);
+          BaseUtitiles.popMultiple(context, count: 3);
         }
       } else {
         BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");

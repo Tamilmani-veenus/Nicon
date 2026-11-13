@@ -4204,6 +4204,159 @@ class _PendingList_SiteVerifyPopupState extends State<PendingList_SiteVerifyPopu
 
 }
 
+class MachineryMoreDetailsPopup extends StatefulWidget {
+  const MachineryMoreDetailsPopup({Key? key, required this.list,required this.ReqNo,required this.ProjectName, required this.heading}) : super(key: key);
+  final List list;
+  final String ReqNo;
+  final String ProjectName;
+  final String heading;
+
+  @override
+  State<MachineryMoreDetailsPopup> createState() => _MachineryMoreDetailsPopupState();
+}
+
+class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
+
+  PendingListController pendingListController = Get.put(PendingListController());
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+          backgroundColor: Setmybackground,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 40),
+                Container(
+                  margin: EdgeInsets.only(left: 15, right: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.heading,
+                        style: TextStyle(
+                            fontSize: RequestConstant.Heading_Font_SIZE,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Back",
+                            style: TextStyle(color: Colors.grey, fontSize: 18),
+                          ))
+                    ],
+                  ),
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                          margin: EdgeInsets.only(left: 15, bottom: 10),
+                          child: Text(widget.ProjectName,
+                            style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold,
+                            ),)),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                          margin: EdgeInsets.only( bottom: 10),
+                          child: Text(widget.ReqNo.toString(),
+                            style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold,
+                            ),)),
+                    ),
+                  ],
+                ),
+                Divider(),
+                ListDetails(context),
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget ListDetails(BuildContext context){
+    return Container(
+      height: BaseUtitiles.getheightofPercentage(context, 90),
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 15)),
+        itemCount: pendingListController.onclickPendingListDet.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 3, right: 3),
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 10, right: 5, bottom: 5, top:5 ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text("Material" + ":   ",
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(pendingListController.onclickPendingListDet[index].materialName.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )),
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          children: [
+                            const Text("Req Qty" + ":  ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                                flex: 3,
+                                child: Text(pendingListController.onclickPendingListDet[index].reqQty.toString())),
+                            const Expanded(
+                                flex: 2,
+                                child: Text("Scale:",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )),
+                            Expanded(
+                                flex: 4,
+                                child: Text(pendingListController.onclickPendingListDet[index].scaleName.toString())),
+                          ],
+                        ),
+
+                        Divider(),
+                        Row(
+                          children: [
+                            Text("Remarks" + ":  ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(pendingListController.onclickPendingListDet[index].remarks.toString())),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },),
+    );
+  }
+}
+
 
 class StoreTeansferPending extends StatefulWidget {
   StoreTeansferPending({Key? key,required this.URL,required this.list,required this.ReqNo, required this.ProjectName}) : super(key: key);

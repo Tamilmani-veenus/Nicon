@@ -484,11 +484,10 @@ class PendingListController extends GetxController {
     var response = await PendingListProvider.getOnclickDetProvider(Url, RID);
     if (response != null) {
       if (response.success == true) {
-        onclickPendingListDet = Url == "PENDING QUOTE" ||
-                Url == "QUOTE VERIFICATION PENDING" ||
-                Url == "QUOTE APPROVAL PENDING"
-            ? response.result!
-            : response.result!.mMatReqMasLink!;
+        onclickPendingListDet  = Url == "PENDING QUOTE" || Url == "QUOTE VERIFICATION PENDING" ||
+          Url == "QUOTE APPROVAL PENDING" ? response.result! :
+          Url == "MACHINERY INDENT" ?response.result!.machineryReqOrdDetLink!:response
+          .result!.mMatReqMasLink!;
         print(onclickPendingListDet.toString());
         return Url == "MRN VERIFICATION"
             ? Navigator.push(
@@ -542,7 +541,17 @@ class PendingListController extends GetxController {
                                           ReqNo: Reqno,
                                           ProjectName: Projectname,
                                           heading: Url,
-                                        )))
+                                        ))):
+        Url == "MACHINERY INDENT" ?
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    MachineryMoreDetailsPopup(
+                      list: onclickPendingListDet,
+                      ReqNo: Reqno,
+                      ProjectName: Projectname, heading: Url,
+                    )))
                             : Url == "PENDING QUOTE" ||
                                     Url == "QUOTE VERIFICATION PENDING" ||
                                     Url == "QUOTE APPROVAL PENDING"
@@ -1308,7 +1317,14 @@ class PendingListController extends GetxController {
                                                                                                                                                                                                 ? Navigator.push(
                                                                                                                                                                                                     context,
                                                                                                                                                                                                     MaterialPageRoute(builder: (context) => ManPowerApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
-                                                                                                                                                                                                  )
+                                                                                                                                                                                                  ): name == "MACHINERY VERIFICATION PENDING" || name == "MACHINERY PRE APPROVAL PENDING" || name =="MACHINERY APPROVAL PENDING"
+                                                                                                                                                                                                          ? await Navigator.push(
+                                                                                                                                                                                                        context,
+                                                                                                                                                                                                        MaterialPageRoute(builder: (context) => MachineryVerifyApproval(
+                                                                                                                                                                                                            onclickPendingListData: onclickPendingListData,
+                                                                                                                                                                                                            heading: entryTypeName!,checkheading: name)),
+
+                                                                                                                                                                                                      )
                                                                                                                                                                                                 : name == "SUPPLIER BILL APPROVAL"
                                                                                                                                                                                                     ? Navigator.push(
                                                                                                                                                                                                         context,

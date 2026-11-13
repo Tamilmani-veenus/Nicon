@@ -23,6 +23,7 @@ import '../../controller/company_nmr_controller.dart';
 import '../../controller/dailywrk_done_dprlabour_controller.dart';
 import '../../controller/dailywrk_done_dprnew_controller.dart';
 import '../../controller/logincontroller.dart';
+import '../../controller/machinery_indent_controller.dart';
 import '../../controller/man_power_controller.dart';
 import '../../controller/material_transreq_controller.dart';
 import '../../controller/mrn_finalapproval_controller.dart';
@@ -3032,6 +3033,7 @@ class _MrnPreApproval_AMState extends State<MrnPreApproval_AM> {
                           pendingListController.mainlist.removeAt(index);
                           pendingListController.getPoAprovalDetList.clear();
                           pendingListController.update();
+                          Navigator.pop(context);
                           Navigator.pop(context);
                           if (pendingListController.mainlist.isEmpty) {
                             Navigator.pop(context);
@@ -21286,6 +21288,627 @@ class _ManPowerApprovalState extends State<ManPowerApproval> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class MachineryVerifyApproval extends StatefulWidget {
+  MachineryVerifyApproval(
+      {Key? key,
+        required this.onclickPendingListData,
+        required this.heading,
+        required this.checkheading})
+      : super(key: key);
+  List<OnClickListResult> onclickPendingListData;
+  String heading;
+  String checkheading;
+
+  @override
+  State<MachineryVerifyApproval> createState() => _MachineryVerifyApprovalState();
+}
+
+class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
+  TextEditingController editingController = TextEditingController();
+  PendingListController pendingListController = Get.put(PendingListController());
+  MachineryIndentController machineryIndentController = Get.put(MachineryIndentController());
+  MRN_Request_Controller mrn_request_controller = Get.put(MRN_Request_Controller());
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        await pendingListController.getPendingList();
+        return true;
+      },
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: Setmybackground,
+          body: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: Text(
+                          widget.heading.toString(),
+                          style: TextStyle(
+                              fontSize: RequestConstant.ALERT_Font_SIZE,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          margin:
+                          EdgeInsets.only(top: 10, left: 15, bottom: 10),
+                          child: TextField(
+                            cursorColor: Theme.of(context).primaryColor,
+                            controller: editingController,
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.black,
+                              ),
+                              hintText: "search..",
+                              hintStyle: TextStyle(color: Colors.black),
+                              isDense: true,
+                              fillColor: Setmybackground,
+                            ),
+                            onEditingComplete: () {
+                              FocusScope.of(context).unfocus();
+                              // if (onSearch != null) onSearch!(searchcontroller.text);
+                            },
+                            textInputAction: TextInputAction.search,
+                            onChanged: (value) {
+                              setState(() {
+                                pendingListController.mainlist.value =
+                                    BaseUtitiles
+                                        .filterSearchResults_PendingList(
+                                        value,
+                                        pendingListController
+                                            .pendingmainlist);
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TextButton(
+                            onPressed: () {
+                              // await pendingListController.getPendingList();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Back",
+                              style:
+                              TextStyle(color: Colors.grey, fontSize: 15),
+                            )),
+                      )
+                    ],
+                  ),
+                  // CommonPendingReqHeader(
+                  //   heading: widget.heading,
+                  //   searchController: editingController,
+                  //   onSearchChanged: (value) {
+                  //
+                  //     setState(() {
+                  //       pendingListController.mainlist.value =
+                  //           BaseUtitiles
+                  //               .filterSearchResults(
+                  //               value,
+                  //               pendingListController
+                  //                   .pendingmainlist,
+                  //                   (item) {
+                  //                 final String typeText =
+                  //                 item.requestType.toString().trim() == "M"
+                  //                     ? "Machinery Items"
+                  //                     : "-";
+                  //
+                  //                 return [
+                  //                   typeText,
+                  //                   item.projectName.toString(),
+                  //                   item.siteName.toString(),
+                  //                   item.reqOrdNo.toString(),
+                  //                   item.createdByNamebill.toString(),
+                  //                   CommonDateUtils.formatDateForDisplay(
+                  //                       item.reqOrdDate.toString()),
+                  //                   CommonDateUtils.formatDateForDisplay(
+                  //                       item.reqDueDate.toString()),
+                  //                 ];
+                  //               }
+                  //           );
+                  //     });
+                  //   },
+                  // ),
+                  Container(
+                    margin: EdgeInsets.only(left: 6, right: 6),
+                    height: BaseUtitiles.getheightofPercentage(context, 80),
+                    child: Obx(() => ListView.builder(
+                        padding: EdgeInsets.only(
+                            bottom: BaseUtitiles.getheightofPercentage(
+                                context, 10)),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: pendingListController.mainlist.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () async {
+                              mrn_request_controller.delete_MaterialIntent_itemlist_Table();
+                              mrn_request_controller.Material_itemview_GetDbList.clear();
+                              await machineryIndentController
+                                  .machineryIndentEdit(
+                                pendingListController
+                                    .mainlist
+                                    .value[index]
+                                    .id!,
+                                widget.heading,
+                                context,
+                                widget.heading=="MACHINERY VERIFICATION PENDING"?"Verify":widget.heading=="MACHINERY PRE APPROVAL PENDING"?"Preapprove":"approve",
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 3, right: 3),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(3),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(left: 10),
+                                            child: Row(
+                                              children: [
+                                                ConstIcons.list_date,
+                                                Text(
+                                                  pendingListController.mainlist
+                                                      .value[index].reqOrdDate
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              pendingListController.mainlist
+                                                  .value[index].reqOrdNo
+                                                  .toString().trim(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Req Due Date",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController.mainlist
+                                                    .value[index].reqDueDate
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Project Name",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController.mainlist
+                                                    .value[index].projectName
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Site Name",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController.mainlist
+                                                    .value[index].siteName
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Request Type",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController
+                                                    .mainlist
+                                                    .value[index]
+                                                    .requestType.toString().trim() == "M"
+                                                    ? "Machinery Items"
+                                                    : "-",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      // Divider(thickness: 1),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                              "Prepared By       ",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController.mainlist
+                                                    .value[index].createdByNamebill
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          SizedBox(width: 5),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 1,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 5,
+                                              child: InkWell(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: 15),
+                                                        child: Text(
+                                                          "More details",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .bold,
+                                                              color: Theme.of(
+                                                                  context)
+                                                                  .primaryColor),
+                                                        )),
+                                                  ],
+                                                ),
+                                                onTap: () {
+                                                  pendingListController
+                                                      .GetDetDetails(
+                                                      "MACHINERY INDENT",
+                                                      pendingListController
+                                                          .mainlist
+                                                          .value[index]
+                                                          .id!,
+                                                      pendingListController
+                                                          .mainlist
+                                                          .value[index]
+                                                          .reqOrdNo
+                                                          .toString(),
+                                                      pendingListController
+                                                          .mainlist
+                                                          .value[index]
+                                                          .projectName
+                                                          .toString(),
+                                                      context);
+                                                },
+                                              )),
+                                          Container(
+                                            height: BaseUtitiles
+                                                .getheightofPercentage(
+                                                context, 4),
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 3, horizontal: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                InkWell(
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 20, right: 20),
+                                                    width: BaseUtitiles
+                                                        .getWidthtofPercentage(
+                                                        context, 20),
+                                                    height: BaseUtitiles
+                                                        .getheightofPercentage(
+                                                        context, 4),
+                                                    alignment: Alignment.center,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 1),
+                                                      child: Text(
+                                                        RequestConstant.DELETE,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: RequestConstant
+                                                              .Lable_Font_SIZE,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onTap: () async {
+                                                    await deleteAlert(
+                                                        context, index);
+                                                  },
+
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        })),
+                  ),
+                  SizedBox(height: 20)
+                  // Expanded(
+                  //   child: Obx(() => CommonPendingRequestList(
+                  //     items: pendingListController.mainlist.value,
+                  //     bottomSpace: BaseUtitiles.getheightofPercentage(context, 10),
+                  //     itemBuilder: (context, item, index) => CommonRequestCard(
+                  //       index: index,
+                  //       reqNo: item.reqOrdNo.toString(),
+                  //       date: item.reqOrdDate.toString(),
+                  //       fields: [
+                  //         InfoField('PROJECT', item.projectName),
+                  //         InfoField('SITE', item.siteName),
+                  //         InfoField('REQ TYPE', item.requestType.toString().trim() == "M"
+                  //             ? "Machinery Items"
+                  //             : "-"),
+                  //         InfoField('DUE DATE',
+                  //           CommonDateUtils.formatDateForDisplay(item.reqDueDate! ?? "-"),
+                  //         ),
+                  //       ],
+                  //       bottomValue: item.createdByNamebill.toString(),
+                  //       onView: () {
+                  //         pendingListController
+                  //             .GetDetDetails(
+                  //             "MACHINERY INDENT",
+                  //             ,
+                  //             pendingListController
+                  //                 .mainlist
+                  //                 .value[index]pendingListController
+                  //                 .mainlist
+                  //                 .value[index]
+                  //                 .id!
+                  //                 .reqOrdNo
+                  //                 .toString(),
+                  //             pendingListController
+                  //                 .mainlist
+                  //                 .value[index]
+                  //                 .projectName
+                  //                 .toString(),
+                  //             context);
+                  //       },
+                  //       onDelete: () async => await deleteAlert(context, index),// PREPARED BY
+                  //       onTap: () async {
+                  //         mrn_request_controller.delete_MaterialIntent_itemlist_Table();
+                  //         mrn_request_controller.Material_itemview_GetDbList.clear();
+                  //         await machineryIndentController
+                  //             .machineryIndentEdit(
+                  //           item.id,
+                  //           widget.heading,
+                  //           context,
+                  //           widget.heading=="MACHINERY VERIFICATION PENDING"?"Verify":widget.heading=="MACHINERY PRE APPROVAL PENDING"?"Preapprove":"approve",
+                  //         );
+                  //
+                  //       },
+                  //     ),
+                  //   )),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future deleteAlert(BuildContext context, int index) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Alert!'),
+            Container(
+              child: Text(
+                pendingListController.mainlist.value[index].reqOrdNo.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: const Text('Do you want to Delete?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    width: 5,
+                    thickness: 2,
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          bool result = await machineryIndentController.machineryEntryListDeleteApi(
+                              pendingListController.mainlist.value[index].id);
+                          if (result) {
+                            pendingListController.mainlist.removeAt(index);
+                            pendingListController.update();
+                            if (pendingListController.mainlist.isEmpty) {
+                              Navigator.pop(context);
+                            }
+                            await pendingListController.getPendingList();
+                          }
+                        },
+                        child: const Text("Delete",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

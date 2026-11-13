@@ -569,7 +569,7 @@ class _MachineryIndentEntryListState extends State<MachineryIndentEntryList> {
                                           flex: 8,
                                           child: Text(
                                             machineryIndentController.macReqEtyList
-                                                .value[index].requestType=="M"? "Machinery Items"
+                                                .value[index].requestType.trim()=="M"? "Machinery Items"
                                                 : "-",
                                             style: TextStyle(
                                               color: Colors.black,
@@ -715,7 +715,7 @@ class _MachineryIndentEntryListState extends State<MachineryIndentEntryList> {
                                                                       await machineryIndentController.machineryIndentEdit(
                                                                           machineryIndentController.macReqEtyList[
                                                                           index]
-                                                                              .reqMasId,
+                                                                              .id,
                                                                           widget.heading,
                                                                           context,"Edit");
                                                                     }),

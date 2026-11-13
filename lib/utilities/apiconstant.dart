@@ -199,7 +199,9 @@ class ApiConstant{
   static String GET_WORKORDBOQ_ENTRY_LIST = BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";
   static String GET_WORKORDBOQ_TERMSANDCONDITION = BASE_URL_CORE + "api/TermsAndCondition/GetAllTermsAndConditionSubcontractorWo";
 
-
+  static String GET_MACHINERY_VERIFYLIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryReqordVerifyPending";
+  static String GET_MACHINERY_PREAPPROVELIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryTobePreApproval";
+  static String GET_MACHINERY_APPROVELIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryFinalApprovePending";
 
   static String GET_DIRECTBILL_CALCULATION_LIST = BASE_URL_CORE + "api/GenericMaster/GetAddLess";
   static String GET_WORKORDER_ENTRY_LIST = BASE_URL_CORE + "api/SubContractorWorkQty/GetWorkOrderDet";
