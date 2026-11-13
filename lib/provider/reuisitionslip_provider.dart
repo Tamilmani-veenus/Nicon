@@ -99,22 +99,16 @@ class RequisitionslipProvider{
   }
 
   //----------Satff Name leave details Pending------------
-  static Future getStaffLeaveInfo_Provider(int empId) async {
-    var data = null;
-    await ApiManager.getAPICall("${"ApiConstant.GETSTAFFLEAVECAL"}?EmpId=$empId").then((value) {
-      final res = staffLeaveDetailsFromJson(value);
-      if (res != null) {
-        data = res;
-        return data;
-      }else{
-        BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-      }
-    }, onError: (error) {
-      // printToLog(error.toString());
-      // printToLog("Error == $error");
-      BaseUtitiles.showToast('Something went wrong..');
-    });
-    return data;
+  static Future<dynamic> getStaffLandP_leaveTaken(int? empId, String reqDate) async {
+    try {
+      final value = await ApiManager.getAPICall("${ApiConstant.GET_PREVIOUSLEAVE_TAKEN_LIST}?EmployeeId=$empId&Date=$reqDate");
+      print('API Response: ${value}');
+      return jsonDecode(value);
+
+    } catch (error) {
+      print("Error == $error");
+      return null;
+    }
   }
 
 

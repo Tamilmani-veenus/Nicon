@@ -30,6 +30,7 @@ import '../home/menu/daily_entries/man_power_screens/man_power_entrylist.dart';
 import '../home/menu/daily_entries/pre_approval/preapproval_main.dart';
 import '../home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_entrylist_site.dart';
 import '../home/menu/daily_entries/subcontractor_attendance_VCPL/subattendance_site_entry_list.dart';
+import '../home/menu/machinery/machinery_entrylist.dart';
 import '../home/menu/main_menu/boq_revised/boq_revised_entrylist.dart';
 import '../home/menu/main_menu/workOrder_Direct/workOrder_Direct_Entrylist.dart';
 import '../home/menu/materials/consumption/consumption_list.dart';
@@ -96,6 +97,7 @@ class Menu_Controller extends GetxController {
   List<Menu> dailyEntryList = [];
   List<Menu> accountsList = [];
   List<Menu> payrollList = [];
+  List<Menu> machineryList = [];
   List<Menu> projPlanningList = [];
 
 
@@ -128,6 +130,10 @@ class Menu_Controller extends GetxController {
               if (element.moduleName == "Payroll") {
                 payrollList.clear();
                 payrollList.addAll(element.menu!);
+              }
+              if (element.moduleName == "Machinery") {
+                machineryList.clear();
+                machineryList.addAll(element.menu!);
               }
               if (element.moduleName == "Project Planning") {
                 projPlanningList.clear();
@@ -376,6 +382,19 @@ class Menu_Controller extends GetxController {
   PayrollScreen(String value, String MenuName, BuildContext context) {
     if (value == "Staff L & P Slip") {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Requisitionslip_EntryList(heading: MenuName,)));
+    }
+  }
+
+  MachineryScreen(String value, String MenuName, BuildContext context) {
+    if (value == "Machinery Indent") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MachineryIndentEntryList(
+            heading: MenuName,
+          ),
+        ),
+      );
     }
   }
 }

@@ -115,9 +115,9 @@ class Result {
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     materialId: json["id"],
-    material: json["MaterialName"],
+    material: json["MaterialName"] ?? json["machineryName"],
     scaleId: json["ScaleID"],
-    scale: json["ScaleName"],
+    scale: json["ScaleName"] ?? json["scaleName"],
     balqty:  json["BalQty"],
     stockQty:  json["StockQty"],
   );

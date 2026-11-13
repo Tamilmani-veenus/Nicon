@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -39,6 +37,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       await requisitionSlipController.getStaffReqTypeList();
+
       if(requisitionSlipController.saveButton.value==RequestConstant.SUBMIT){
         requisitionSlipController.reqId=0;
         requisitionSlipController.Reqdate.text = BaseUtitiles.initiateCurrentDateFormat();
@@ -72,6 +71,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
         requisitionSlipController.ReqAutoyearwise.text = autoYearWiseNoController.RequisitionSlip_autoYrsWise.value;
         requisitionSlipController.type.value = "L";
         requisitionSlipController.isHalfDay.value=false;
+        await requisitionSlipController.getStaffLandPLeaveTaken(int.tryParse(loginController.EmpId()),requisitionSlipController.Reqdate.text);
       }
 
       else if(requisitionSlipController.saveButton.value==RequestConstant.RESUBMIT){
@@ -96,12 +96,15 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
               : (element.totalLeaveDays ?? 0.0).toString();
           requisitionSlipController.Fromtime.text = element.permissionFromTime;
           requisitionSlipController.Totime.text = element.permissionToTime;
+          requisitionSlipController.RequiredHrs.text = element.permissionTimeHrs.toString();
+          requisitionSlipController.RequiredMins.text = element.permissionTimeMins.toString();
           requisitionSlipController.TotalHrs.text=element.totalPermissionHours.toStringAsFixed(2);
           requisitionSlipController.yearofLeavedays.value="0";
           requisitionSlipController.leaveTypeText.text=element.leaveTypeDesc;
           requisitionSlipController.leaveTypeValue.value=element.leaveType;
           requisitionSlipController.isHalfDay.value=element.isHalfDay;
         }
+        await requisitionSlipController.getStaffLandPLeaveTaken(staffController.selectedstaffId.value,requisitionSlipController.Reqdate.text);
       }
 
       if (!mounted) return;
@@ -637,7 +640,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                       Expanded(
                                           child:
                                           Obx(() =>
-                                              Text(requisitionSlipController.yearofLeavedays.value.toString(),style:  TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),),
+                                              Text(requisitionSlipController.leaveTaken.value.toString(),style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),),
                                           )
                                       )
                                     ],
@@ -1477,7 +1480,25 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                               ),
                             ),
                           ),
-
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                margin:  EdgeInsets.only(left: 14, right: 14),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 4,
+                                        child: Text("Previous Permission Taken (This Year)", style:  TextStyle(fontWeight: FontWeight.bold),)),
+                                    Expanded(
+                                        child:
+                                        Obx(() =>
+                                            Text(requisitionSlipController.permissionHoursTaken.value.toString(),style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),),
+                                        )
+                                    )
+                                  ],
+                                )
+                            ),
+                          ),
                         ],
                       ),
                     )),

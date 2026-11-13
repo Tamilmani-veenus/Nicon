@@ -73,6 +73,8 @@ class  RequisitionSlipControllerNew extends GetxController{
   RxList leaveTypeList = ["Casual Leave","Sick Leave","Earned Leave"].obs;
   LoginController loginController=Get.put(LoginController());
 
+  final leaveTaken = 0.0.obs;
+  final permissionHoursTaken = "0.00".obs;
 
   Future getRequisitionslip_EntryList() async {
     mainentrylist.value=[];
@@ -109,23 +111,26 @@ class  RequisitionSlipControllerNew extends GetxController{
     }
   }
 
-  // Future getLeaveInfo_List(int empId) async {
-  //   staffLeaveInfolist.value.clear();
-  //   await RequisitionslipProvider.getStaffLeaveInfo_Provider(empId).then((value) async {
-  //     if (value != null && value.length > 0) {
-  //       staffLeaveInfolist.value = value;
-  //       await leaveInfo();
-  //       update();
-  //       print("yearofLeavedays :: ${yearofLeavedays.value}");
-  //       print("yearofPerHrs :: ${yearofPerHrs.value}");
-  //       return staffLeaveInfolist.value;
-  //     }
-  //     else {
-  //       BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-  //     }
-  //   });
-  // }
 
+
+  Future<void> getStaffLandPLeaveTaken(int? empId, String reqDate) async {
+    final response = await RequisitionslipProvider.getStaffLandP_leaveTaken(empId,reqDate);
+    if (response != null ){
+      if(response["success"] == true) {
+        final List result = response["result"] ?? [];
+        if (result.isNotEmpty) {
+          final data = result.first;
+          leaveTaken.value = data["LeaveTaken"] ?? 0;
+          permissionHoursTaken.value = data["PermissionHoursTaken"]?.toString() ?? "0.00";
+        }
+      }else {
+          BaseUtitiles.showToast(response["message"] ?? "Something Went Wrong..");
+        }
+      }
+      else {
+        BaseUtitiles.showToast("Something Went Wrong..");
+      }
+  }
 
   Future<void> leaveInfo() async {
     yearofLeavedays.value = '';
@@ -137,15 +142,7 @@ class  RequisitionSlipControllerNew extends GetxController{
     update();
   }
 
-  // Future<void> leaveInfo() async {
-  //   yearofLeavedays.text = "";
-  //   yearofPerHrs.text = "";
-  //    staffLeaveInfolist.forEach((element) {
-  //       yearofLeavedays.text = element.leaveDays.toString();
-  //       yearofPerHrs.text = element.leaveHours.toString();
-  //   });
-  //    update();
-  // }
+
 
 
   Future SaveButtonStaffReqScreen(BuildContext context, int id) async {
@@ -251,6 +248,7 @@ class  RequisitionSlipControllerNew extends GetxController{
         ReqSlipEditList.value = [response.result];
         if (ReqSlipEditList.isNotEmpty) {
           saveButton.value=RequestConstant.RESUBMIT;
+
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => RequisitionSlip_Entry(heading: MenuName,))

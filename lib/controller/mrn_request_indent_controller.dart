@@ -113,30 +113,30 @@ class MRN_Request_Controller extends GetxController {
     }
   }
 
-  Future getMaterialList(BuildContext context, String requestType, projectId, siteId) async {
+  Future getMaterialList(BuildContext context, String requestType, projectId, siteId,{type}) async {
     getmaterialvalue.value.clear();
     await ClickUtils.run(() async {
-    final value = await CommonProvider.getmaterial(
-        requestType == "CP", projectId, siteId);
-    if (value != null) {
-      if (value.success == true) {
-        if (value.result!.isNotEmpty) {
-          getmaterialvalue.value = value.result!;
-          await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Materials_Add(
-                        list: getmaterialvalue.value,
-                      )));
+      final value = await CommonProvider.getmaterial(
+          requestType == "CP", projectId, siteId,type:type);
+      if (value != null) {
+        if (value.success == true) {
+          if (value.result!.isNotEmpty) {
+            getmaterialvalue.value = value.result!;
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Materials_Add(
+                      list: getmaterialvalue.value,
+                    )));
+          } else {
+            BaseUtitiles.showToast('No Data Found');
+          }
         } else {
-          BaseUtitiles.showToast('No Data Found');
+          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
         }
       } else {
-        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+        BaseUtitiles.showToast('Something went wrong..');
       }
-    } else {
-      BaseUtitiles.showToast('Something went wrong..');
-    }
     });
   }
 
@@ -555,28 +555,50 @@ class MRN_Request_Controller extends GetxController {
 
   // ---------Edit Call API----------
 
-  Future Material_Intentlist_editSaveDetTable() async {
+  Future Material_Intentlist_editSaveDetTable({type,list}) async {
     materialTableList.clear();
-    Material_EditListApiValue.forEach((element) {
-      element.requestDet.forEach((val) {
-        materialTableModel = Materiallist();
-        materialTableModel.materialid = val.matId!;
-        materialTableModel.material = val.matName!;
-        materialTableModel.scale = val.scale!;
-        materialTableModel.qty = val.qty;
-        materialTableModel.reqQty = val.reqQty;
-        materialTableModel.scaleId = val.scaleId;
-        materialTableModel.reqDetId = val.reqDetId;
-        materialTableModel.balqty = val.balqty!;
-        materialTableModel.stockqty = val.stockqty;
-        materialTableModel.remarks = val.detRemarks!;
-        materialTableModel.desc = val.detDescription;
-        materialTableModel.approxdays = val.approxDays;
-        materialTableList.add(materialTableModel);
+    if(type=="Machinery"){
+      list.forEach((element) {
+        element.machineryReqOrdDetLink.forEach((val) {
+          materialTableModel = Materiallist();
+          materialTableModel.materialid = val.materialId!;
+          materialTableModel.material = val.materialName!;
+          materialTableModel.scale = val.scaleName!;
+          materialTableModel.qty = val.qty;
+          materialTableModel.reqQty = val.reqQty;
+          materialTableModel.scaleId = val.scaleId;
+          materialTableModel.reqDetId = val.id;
+          materialTableModel.balqty = val.balQty;
+          materialTableModel.remarks = val.remarks;
+          materialTableModel.desc = val.reqDesc;
+          materialTableModel.stockqty =
+              double.tryParse(val.stockQty?.toString() ?? '0') ?? 0.0;
+          materialTableList.add(materialTableModel);
+        });
       });
-    });
+    }
+    else {
+      Material_EditListApiValue.forEach((element) {
+        element.requestDet.forEach((val) {
+          materialTableModel = Materiallist();
+          materialTableModel.materialid = val.matId!;
+          materialTableModel.material = val.matName!;
+          materialTableModel.scale = val.scale!;
+          materialTableModel.qty = val.qty;
+          materialTableModel.reqQty = val.reqQty;
+          materialTableModel.scaleId = val.scaleId;
+          materialTableModel.reqDetId = val.reqDetId;
+          materialTableModel.balqty = val.balqty!;
+          materialTableModel.stockqty = val.stockqty;
+          materialTableModel.remarks = val.detRemarks!;
+          materialTableModel.desc = val.detDescription;
+          materialTableModel.approxdays = val.approxDays;
+          materialTableList.add(materialTableModel);
+        });
+      });
+    }
     var savedatas =
-        await materiallistService.Material_table_Save(materialTableList);
+    await materiallistService.Material_table_Save(materialTableList);
     return savedatas;
   }
 

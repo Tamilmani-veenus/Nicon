@@ -218,7 +218,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                           controller: dailyEntriesController.AttendDateController,
                           initialDate: DateTime.now(),
                           firstDate: loginController.user.value.userType == "S"
-                              ? DateTime.now().subtract(const Duration(days: 2))
+                              ? DateTime.now().subtract(Duration(days: AppClient.isNicon ? 1 : 2))
                               : DateTime(2000),
                           lastDate: DateTime.now(),
                           selectable: true,
@@ -555,7 +555,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                           msg:
                                               "Image cannot be added for 'NO WORK'.");
                                     } else {
-                                      if (!AppClient.isPrahkurti && !AppClient.isVrindhavana) {
+                                      if (!AppClient.isPrahkurti && !AppClient.isVrindhavana && !AppClient.isNicon) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
