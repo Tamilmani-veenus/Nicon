@@ -674,6 +674,76 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                     ],
                   ),
                 ),
+                Obx(() => Visibility(
+                    visible: mrn_request_controller
+                        .Material_itemview_GetDbList
+                        .value
+                        .isEmpty
+                        ? false
+                        : true,
+                    child: Container(
+                      height: BaseUtitiles.getheightofPercentage(context, 95),
+                      child: DraggableScrollableSheet(
+                        minChildSize: 0.1,
+                        maxChildSize: 0.9,
+                        initialChildSize: 0.3,
+                        builder: (BuildContext context, ScrollController scrollController) {
+                          return Container(
+                            decoration: const BoxDecoration(
+                              color: Setmybackground,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40.0),
+                                topRight: Radius.circular(40.0),
+                              ),
+                            ),
+                            child: Stack(
+                              children: [
+                                Container(
+                                    height: MediaQuery.of(context).size.height * 1,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: SingleChildScrollView(
+                                      controller: scrollController,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              margin: EdgeInsets.only(top: 10),
+                                              child: ListDetails(context, scrollController)),
+                                        ],
+                                      ),
+                                    )),
+                                IgnorePointer(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(40.0),
+                                        topRight: Radius.circular(40.0),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(top: 20, bottom: 20),
+                                          height: 5,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(10),
+                                              color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                )),
                 // Obx(
                 //       () => MaterialsBottomSheetNew(
                 //     isVisible: mrn_request_controller
@@ -798,30 +868,604 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
     );
   }
 
+  Widget ListDetails(BuildContext context, ScrollController scrollController) {
+    return SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          children: [
+            SizedBox(height: BaseUtitiles.getheightofPercentage(context, 5)),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.79,
+              child: Obx(() => ListView.builder(
+                shrinkWrap: true,
+                // padding: EdgeInsets.only(bottom: 50   ),
+                physics: BouncingScrollPhysics(),
+                itemCount:mrn_request_controller
+                    .Material_itemview_GetDbList
+                    .value
+                    .length,
+                itemBuilder: (BuildContext context, int index) {
+                  mrn_request_controller
+                      .Material_itemlist_textControllersInitiate();
+                  return Container(
+                    margin: EdgeInsets.only(left: 5, right: 5, bottom: 10, top: 0),
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          color: Colors.white,
+                          elevation: 5,
+                          margin: EdgeInsets.only(left: 5, right: 5,top: 0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Container(
+                                margin:
+                                const EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 5,
+                                          child: Text(
+                                            "${mrn_request_controller.Material_itemview_GetDbList.value[index].material}",
+                                            style: TextStyle(
+                                                fontWeight:
+                                                FontWeight
+                                                    .bold,
+                                                fontSize:
+                                                RequestConstant
+                                                    .ALERT_Font_SIZE,
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                          ),
+                                        ),
+                                        // Obx((){
+                                        //   return mrn_request_controller.activeType.value ?
+                                        //    Expanded(
+                                        //     flex: 3,
+                                        //     child: Text(
+                                        //       "( BalQty: ${mrn_request_controller.Material_itemview_GetDbList.value[index].balqty.toString()} )",
+                                        //       style: TextStyle(
+                                        //           fontWeight:
+                                        //           FontWeight
+                                        //               .bold,
+                                        //           fontSize:
+                                        //           RequestConstant
+                                        //               .ALERT_Font_SIZE,
+                                        //           color: Theme.of(context)
+                                        //               .primaryColor),
+                                        //     ),
+                                        //   ) : SizedBox();
+                                        //   },
+                                        // ),
+                                        Visibility(
+                                          visible: machineryIndentController.saveButton.value != RequestConstant.VERIFY
+                                              ? true : false,
+                                          child: SizedBox(
+                                            child:
+                                            InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                  context:
+                                                  context,
+                                                  builder:
+                                                      (context) =>
+                                                      AlertDialog(
+                                                        title:
+                                                        const Text(
+                                                          RequestConstant.DO_YOU_WANT_DELETE,
+                                                          style:
+                                                          TextStyle(color: Colors.black),
+                                                        ),
+                                                        actions: <Widget>[
+                                                          Container(
+                                                            margin: const EdgeInsets.only(left: 20, right: 20),
+                                                            child: IntrinsicHeight(
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: TextButton(
+                                                                      onPressed: () {
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: const Text(
+                                                                        "Cancel",
+                                                                        style: TextStyle(
+                                                                          color: Colors.grey,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontSize: RequestConstant.Lable_Font_SIZE,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  VerticalDivider(
+                                                                    color: Colors.grey.shade400,
+                                                                    width: 5,
+                                                                    thickness: 2,
+                                                                    indent: 15,
+                                                                    endIndent: 15,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: TextButton(
+                                                                        onPressed: () async{
+                                                                          mrn_request_controller.deleteParticularList(mrn_request_controller.Material_itemview_GetDbList[index]);
+                                                                          mrn_request_controller.Material_itemview_GetDbList.remove(mrn_request_controller.Material_itemview_GetDbList[index]);
+                                                                          mrn_request_controller.getMaterialTablesDatas();
+                                                                          Navigator.pop(context);
+                                                                        },
+                                                                        child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                );
+                                              },
+                                              child: const Icon(
+                                                  Icons
+                                                      .remove_circle,
+                                                  color: Colors
+                                                      .red),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Obx((){
+                                    //   return mrn_request_controller.activeType.value ?
+                                    //   Padding(
+                                    //     padding: const EdgeInsets.only(top: 4),
+                                    //     child: Text(
+                                    //       "( BalQty: ${mrn_request_controller.Material_itemview_GetDbList.value[index].balqty.toString()} )",
+                                    //       style: TextStyle(
+                                    //           fontWeight:
+                                    //           FontWeight
+                                    //               .bold,
+                                    //           fontSize:
+                                    //           RequestConstant
+                                    //               .ALERT_Font_SIZE,
+                                    //           color: Colors.red),
+                                    //     ),
+                                    //   ) : SizedBox();
+                                    // },
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                              ////------
 
-  Future<void> ResetAlert(BuildContext context) async {
-    // final confirmed = await AppAlertDialog.showAction(context, AlertAction.reset);
-    //
-    // if (confirmed != true) return;
+                              Container(
+                                margin:
+                                const EdgeInsets
+                                    .only(
+                                    top: 10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment
+                                      .start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                              margin: EdgeInsets.only(left: 15, bottom: 10),
+                                              child: Text(
+                                                  "Unit:  ",
+                                                  style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE, color: Theme.of(context).primaryColor))),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child: Container(
+                                              margin: const EdgeInsets.only(bottom: 10),
+                                              child: Text(
+                                                  mrn_request_controller.Material_itemview_GetDbList.value[index].scale.toString(),
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: RequestConstant.ALERT_Font_SIZE, color: Colors.black))),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child:
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 10,bottom: 10),
+                                            child:
+                                            RichText(
+                                              text: TextSpan(
+                                                  style: const TextStyle(
+                                                    fontSize: 12.0,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.black,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    const TextSpan(
+                                                      text: "Quantity",
+                                                    ),
+                                                    TextSpan(
+                                                      text: mrn_request_controller.Addwork_qtyControllers[index].text != "" && mrn_request_controller.Addwork_qtyControllers[index].text != "0" && mrn_request_controller.Addwork_qtyControllers[index].text != "0.0" ? "" : " *",
+                                                      style: TextStyle(
+                                                        color: mrn_request_controller.Addwork_qtyControllers[index].text != "" && mrn_request_controller.Addwork_qtyControllers[index].text != "0" && mrn_request_controller.Addwork_qtyControllers[index].text != "0.0" ? Colors.white : Colors.red,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ]),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child:
+                                          Container(
+                                            margin: const EdgeInsets.only(top: 5, right: 10,bottom: 10),
+                                            height: BaseUtitiles.getheightofPercentage(context, 3),
+                                            width: BaseUtitiles.getWidthtofPercentage(context, 20),
+                                            child:
+                                            TextFormField(
+                                              autovalidateMode: AutovalidateMode.always,
+                                              onTap: () {
+                                                if (mrn_request_controller.Addwork_qtyControllers[index].text != "" && mrn_request_controller.Addwork_qtyControllers[index].text != "0" && mrn_request_controller.Addwork_qtyControllers[index].text != "0.0") {
+                                                  return;
+                                                } else {
+                                                  mrn_request_controller.Addwork_qtyControllers[index].text = "";
+                                                }
+                                              },
+                                              cursorColor: Theme.of(context).primaryColor,
+                                              textAlign: TextAlign.center,
+                                              controller: mrn_request_controller.Addwork_qtyControllers[index],
+                                              keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
+                                              inputFormatters: [
+                                                TextInputFormatter.withFunction((oldValue, newValue) {
+                                                  return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                                      ? newValue
+                                                      : oldValue;
+                                                }),
+                                              ],
 
+                                              decoration: InputDecoration(contentPadding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor), borderRadius: const BorderRadius.all(Radius.circular(5))),
+                                                enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.grey), borderRadius: BorderRadius.all(Radius.circular(5))),
+                                                errorStyle: const TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 10.0,
+                                                ),
+                                                errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0),
+                                                  borderSide: const BorderSide(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                focusedErrorBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(2.0),
+                                                  borderSide: const BorderSide(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ),
+                                              style: const TextStyle(color: Colors.black),
+                                              onChanged: (value) {
+                                                if(mrn_request_controller.activeType.value){
+                                                  mrn_request_controller.MaterialItemlistBal_clickEdit(index);
+                                                }
+                                                else{
+                                                  mrn_request_controller.updateConsumTables();
+                                                }
+                                              },
+
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin:
+                                      const EdgeInsets
+                                          .only(
+                                          top:
+                                          5,
+                                          right:
+                                          10,
+                                          left:
+                                          10),
+                                      height: BaseUtitiles
+                                          .getheightofPercentage(
+                                          context,
+                                          3),
+                                      child:
+                                      TextFormField(
+                                        cursorColor:
+                                        Theme.of(context)
+                                            .primaryColor,
+                                        textAlign:
+                                        TextAlign
+                                            .center,
+                                        controller:
+                                        mrn_request_controller
+                                            .Addwork_descControllers[index],
+                                        keyboardType:
+                                        TextInputType
+                                            .multiline,
+                                        decoration:
+                                        InputDecoration(
+                                          labelText:
+                                          'Brand/Description',
+                                          labelStyle: const TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              12.0),
+                                          contentPadding: const EdgeInsets
+                                              .fromLTRB(
+                                              5.0,
+                                              0.0,
+                                              5.0,
+                                              0.0),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              borderRadius: const BorderRadius
+                                                  .all(
+                                                  Radius.circular(5))),
+                                          enabledBorder: const OutlineInputBorder(
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                                        ),
+                                        style: const TextStyle(
+                                            color: Colors
+                                                .black),
+                                        onChanged:
+                                            (value) {
+                                          mrn_request_controller
+                                              .MaterialItemlist_clickEdit();
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets
+                                          .only(
+                                          top: 10,
+                                          right: 10,
+                                          left: 10,
+                                          bottom:
+                                          5),
+                                      height: BaseUtitiles
+                                          .getheightofPercentage(
+                                          context,
+                                          3),
+                                      child:
+                                      TextField(
+                                        cursorColor:
+                                        Theme.of(context)
+                                            .primaryColor,
+                                        textAlign:
+                                        TextAlign
+                                            .center,
+                                        controller:
+                                        mrn_request_controller
+                                            .Addwork_remarksControllers[index],
+                                        keyboardType:
+                                        TextInputType
+                                            .multiline,
+                                        decoration:
+                                        InputDecoration(
+                                          labelText:
+                                          'Remarks',
+                                          labelStyle: const TextStyle(
+                                              color: Colors
+                                                  .black,
+                                              fontSize:
+                                              12.0),
+                                          contentPadding: const EdgeInsets
+                                              .fromLTRB(
+                                              5.0,
+                                              0.0,
+                                              5.0,
+                                              0.0),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              borderRadius: const BorderRadius
+                                                  .all(
+                                                  Radius.circular(5))),
+                                          enabledBorder: const OutlineInputBorder(
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                                        ),
+                                        style: const TextStyle(
+                                            color: Colors
+                                                .black),
+                                        onChanged:
+                                            (value) {
+                                          mrn_request_controller
+                                              .MaterialItemlist_clickEdit();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )),
+            ),
+          ],
+        ));
   }
 
-  Future<void> SubmitAlert(context) async {
-    //   final confirmed = await AppAlertDialog.showForLabel(context, machineryIndentController.saveButton.value);
-    //
-    //   if (confirmed != true) return;
-    //
-    //   if (await BaseUtitiles.checkNetworkAndShowLoader(
-    //       context)) {
-    //     await mrn_request_controller
-    //         .getMaterialTablesDatas();
-    //     await machineryIndentController
-    //         .SaveMachineryIntentScreen(
-    //       context,
-    //       machineryIndentController.reqId,
-    //     );
-    //   }
-    // }
+  Future ResetAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: const Text('Are you sure to Reset?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    //color of divider
+                    width: 5,
+                    //width space of divider
+                    thickness: 2,
+                    //thickness of divier line
+                    indent: 15,
+                    //Spacing at the top of divider.
+                    endIndent: 15, //Spacing at the bottom of divider.
+                  ),
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          machineryIndentController.reqId = 0;
+                          machineryIndentController.saveButton.value =
+                              RequestConstant.SUBMIT;
+                          mrn_request_controller
+                              .delete_MaterialIntent_itemlist_Table();
+                          mrn_request_controller.Material_itemview_GetDbList
+                              .clear();
+                          projectController.projectname.text = "--SELECT--";
+                          projectController.selectedProjectId.value = 0;
+                          subcontractorController.Subcontractorname.text =
+                          "--SELECT--";
+                          subcontractorController.selectedSubcontId.value = 0;
+                          machineryIndentController.remarksController.text = '';
+                          machineryIndentController.requestDateController.text =
+                              BaseUtitiles.initiateCurrentDateFormat();
+                          machineryIndentController.dueDateController.text =
+                              BaseUtitiles.initiateCurrentDateFormat();
+                          machineryIndentController.preparedByController.text =
+                              loginController.EmpName();
+                          machineryIndentController.autoYearWiseNoController.text =
+                              autoYearWiseNoController
+                                  .MachineryIndent_autoYrsWise.value;
+                          machineryIndentController.reqTypeController.text =
+                          "--SELECT--";
+                          machineryIndentController.reqType.value = "0";
+                          siteController.selectedsiteId = 0.obs;
+                          siteController.selectedsitedropdownName =
+                              "--SELECT--".obs;
+                          siteController.getSiteDropdownvalue.value.clear();
+                          siteController.Sitename.text = RequestConstant.SELECT;
+                          siteController.siteDropdownName.clear();
+                          bottomsheetControllers.searchcontroller.text = "";
+                          Navigator.pop(context);
+                        },
+                        child: Text("Reset",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future SubmitAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: Text( 'Are you sure to ${machineryIndentController.saveButton.value}?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: RequestConstant.Lable_Font_SIZE,
+                        ),
+                      ),
+                    ),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    width: 5,
+                    thickness: 2,
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                  Expanded(
+                    child: StatefulBuilder(
+                      builder: (context, setState) => TextButton(
+                        onPressed: () async {
+                          if (await BaseUtitiles.checkNetworkAndShowLoader(
+                              context)) {
+                            await mrn_request_controller
+                                .getMaterialTablesDatas();
+                            await machineryIndentController
+                                .SaveMachineryIntentScreen(
+                              context,
+                              machineryIndentController.reqId,
+                            );
+                          }
+                        },
+                        child: Text(
+                          machineryIndentController.saveButton.value,
+                          style: TextStyle(
+                            color:  Theme.of(context).primaryColor,
+                            // Change color when disabled
+                            fontWeight: FontWeight.bold,
+                            fontSize: RequestConstant.Lable_Font_SIZE,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -76,6 +76,7 @@ class _MainManusListState extends State<MainManusList> {
               "Main Menu",
               "Accounts",
               "Payroll",
+              "Machinery",
               "Project Planning"
             ].contains(moduleName)) {
               return const SizedBox.shrink();
@@ -1445,6 +1446,108 @@ class _MainManusListState extends State<MainManusList> {
                                   childAspectRatio: 6 / 6,
                                   crossAxisSpacing: 3,
                                   mainAxisSpacing: 10),
+                        ),
+                      ),
+                    ),
+                  if (menuController.menuListDatas.value[index].moduleName ==
+                      "Machinery")
+                    Container(
+                      margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: GridView.builder(
+                          padding: EdgeInsets.all(5),
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: menuController.machineryList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      menuController.machineryList[index]
+                                          .menuName ==
+                                          "Machinery Indent"
+                                          ? Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColor,
+                                          borderRadius:
+                                          const BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                          // gradient: LinearGradient(
+                                          //   begin: Alignment.topLeft,
+                                          //   end: Alignment.bottomRight,
+                                          //   colors: [
+                                          //     purple,
+                                          //     blue,
+                                          //   ],
+                                          // ),
+                                        ),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.precision_manufacturing,
+                                              color: Colors.white,
+                                              size: 25,
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                          : SizedBox()
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          menuController.machineryList[index]
+                                              .dynamicMenuName ??
+                                              "-",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 13),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              onTap: () async {
+                                menuController.MachineryScreen(
+                                    menuController.machineryList[index].menuName!,menuController.machineryList[index]
+                                    .dynamicMenuName!,
+                                    context);
+                                menuController.formName.value =
+                                menuController.machineryList[index].menuName!;
+                                menuController.formMenuId.value =
+                                menuController.machineryList[index].menuId!;
+                                await commanController
+                                    .getControllEntryListRights();
+                              },
+                            );
+                          },
+                          gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 140,
+                              childAspectRatio: 6 / 6,
+                              crossAxisSpacing: 3,
+                              mainAxisSpacing: 10),
                         ),
                       ),
                     )
