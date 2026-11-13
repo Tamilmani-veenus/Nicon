@@ -29,7 +29,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppClient.init();
   print("Package Name: ${AppClient.packageName}");
-  await ApiConfig.initializeUrl();
+  // await ApiConfig.initializeUrl();
   await Upgrader.clearSavedSettings();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp],);
   await SessionStorage.init();

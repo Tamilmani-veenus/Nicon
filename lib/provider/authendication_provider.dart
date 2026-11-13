@@ -37,10 +37,15 @@ class AuthendicationProvider {
 
     }  catch (error) {
       print("Error == $error");
-      if(from!="session") {
+      if (from == "session") {
+        // splash screen: wait 5 seconds, then show the same error toast
+        await Future.delayed(const Duration(seconds: 5));
+        BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
+      } else {
+        // normal login flow: unchanged
         Navigator.pop(context);
+        BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       }
-      BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       return null;
     }
   }
