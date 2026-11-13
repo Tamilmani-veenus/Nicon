@@ -28,6 +28,7 @@ import '../../utilities/baseutitiles.dart';
 import '../../utilities/requestconstant.dart';
 import '../menus/main_menuslist.dart';
 import 'admin_dashboard.dart';
+import 'dashboard_otheruser.dart';
 import 'material_dashboard.dart';
 
 class Dashboard_screen extends StatefulWidget {
@@ -50,6 +51,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
   bool isAdmin = false;
   bool isMaterial = false;
   bool isHr = false;
+  bool _showPunchPage = false;
   int _currentPage = 0;
   final _pageController = PageController();
   LoginController loginController = Get.put(LoginController());
@@ -279,8 +281,18 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          child: isLabour ? const HomeScreen() : isAdmin ? const AdminHomeScreen()
-                              : isMaterial ? const MaterialHomeScreen() :isHr ? const HrDashboard() :const AdminHomeScreen(),
+                          child: _showPunchPage
+                              ? const HomeScreenOtherUser(Url: "Admin")
+                              : isLabour ? const HomeScreen() : isAdmin ? AdminHomeScreen(onPunchTap: () {
+                            setState(() {
+                              _showPunchPage = true;
+                            });
+                          },)
+                              : isMaterial ? const MaterialHomeScreen() :isHr ? const HrDashboard() : AdminHomeScreen(onPunchTap: () {
+                            setState(() {
+                              _showPunchPage = true;
+                            });
+                          },),
                         ),
                         Container(
                           alignment: Alignment.center,

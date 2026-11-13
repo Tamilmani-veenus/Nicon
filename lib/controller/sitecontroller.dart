@@ -150,7 +150,7 @@ class SiteController extends GetxController {
         reportsController.selectedsiteId.value,
         reportsController.materialDropdowntId.value,
         FromdateController.text,
-        TodateController.text);
+        TodateController.text,reportsController.mrn_Track_type_DPR.value);
     if (value != null) {
       if (value.success == true) {
         if (value.result!.isNotEmpty) {

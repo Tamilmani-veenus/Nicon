@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,21 +6,23 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
-import '../../app_theme/app_colors.dart';
 import '../../commonpopup/adminDashViewAllScreen.dart';
 import '../../controller/admin_dashboard_controller.dart';
 import '../../controller/logincontroller.dart';
+import '../../controller/punch_in_controller.dart';
 import '../../controller/site_location_controller.dart';
 import '../../home/dashboard/site_locations_view.dart';
 import '../../login/animation_signinpage/signin_page.dart';
 import '../../models/admin_dashboard_response.dart';
 import '../../utilities/baseutitiles.dart';
-import '../../utilities/requestconstant.dart';
+import 'dashboard_otheruser.dart';
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
   AdminDashboardController adminDashboardController = Get.put(AdminDashboardController());
   LoginController loginController = Get.put(LoginController());
   SiteLocationController siteLocationController = Get.put(SiteLocationController());
+  PunchInController punchInController = Get.put(PunchInController());
+
   late TooltipBehavior _tooltipBehavior;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
   GlobalKey<RefreshIndicatorState>();
@@ -270,6 +271,114 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             height: 10,
                           ),
                           _pinSiteLocationCard(context),
+                          punchAttendanceCard(context),
+                          GestureDetector(
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (_) => const HomeScreenOtherUser(Url: "Admin"),
+                              //   ),
+                              // );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 4,
+                                right: 4,
+                                top: 2,
+                                bottom: 12,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor.withOpacity(0.18),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(.04),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Obx(() {
+                                final isPunchedIn =
+                                    punchInController.resPunchSts.value == "true";
+
+                                return Row(
+                                  children: [
+                                    // PUNCH ICON
+                                    Container(
+                                      width: 46,
+                                      height: 46,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor.withOpacity(.09),
+                                        borderRadius: BorderRadius.circular(13),
+                                      ),
+                                      child: Icon(
+                                        isPunchedIn
+                                            ? Icons.logout_rounded
+                                            : Icons.access_time_rounded,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 27,
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 13),
+
+                                    // TITLE + SUBTITLE
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            isPunchedIn ? 'Punch Out' : 'Punch In',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade800,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 4),
+
+                                          Text(
+                                            isPunchedIn
+                                                ? 'Already punched in'
+                                                : 'Tap here to punch in',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade500,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 8),
+
+                                    // ARROW
+                                    Image.asset(
+                                      'assets/images/ic_arrow.png',
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
                           Obx(() => GridView.builder(
                             padding: EdgeInsets.only(top: 8),
                             shrinkWrap: true,
@@ -2538,11 +2647,152 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
     );
   }
+
+
+
+  Widget punchAttendanceCard(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        left: 4,
+        right: 4,
+        top: 2,
+        bottom: 12,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          widget.onPunchTap?.call();
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (_) =>
+          //     const HomeScreenOtherUser(Url: "Admin"),
+          //   ),
+          // );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: Theme.of(context).primaryColor
+                  .withOpacity(0.15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Obx(() {
+            final isPunchedIn =
+                punchInController.resPunchSts.value == "true";
+
+            return Row(
+              children: [
+                // LEFT CONTENT
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_month_rounded,
+                            color: Colors.grey.shade500,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            "DAILY ATTENDANCE",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey.shade500,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        isPunchedIn ? "Punch Out" : "Punch In",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      Text(
+                        isPunchedIn
+                            ? "Already punched in"
+                            : "Tap to mark your attendance",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // RIGHT ACTION SECTION
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        isPunchedIn
+                            ? Icons.logout_rounded
+                            : Icons.fingerprint_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        isPunchedIn ? "PUNCH OUT" : "PUNCH IN",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
 }
 
 class AdminHomeScreen extends StatefulWidget {
   final bool isAdmin;
-  const AdminHomeScreen({super.key,this.isAdmin = false,});
+  final VoidCallback? onPunchTap;
+  const AdminHomeScreen({super.key,this.isAdmin = false,this.onPunchTap,});
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
