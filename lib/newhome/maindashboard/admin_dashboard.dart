@@ -2624,7 +2624,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       Text(
                         isPunchedIn ? "Punch Out" : "Punch In",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
                         ),
@@ -2662,9 +2662,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        isPunchedIn
-                            ? Icons.logout_rounded
-                            : Icons.fingerprint_rounded,
+                        Icons.fingerprint_rounded,
                         color: Colors.white,
                         size: 22,
                       ),
@@ -2673,7 +2671,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         isPunchedIn ? "PUNCH OUT" : "PUNCH IN",
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 9,
+                          fontSize: 8,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
