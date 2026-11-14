@@ -47,76 +47,91 @@ class _SplashState extends State<Splash> {
 
   String versionName = "";
   String code = "";
-
-
+  bool _hasError = false;
+  bool _isRefreshing = false;
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () async {
-      if (!mounted) return;
+    _initializeApp();
+  }
 
+  Future<void> _initializeApp({bool isRefresh = false}) async {
+    final stopwatch = Stopwatch()..start();
+
+    if (isRefresh) {
+      // keep the error screen visible, just disable the button
+      setState(() => _isRefreshing = true);
+    } else {
+      _hasError = false;
+    }
+
+    bool failed = false;
+
+    try {
+      await ApiConfig.initializeUrl();
       await BaseUtitiles.getDeviceDetails();
 
       DBManager dbManager = DBManager();
       await dbManager.database;
 
-      if (!mounted) return;
+      final ok = await SessionCheck();
+      failed = !ok;
+    } catch (e) {
+      debugPrint("Splash Initialization Error: $e");
+      failed = true;
+    }
 
-      await SessionCheck();
+    if (!failed) return; // navigation already happened
+
+    // On manual refresh, wait until 5 seconds have passed since the tap
+    if (isRefresh) {
+      final remaining = const Duration(seconds: 5) - stopwatch.elapsed;
+      if (remaining > Duration.zero) {
+        await Future.delayed(remaining);
+      }
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _hasError = true;
+      _isRefreshing = false;
     });
+
   }
 
-  Future<void> SessionCheck() async {
-    try {
-      loginController.seassion_values = SessionStorage.readUser();
+  /// returns true if it navigated away, false if validation failed
+  Future<bool> SessionCheck() async {
+    loginController.seassion_values = SessionStorage.readUser();
 
-      if (loginController.seassion_values == null) {
-        if (!mounted) return;
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SignInPage()),
-        );
-        return;
-      }
-
-      await loginController.getLoginNew_seassionvalues(context);
-
-      if (!mounted) return;
-
-      if (loginController.user.value.success == true) {
-        if (loginController.user.value.userType == "A") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard_screen()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DashboardScreen_OtherUser(),
-            ),
-          );
-        }
-      }
-      else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SignInPage()),
-        );
-      }
-    } catch (e) {
-      debugPrint("SessionCheck Error: $e");
-
-      if (!mounted) return;
-
+    if (loginController.seassion_values == null) {
+      if (!mounted) return true;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignInPage()),
       );
+      return true;
     }
+
+    await loginController.getLoginNew_seassionvalues(context);
+
+    if (!mounted) return true;
+
+    if (loginController.user.value.success == true) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => loginController.user.value.userType == "A"
+              ? Dashboard_screen()
+              : DashboardScreen_OtherUser(),
+        ),
+      );
+      return true;
+    }
+
+    return false;
   }
 
 
@@ -124,16 +139,90 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            color: Colors.white,
-            child: Image.asset('assets/images/loading.gif'),
+      body: Center(
+        child: _hasError
+            ? Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Image.asset(
+                'assets/images/loading.gif',
+                height: 100,
+              ),
+
+              const SizedBox(height: 20),
+
+              const Text(
+                "Connection Failed",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              const Text(
+                "Unable to connect. Please try again.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+
+              const SizedBox(height: 25),
+
+              ElevatedButton.icon(
+                onPressed: _isRefreshing ? null : () => _initializeApp(isRefresh: true),
+                icon: _isRefreshing
+                    ? const SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+                    : const Icon(Icons.refresh),
+                label: Text(_isRefreshing ? "Please wait..." : "Refresh"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4A3AFF),
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.grey.shade400, // disabled look
+                  disabledForegroundColor: Colors.white70,
+                  padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 13),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        )
+            : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              color: Colors.white,
+              child: Image.asset(
+                'assets/images/loading.gif',
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            const Text(
+              "Checking connection...",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
