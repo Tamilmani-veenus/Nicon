@@ -140,15 +140,14 @@ class _HrDashboardState extends State<HrDashboard> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return  WillPopScope(
-      onWillPop: () async {
+    return  PopScope(
+        canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (_) => const Dashboard_screen(),
-          ),
+          MaterialPageRoute(builder: (_) => const Dashboard_screen()),
         );
-        return false;
       },
       child: SafeArea(
           top: false,

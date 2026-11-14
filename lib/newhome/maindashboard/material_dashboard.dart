@@ -131,15 +131,14 @@ class _MaterialHomeScreenState extends State<MaterialHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (_) => const Dashboard_screen(),
-          ),
+          MaterialPageRoute(builder: (_) => const Dashboard_screen()),
         );
-        return false;
       },
       child: SafeArea(
         top: false,

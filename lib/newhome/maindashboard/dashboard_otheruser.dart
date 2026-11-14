@@ -231,8 +231,9 @@ class _DashboardScreen_OtherUserState extends State<DashboardScreen_OtherUser> {
 
 class HomeScreenOtherUser extends StatefulWidget {
   final String? Url;
+  final VoidCallback? onPunchCompleted;
   const
-  HomeScreenOtherUser({Key? key,this.Url}) : super(key: key);
+  HomeScreenOtherUser({Key? key,this.Url,this.onPunchCompleted,}) : super(key: key);
 
   @override
   State<HomeScreenOtherUser> createState() => _HomeScreenOtherUserState();
@@ -323,12 +324,15 @@ class _HomeScreenOtherUserState extends State<HomeScreenOtherUser> {
   @override
   void initState() {
     super.initState();
+    punchInController.onPunchCompleted =
+        widget.onPunchCompleted;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!AppClient.isPrahkurti) {
         punchInController.getPunchTypeList();
         punchInController.getProjectPunchInSts();
       }
       SignInPage.checkVersion(context);
+
     });
   }
 
@@ -348,16 +352,40 @@ class _HomeScreenOtherUserState extends State<HomeScreenOtherUser> {
       },
       child: Scaffold(
         body: SingleChildScrollView(
-          child: WillPopScope(
-            onWillPop: () async {
+          child: PopScope(
+              canPop: false,
+            onPopInvoked: (didPop) {
+              if (didPop) return;
               if(widget.Url == "Admin"){
-                Get.to(() => Dashboard_screen());
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const Dashboard_screen(),
+                  ),
+                );
               }
               else{
                 showExitPopup(context);
               }
-              return true;
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(builder: (_) => const Dashboard_screen()),
+              // );
             },
+            // onWillPop: () async {
+            //   if(widget.Url == "Admin"){
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (_) => const Dashboard_screen(),
+            //       ),
+            //     );
+            //   }
+            //   else{
+            //     showExitPopup(context);
+            //   }
+            //   return true;
+            // },
             child: Container(
               padding: const EdgeInsets.all(20),
               child: Column(

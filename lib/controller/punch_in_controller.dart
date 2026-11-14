@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:nicon/newhome/maindashboard/dashboard.dart';
 import 'package:ntp/ntp.dart';
 import 'package:nicon/controller/site_location_controller.dart';
 import '../models/punch_filter_response.dart';
@@ -62,6 +63,8 @@ class PunchInController extends GetxController with StateMixin<HomeState> {
   RxInt selectedRadio = 0.obs;
   RxList originalList = [].obs; // Full list from API
   RxList filteredList = [].obs; // List to display based on search
+  VoidCallback? onPunchCompleted;
+
 
   @override
   void onInit() async {
@@ -127,7 +130,13 @@ class PunchInController extends GetxController with StateMixin<HomeState> {
     if (data != null) {
       if (data["success"] == true) {
         BaseUtitiles.showToast(data["message"]);
-        Get.to(() => DashboardScreen_OtherUser());
+        if(loginController.user.value.userType == "A") {
+            Get.to(() => Dashboard_screen());
+          }
+        else{
+          Get.to(() => DashboardScreen_OtherUser());
+        }
+
         getProjectPunchInSts();
         punchInRemarks.text = "";
         punchAddress.value = "";
@@ -135,7 +144,12 @@ class PunchInController extends GetxController with StateMixin<HomeState> {
         punchLat.value = "";
         imageFile.value = null;
       } else {
-        Get.to(() => DashboardScreen_OtherUser());
+        if(loginController.user.value.userType == "A"){
+          Get.to(() => Dashboard_screen());
+        }
+        else{
+          Get.to(() => DashboardScreen_OtherUser());
+        }
         BaseUtitiles.showToast(data["message"] ?? "Something went wrong...");
       }
     } else {
@@ -172,7 +186,12 @@ class PunchInController extends GetxController with StateMixin<HomeState> {
     if (data != null) {
       if (data["success"] == true) {
         BaseUtitiles.showToast(data["message"]);
-        Get.to(() => DashboardScreen_OtherUser());
+        if(loginController.user.value.userType == "A") {
+          Get.to(() => Dashboard_screen());
+        }
+        else{
+          Get.to(() => DashboardScreen_OtherUser());
+        }
         getProjectPunchInSts();
         punchOutRemarks.text = "";
         punchAddress.value = "";
@@ -180,7 +199,12 @@ class PunchInController extends GetxController with StateMixin<HomeState> {
         punchLat.value = "";
         imageFile.value = null;
       } else {
-        Get.to(() => DashboardScreen_OtherUser());
+        if(loginController.user.value.userType == "A"){
+          Get.to(() => Dashboard_screen());
+        }
+        else{
+          Get.to(() => DashboardScreen_OtherUser());
+        }
         BaseUtitiles.showToast(data["message"] ?? "Something went wrong...");
       }
     } else {

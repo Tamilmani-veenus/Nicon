@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:nicon/utilities/apiconstant.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math' as math;
@@ -46,6 +47,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       if (!mounted) return;
       SignInPage.checkVersion(context);
       await adminDashboardController.getAdminDashboardDetails();
+      await punchInController.getProjectPunchInSts();
     });
   }
 
@@ -271,114 +273,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             height: 10,
                           ),
                           _pinSiteLocationCard(context),
+
+                          if(AppClient.isNicon)
                           punchAttendanceCard(context),
-                          GestureDetector(
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (_) => const HomeScreenOtherUser(Url: "Admin"),
-                              //   ),
-                              // );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                left: 4,
-                                right: 4,
-                                top: 2,
-                                bottom: 12,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(18),
-                                border: Border.all(
-                                  color: Theme.of(context).primaryColor.withOpacity(0.18),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(.04),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Obx(() {
-                                final isPunchedIn =
-                                    punchInController.resPunchSts.value == "true";
 
-                                return Row(
-                                  children: [
-                                    // PUNCH ICON
-                                    Container(
-                                      width: 46,
-                                      height: 46,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor.withOpacity(.09),
-                                        borderRadius: BorderRadius.circular(13),
-                                      ),
-                                      child: Icon(
-                                        isPunchedIn
-                                            ? Icons.logout_rounded
-                                            : Icons.access_time_rounded,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 27,
-                                      ),
-                                    ),
-
-                                    const SizedBox(width: 13),
-
-                                    // TITLE + SUBTITLE
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            isPunchedIn ? 'Punch Out' : 'Punch In',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey.shade800,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 4),
-
-                                          Text(
-                                            isPunchedIn
-                                                ? 'Already punched in'
-                                                : 'Tap here to punch in',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.grey.shade500,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    const SizedBox(width: 8),
-
-                                    // ARROW
-                                    Image.asset(
-                                      'assets/images/ic_arrow.png',
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ),
-                          ),
                           Obx(() => GridView.builder(
                             padding: EdgeInsets.only(top: 8),
                             shrinkWrap: true,
@@ -2557,6 +2455,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 () => const SiteLocationView(
               allotedStatus: "0",
               checkValue: "1",
+                  Url: "PIN SITE VIEW",
             ),
           );
         },
@@ -2659,7 +2558,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         bottom: 12,
       ),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          await punchInController.getProjectPunchInSts();
           widget.onPunchTap?.call();
           // Navigator.push(
           //   context,
@@ -2688,7 +2588,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           ),
           child: Obx(() {
             final isPunchedIn =
-                punchInController.resPunchSts.value == "true";
+                punchInController.resPunchSts.value.toString().toUpperCase() == "TRUE";
 
             return Row(
               children: [
