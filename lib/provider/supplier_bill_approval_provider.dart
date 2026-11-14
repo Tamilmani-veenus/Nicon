@@ -7,7 +7,7 @@ import '../utilities/apiconstant.dart';
 class SupplierBillAppProvider{
   static Future<SuppBillAppGetById?> SupplierBillGetByIdAPI(int reqId,type) async {
     try {
-      final value = await ApiManager.getAPICall(type=="G"?"${ApiConstant.GET_SUPP_BILL_DIRECT_APP_EDIT_API}?id=$reqId":"${ApiConstant.GET_SUPP_BILL_APP_EDIT_API}?id=$reqId");
+      final value = await ApiManager.getAPICall(type=="G" || type=="W"?"${ApiConstant.GET_SUPP_BILL_DIRECT_APP_EDIT_API}?id=$reqId":"${ApiConstant.GET_SUPP_BILL_APP_EDIT_API}?id=$reqId");
       return suppBillAppGetByIdFromJson(value);
     } catch (error,e) {
       print("Error == $e");

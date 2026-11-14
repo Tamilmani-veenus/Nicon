@@ -89,9 +89,6 @@ class SupplierBillApprovalController extends GetxController {
 
       if (value != null) {
         if (value.success == true) {
-          if(type!="G" && type!="P"){
-            BaseUtitiles.showToast("Rental Bill – Work in Progress");
-          }else {
             await delete_SuppBill_itemlist_Table();
 
             suppBillAppEditListValue.value = [value];
@@ -105,7 +102,6 @@ class SupplierBillApprovalController extends GetxController {
                 builder: (context) => SupplierBillEntry(heading: MenuName),
               ),
             );
-          }
         } else {
           BaseUtitiles.showToast(
               value.message ?? 'Something went wrong..');
