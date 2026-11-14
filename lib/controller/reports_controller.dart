@@ -49,7 +49,8 @@ class ReportsController extends GetxController{
   RxList getCompanyDropDownvalue=[].obs;
   RxInt selectedCompanyId = 0.obs;
 
-
+  final mrnTracker_Type_Controller = TextEditingController();
+  RxString mrn_Track_type_DPR = "".obs;
   //-------------Get Projects Reports---------------
 
   Future getReportProjectList({String? type,String? Url}) async {

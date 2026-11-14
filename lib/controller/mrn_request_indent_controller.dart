@@ -511,7 +511,7 @@ class MRN_Request_Controller extends GetxController {
         if (saveButton.value == RequestConstant.VERIFY) {
           BaseUtitiles.showToast(list["message"]);
           await pendingListController.getPendingList();
-          BaseUtitiles.popMultiple(context, count: 4);
+          BaseUtitiles.popMultiple(context, count: 5);
         } else {
           BaseUtitiles.showToast(list["message"]);
           await getMrn_Req_EntryList();

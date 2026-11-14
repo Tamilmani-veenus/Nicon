@@ -63,12 +63,15 @@ class OnclickPendingDetResult {
   List<MMatPurOrdLink>? mMatPurOrdLink;
   List<MaterialTransferRequestDets>? materialTransferRequestDets;
   List<MMatRenWorkElement>?mMatRenWorkElement;
+  List<MachineryReqOrdDetLink>?machineryReqOrdDetLink;
 
   OnclickPendingDetResult({
     this.mMatReqMasLink,
     this.mMatPurOrdLink,
     this.materialTransferRequestDets,
     this.mMatRenWorkElement,
+    this.machineryReqOrdDetLink,
+
   });
 
 
@@ -97,6 +100,11 @@ class OnclickPendingDetResult {
           : List<MMatRenWorkElement>.from(
           json["mMatRenWork"]
               .map((x) => MMatRenWorkElement.fromJson(x))),
+      machineryReqOrdDetLink: json["machineryReqOrdDetLink"] == null
+          ? []
+          : List<MachineryReqOrdDetLink>.from(
+          json["machineryReqOrdDetLink"]
+              .map((x) => MachineryReqOrdDetLink.fromJson(x))),
     );
   }
 
@@ -104,7 +112,8 @@ class OnclickPendingDetResult {
     "mMatReqMasLink": List<dynamic>.from(mMatReqMasLink!.map((x) => x.toJson())),
     "mMatPurOrdLink": List<dynamic>.from(mMatPurOrdLink!.map((x) => x.toJson())),
     "materialTransferRequestDets": List<dynamic>.from(materialTransferRequestDets!.map((x) => x.toJson())),
-    "mMatRenWork": List<dynamic>.from(mMatRenWorkElement!.map((x) =>  x.toJson()))
+    "mMatRenWork": List<dynamic>.from(mMatRenWorkElement!.map((x) =>  x.toJson())),
+    "machineryReqOrdDetLink": List<dynamic>.from(machineryReqOrdDetLink!.map((x) =>  x.toJson())),
   };
 }
 
@@ -668,3 +677,62 @@ class MMatRenWorkElement {
   };
 }
 
+class MachineryReqOrdDetLink {
+  int? id;
+  int? machineryReqOrdMasid;
+  int? materialId;
+  int? scaleId;
+  double? reqQty;
+  double? qty;
+  String? remarks;
+  String? reqDesc;
+  String? scaleName;
+  String? materialName;
+  int? stockQty;
+  double? balQty;
+
+  MachineryReqOrdDetLink({
+    this.id,
+    this.machineryReqOrdMasid,
+    this.materialId,
+    this.scaleId,
+    this.reqQty,
+    this.qty,
+    this.remarks,
+    this.reqDesc,
+    this.scaleName,
+    this.materialName,
+    this.stockQty,
+    this.balQty,
+  });
+
+  factory MachineryReqOrdDetLink.fromJson(Map<String, dynamic> json) => MachineryReqOrdDetLink(
+    id: json["id"],
+    machineryReqOrdMasid: json["machineryReqOrdMasid"],
+    materialId: json["machineryId"],
+    scaleId: json["scaleID"],
+    reqQty: json["reqQty"],
+    qty: json["qty"],
+    remarks: json["remarks"],
+    reqDesc: json["reqDesc"],
+    scaleName: json["scaleName"],
+    materialName: json["machineryName"],
+    stockQty: json["stockQty"],
+    balQty: json["balQty"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "machineryReqOrdMasid": machineryReqOrdMasid,
+    "machineryId": materialId,
+    "scaleID": scaleId,
+    "reqQty": reqQty,
+    "qty": qty,
+    "remarks": remarks,
+    "reqDesc": reqDesc,
+    "scaleName": scaleName,
+    "machineryName": materialName,
+    "stockQty": stockQty,
+    "balQty": balQty,
+  };
+}

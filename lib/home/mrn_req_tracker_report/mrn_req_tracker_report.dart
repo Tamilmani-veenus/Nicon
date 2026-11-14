@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../app_theme/app_colors.dart';
+import '../../commonpopup/worktype_alert.dart';
 import '../../constants/ui_constant/icons_const.dart';
 import '../../controller/accountsettings_controller.dart';
 import '../../controller/attendancecontroller.dart';
@@ -12,6 +14,7 @@ import '../../controller/projectcontroller.dart';
 import '../../controller/reports_controller.dart';
 import '../../controller/sitecontroller.dart';
 import '../../controller/subcontcontroller.dart';
+import '../../utilities/apiconstant.dart';
 import '../../utilities/baseutitiles.dart';
 import '../../utilities/common_date_fields.dart';
 import '../../utilities/requestconstant.dart';
@@ -53,6 +56,8 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
       reportsController.selectedCompanyId.value = 0;
       reportsController.Subheadername.text = "--ALL--";
       reportsController.materialDropdowntId.value = 0;
+      reportsController.mrnTracker_Type_Controller.text = "Direct Details";
+      reportsController.mrn_Track_type_DPR.value = "D";
     });
     super.initState();
   }
@@ -256,7 +261,6 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                     ),
                   ),
                 ),
-
                 Container(
                   margin: EdgeInsets.only(top: 5, left: 10, right: 10),
                   child: Card(
@@ -297,31 +301,72 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                     ),
                   ),
                 ),
+                Container(
+                  margin: EdgeInsets.only(top: 5, left: 10, right: 10),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.white70, width: 1),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 3,
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.only(top: 3, left: 10, bottom: 5),
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: reportsController.mrnTracker_Type_Controller,
+                        cursorColor: Colors.black,
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          border: InputBorder.none,
+                          labelText: "Tracker Type",
+                          labelStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: RequestConstant.Lable_Font_SIZE),
+                          prefixIconConstraints:
+                          BoxConstraints(minWidth: 0, minHeight: 0),
+                          prefixIcon: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 8),
+                              child: ConstIcons.materialName
 
+                          ),
+                        ),
+                        onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const MrnTrackerTypeAlertAll();
+                              });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.only(top: 10,),
                   child: IntrinsicHeight(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         InkWell(
                           child: Container(
                             margin: EdgeInsets.only(left: 20, right: 20, top: 10),
                             height: BaseUtitiles.getheightofPercentage(context, 4),
-                            width: BaseUtitiles.getWidthtofPercentage(context, 18),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color:  Theme.of(context).primaryColor
+                              color:  Theme.of(context).primaryColor,
                             ),
                             alignment: Alignment.center,
-                            child: Padding(
+                            child:
+                            Padding(
                               padding: const EdgeInsets.all(5),
-                              child: Text("Show",
+                              child: Text("List View",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: RequestConstant.Lable_Font_SIZE,
-                                    color: Colors.white
-                                ),
+                                    color:  Colors.white),
                               ),
                             ),
                           ),
@@ -332,10 +377,59 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                             }
                           },
                         ),
+
+                        VerticalDivider(
+                          color: Colors.grey.shade400,
+                          width: 5,
+                          thickness: 2,
+                          indent: 15,
+                          endIndent: 8, //Spacing at the bottom of divider.
+                        ),
+
+                        InkWell(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+                            height: BaseUtitiles.getheightofPercentage(context, 4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            alignment: Alignment.center,
+                            child:
+                            Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Text("PDF Download",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                    color: Colors.white
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () async {
+                            if(_formKey.currentState!.validate()){
+                              // download(loginController.user.value.userId!,
+                              //     loginController.user.value.userType!,
+                              //     reportsController.selectedProjectId.value,
+                              //     reportsController.selectedsiteId.value,
+                              //     reportsController.selectedSubcontId.value,
+                              //     dprController.FromdateController.text,
+                              //     dprController.TodateController.text,
+                              //     reportsController.projectname.text,
+                              //     reportsController.sitename.text,
+                              //     reportsController.subcontractorname.text,
+                              //     dailyWrkDone_DPR_Controller.wrktype_DPR.value,
+                              //     dailyWrkDone_DPR_Controller.reportType.value);
+                            }
+                          },
+                        ),
+
                       ],
                     ),
                   ),
                 ),
+
 
                 SizedBox(height: BaseUtitiles.getheightofPercentage(context, 2)),
 
@@ -347,6 +441,11 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
         ),
       ),
     );
+  }
+
+  download(int uid,String uType,int pId,int SId,int subId,String fdate,String todate,String pName,String sName,String subName,String wType,int repType){
+    launch(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
+    print(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
   }
 
   Widget ListDetails(){

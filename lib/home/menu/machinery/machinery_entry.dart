@@ -141,10 +141,14 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Visibility(
-                      visible:
+                      visible:machineryIndentController.saveButton.value !=
+                          RequestConstant.APPROVAL
+                          && machineryIndentController.saveButton.value !=
+                              RequestConstant.PREAPPROVAL
+                          &&
                       machineryIndentController.saveButton.value !=
                           RequestConstant.VERIFY
-                          || machineryIndentController.saveButton.value !=
+                          && machineryIndentController.saveButton.value !=
                           RequestConstant.RESUBMIT
                           ? true
                           : false,
@@ -626,6 +630,10 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                           BaseUtitiles.getheightofPercentage(context, 1)),
                       Visibility(
                         visible: machineryIndentController.saveButton.value !=
+                            RequestConstant.PREAPPROVAL
+                            && machineryIndentController.saveButton.value !=
+                                RequestConstant.APPROVAL
+                            && machineryIndentController.saveButton.value !=
                             RequestConstant.VERIFY,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -873,7 +881,7 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
         controller: scrollController,
         child: Column(
           children: [
-            SizedBox(height: BaseUtitiles.getheightofPercentage(context, 5)),
+            SizedBox(height: BaseUtitiles.getheightofPercentage(context, 2)),
             Container(
               height: MediaQuery.of(context).size.height * 0.79,
               child: Obx(() => ListView.builder(
@@ -944,7 +952,11 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                                         //   },
                                         // ),
                                         Visibility(
-                                          visible: machineryIndentController.saveButton.value != RequestConstant.VERIFY
+                                          visible: machineryIndentController.saveButton.value !=
+                                              RequestConstant.PREAPPROVAL
+                                              && machineryIndentController.saveButton.value !=
+                                                  RequestConstant.APPROVAL
+                                              && machineryIndentController.saveButton.value != RequestConstant.VERIFY
                                               ? true : false,
                                           child: SizedBox(
                                             child:
@@ -1058,7 +1070,7 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                                           .spaceBetween,
                                       children: [
                                         Expanded(
-                                          flex: 4,
+                                          flex: 3,
                                           child: Container(
                                               margin: EdgeInsets.only(left: 15, bottom: 10),
                                               child: Text(

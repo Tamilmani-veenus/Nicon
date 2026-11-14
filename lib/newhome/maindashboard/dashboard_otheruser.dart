@@ -34,6 +34,7 @@ import '../../utilities/requestconstant.dart';
 import '../menus/main_menuslist.dart';
 import '../pendinglist.dart';
 import '../reports/reports.dart';
+import 'dashboard.dart';
 
 
 class DashboardScreen_OtherUser extends StatefulWidget {
@@ -224,12 +225,14 @@ class _DashboardScreen_OtherUserState extends State<DashboardScreen_OtherUser> {
         ],
       ),
     );
-  }}
+  }
+}
 
 
 class HomeScreenOtherUser extends StatefulWidget {
+  final String? Url;
   const
-  HomeScreenOtherUser({Key? key}) : super(key: key);
+  HomeScreenOtherUser({Key? key,this.Url}) : super(key: key);
 
   @override
   State<HomeScreenOtherUser> createState() => _HomeScreenOtherUserState();
@@ -347,7 +350,12 @@ class _HomeScreenOtherUserState extends State<HomeScreenOtherUser> {
         body: SingleChildScrollView(
           child: WillPopScope(
             onWillPop: () async {
-              showExitPopup(context);
+              if(widget.Url == "Admin"){
+                Get.to(() => Dashboard_screen());
+              }
+              else{
+                showExitPopup(context);
+              }
               return true;
             },
             child: Container(
