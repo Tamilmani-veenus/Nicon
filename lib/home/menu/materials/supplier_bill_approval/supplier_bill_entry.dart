@@ -1195,6 +1195,10 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                   context,
                                   item,
                                   index,
+                                    supplierBillApprovalController
+                                        .suppBillAppEditListValue[0]
+                                        .result
+                                        .poBillType
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
@@ -1465,7 +1469,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
     });
   }
 
-  void showAmountDetailsDialog(BuildContext context, item, int index) {
+  void showAmountDetailsDialog(BuildContext context, item, int index,type) {
     final Color primaryColor = Theme.of(context).primaryColor;
 
     final Map<String, String> values = {
@@ -1478,7 +1482,8 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       'IGST %': item.igstPer.toString(),
       'IGST Amt': item.igstAmt.toString(),
       'Net Amount': item.netAmount.toString(),
-      'Expiry Date': item.expiryDate ?? "Not Applicable".toString(),
+      if (type == "G")
+        'Expiry Date': item.expiryDate ?? "Not Applicable",
     };
 
     values.forEach((key, value) {
@@ -1556,16 +1561,17 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                       },
                     ),
 
-                    const SizedBox(height: 14),
-
                     // Net Amount
-                    _buildAmountDetailField(
-                      'Expiry Date',
-                      primaryColor,
-                      item: item,
-                      index: index,
-                      setDialogState: setDialogState,
-                    ),
+                    if (type == "G") ...[
+                      const SizedBox(height: 14),
+                      _buildAmountDetailField(
+                        'Expiry Date',
+                        primaryColor,
+                        item: item,
+                        index: index,
+                        setDialogState: setDialogState,
+                      ),
+                    ],
 
                     const SizedBox(height: 14),
 
