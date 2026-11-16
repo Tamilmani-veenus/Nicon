@@ -70,16 +70,65 @@ class MachineryIndentController extends GetxController {
     return MachineryIndentProvider.machineryListDeleteAPI(reqId);
   }
 
-  Future<void> deleteAlert(BuildContext context, int index) async {
-    // final confirmed = await AppAlertDialog.showAction(context, AlertAction.delete);
-
-    // if (confirmed == true) {
-    //   bool result = await machineryEntryListDeleteApi(macReqEtyList.value[index].id);
-    //   if (result) {
-    //     macReqEtyList.removeAt(index);
-    //   }
-    // }
+  Future DeleteAlert(BuildContext context, int index) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: const Text('Do you want to Delete?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400, //color of divider
+                    width: 5, //width space of divider
+                    thickness: 2, //thickness of divier line
+                    indent: 15, //Spacing at the top of divider.
+                    endIndent: 15, //Spacing at the bottom of divider.
+                  ),
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          bool result = await machineryEntryListDeleteApi(macReqEtyList.value[index].id);
+                          // Material_EntryList_DeleteApi(MrnReqEtyList.value[index].reqMasId);
+                          if (result) {
+                            macReqEtyList.removeAt(index);
+                            Navigator.of(context).pop();
+                          }
+                          else{
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text("Delete",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
 
   Future SaveMachineryIntentScreen(BuildContext context, int id) async {
     getRequestDetList.value.clear();
@@ -139,10 +188,12 @@ class MachineryIndentController extends GetxController {
     debugPrint(prettyJson, wrapWidth: 1024);
     if (list != null) {
       if (list["success"] == true) {
-        if (saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.PREAPPROVAL || saveButton.value == RequestConstant.APPROVAL) {
+        if (saveButton.value == RequestConstant.VERIFY
+            || saveButton.value == RequestConstant.PREAPPROVAL
+            || saveButton.value == RequestConstant.APPROVAL) {
           BaseUtitiles.showToast(list["message"]);
           await pendingListController.getPendingList();
-          BaseUtitiles.popMultiple(context, count: 4);
+          BaseUtitiles.popMultiple(context, count: 3);
         } else {
           BaseUtitiles.showToast(list["message"]);
           await getMacIndentEntryList();
@@ -203,7 +254,7 @@ class MachineryIndentController extends GetxController {
             else{
               saveButton.value = RequestConstant.APPROVAL;
             }
-            await Navigator.push(
+            await Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>  MachineryIndentEntry(heading: MenuName,)));

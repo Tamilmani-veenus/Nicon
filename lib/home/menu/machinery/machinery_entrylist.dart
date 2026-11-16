@@ -772,7 +772,7 @@ class _MachineryIndentEntryListState extends State<MachineryIndentEntryList> {
                                                                         () async {
                                                                       Navigator.pop(
                                                                           context);
-                                                                      machineryIndentController.deleteAlert(
+                                                                      machineryIndentController.DeleteAlert(
                                                                         context,
                                                                         index,
                                                                       );
