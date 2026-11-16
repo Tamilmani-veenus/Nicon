@@ -21854,7 +21854,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
             Text('Alert!'),
             Container(
               child: Text(
-                pendingListController.mainlist.value[index].reqOrdNo.toString(),
+                pendingListController.mainlist.value[index].reqOrdNo.toString().trim(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -21898,6 +21898,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                           if (result) {
                             pendingListController.mainlist.removeAt(index);
                             pendingListController.update();
+                            Navigator.pop(context);
                             if (pendingListController.mainlist.isEmpty) {
                               Navigator.pop(context);
                             }

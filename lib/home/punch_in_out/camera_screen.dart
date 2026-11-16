@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -14,10 +14,11 @@ import '../../controller/dailywrk_done_dprnew_controller.dart';
 import '../../controller/inward_pending_controller.dart';
 import '../../controller/punch_in_controller.dart';
 import '../../controller/sitevoucher_controller.dart';
-import '../../controller/staffcontroller.dart';
 import '../../controller/staffvoucher_controller.dart';
 import '../../utilities/baseutitiles.dart';
 import 'package:image/image.dart' as img;
+
+import 'doc_test.dart';
 
 class CameraCapturePage extends StatefulWidget {
   final String fromScreen;
@@ -44,6 +45,9 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
   int? newlyAddedIndex;
   bool _isCameraBusy = false;
   bool isFrontCamera = false;
+  bool _isScanning = false;
+  bool _scanMode = false;
+  bool get _showScan => widget.fromScreen != "Punch In" && widget.fromScreen != "Punch Out";
 
   @override
   void initState() {
@@ -56,18 +60,116 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
+    _controller = null;
     super.dispose();
+  }
+
+  Future<void> _disposeCamera() async {
+    final old = _controller;
+    _controller = null;
+    _initializeControllerFuture = null;
+    if (mounted) setState(() {});      // 1. remove CameraPreview from the tree first
+    await old?.dispose();              // 2. then dispose
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (_controller == null || !_controller!.value.isInitialized) {
-      return;
-    }
-    if (state == AppLifecycleState.inactive) {
-      await _controller?.dispose();
+    if (_isScanning) return;
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      if (_controller != null) await _disposeCamera();
     } else if (state == AppLifecycleState.resumed) {
-      _initCamera();
+      if (_controller == null && !initial) await _initCamera();
+    }
+  }
+
+  void _addImageToController(File file) {
+    if(widget.fromScreen=="Subcontractor Attendance"){
+      dailyEntriesController.imageFiles.add(file);
+      newlyAddedIndex = dailyEntriesController.imageFiles.length - 1;
+    }
+    else if(widget.fromScreen=="DPR"){
+      dailyWrkDone_DPR_Controller.imageFiles.add(file);
+      newlyAddedIndex = dailyWrkDone_DPR_Controller.imageFiles.length - 1;
+    }
+    else if(widget.fromScreen=="DPR-NEW"){
+      dailyWrkDone_DPRNEW_Controller.imageFiles.add(file);
+      newlyAddedIndex = dailyWrkDone_DPRNEW_Controller.imageFiles.length - 1;
+    }
+    else if(widget.fromScreen=="Site Voucher"){
+      siteVoucher_Controller.imageFiles.add(file);
+      newlyAddedIndex = siteVoucher_Controller.imageFiles.length - 1;
+    }
+    else if(widget.fromScreen=="Staff Voucher"){
+      staffVoucher_Controller.imageFiles.add(file);
+      newlyAddedIndex = staffVoucher_Controller.imageFiles.length - 1;
+    }
+    else if(widget.fromScreen=="Inward"){
+      inwardPendingcontroller.checkImgList.value = true;
+      inwardPendingcontroller.imageFiles.add(file);
+      newlyAddedIndex = inwardPendingcontroller.imageFiles.length - 1;
+      inwardPendingcontroller.count = inwardPendingcontroller.count + 1;
+      inwardPendingcontroller.pickedImageCount.value++;
+    }
+    else if(widget.fromScreen=="InwardAddButton"){
+      inwardPendingcontroller.imageFiles.add(file);
+      newlyAddedIndex = inwardPendingcontroller.imageFiles.length - 1;
+      inwardPendingcontroller.count = inwardPendingcontroller.count + 1;
+      inwardPendingcontroller.pickedImageCount.value++;
+    }
+  }
+
+  /// Scan inside the app (no external scanner screen)
+  Future<void> scanInApp() async {
+    if (_isCameraBusy || _controller == null || !_controller!.value.isInitialized) return;
+
+    // size of the preview box on screen, and of the camera picture
+    final boxW = MediaQuery.sizeOf(context).width;
+    final boxH = BaseUtitiles.getheightofPercentage(context, 65).toDouble();
+    final ps = _controller!.value.previewSize!;
+    final camAspect = ps.height / ps.width; // portrait
+    final boxAspect = boxW / boxH;
+
+    // part of the photo that is visible in the preview (BoxFit.cover)
+    double vl = 0, vt = 0, vr = 1, vb = 1;
+    if (boxAspect > camAspect) {
+      final f = camAspect / boxAspect;
+      vt = (1 - f) / 2;
+      vb = 1 - vt;
+    } else {
+      final f = boxAspect / camAspect;
+      vl = (1 - f) / 2;
+      vr = 1 - vl;
+    }
+    // the guide frame is 3% to 97% of the preview box
+    final cl = vl + (vr - vl) * 0.03;
+    final cr = vl + (vr - vl) * 0.97;
+    final ct = vt + (vb - vt) * 0.03;
+    final cb = vt + (vb - vt) * 0.97;
+
+    setState(() => _isCameraBusy = true);
+    try {
+      final shot = await _controller!.takePicture();
+
+      final prepared = await compute(prepareScanImage, {
+        'path': shot.path,
+        'l': cl, 't': ct, 'r': cr, 'b': cb,
+      });
+      if (!mounted) return;
+
+      final String? result = await Navigator.push<String>(
+        context,
+        MaterialPageRoute(builder: (_) => ScanEditPage(data: prepared)),
+      );
+
+      if (result != null) {
+        _addImageToController(File(result));
+        if (mounted) Navigator.pop(context, "Camera");
+        return;
+      }
+    } catch (e, s) {
+      debugPrint("scanInApp error: $e\n$s");
+    } finally {
+      if (mounted) setState(() => _isCameraBusy = false);
     }
   }
 
@@ -77,24 +179,24 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
 
     if (image == null) return originalFile;
 
-    // 🔁 FIX MIRROR (Samsung front camera)
     if (flip) {
       image = img.flipHorizontal(image);
     }
 
-    // 🖊️ Add watermark
+    final text = punchInController.networkTime ?? DateTime.now().toString();
+
     img.drawString(
       image,
       img.arial_48,
-      450,
-      1400,
-      punchInController.networkTime!,
+      40,
+      image.height - 280,
+      text,
       color: img.getColor(255, 255, 255),
     );
 
     final newPath = originalFile.path.replaceFirst('.jpg', '_wm.jpg');
     final newFile = File(newPath)
-      ..writeAsBytesSync(img.encodeJpg(image, quality: 90));
+      ..writeAsBytesSync(img.encodeJpg(image, quality: 85));
 
     return newFile;
   }
@@ -115,33 +217,132 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
     }
   }
 
+  Future<void> _toggleScan() async {
+    final turningOn = !_scanMode;
+    setState(() => _scanMode = turningOn);
+    if (turningOn && isFrontCamera) {
+      final back =
+      cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
+      if (back != -1) {
+        selectedCameraIndex = back;
+        await _disposeCamera();
+        await _initCamera();
+      }
+    }
+  }
+
   Future<void> _initCamera() async {
-    cameras = await availableCameras();
-    punchInController.getNetworkTime();
+    try {
+      cameras = await availableCameras();
 
-    final selectedCamera = cameras[selectedCameraIndex];
-    isFrontCamera = selectedCamera.lensDirection == CameraLensDirection.front;
+      if (cameras.isEmpty || !mounted) {
+        debugPrint("No camera available");
+        return;
+      }
 
-    _controller = CameraController(
-      selectedCamera,
-      ResolutionPreset.veryHigh,
-      enableAudio: false,
-    );
+      if (selectedCameraIndex >= cameras.length) {
+        selectedCameraIndex = 0;
+      }
 
-    _initializeControllerFuture = _controller!.initialize();
-    if (mounted) setState(() {});
+      punchInController.getNetworkTime();
+
+      final selectedCamera = cameras[selectedCameraIndex];
+
+      isFrontCamera =
+          selectedCamera.lensDirection == CameraLensDirection.front;
+
+      _controller = CameraController(
+        selectedCamera,
+        ResolutionPreset.ultraHigh,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+
+      _initializeControllerFuture = _controller!.initialize();
+
+      await _initializeControllerFuture;
+      try {
+        await _controller!.setFocusMode(FocusMode.auto);
+      } catch (_) {}
+
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      debugPrint("Camera initialization error: $e");
+    }
   }
 
   void _switchCamera() async {
-    if (cameras.length < 2) return; // Only one camera available
+    if (cameras.length < 2) return;
 
     selectedCameraIndex = selectedCameraIndex == 0 ? 1 : 0;
 
-    await _controller?.dispose();
-    _initCamera();
+    await _disposeCamera();
+    await _initCamera();
   }
 
   Future<void> takePicture() async {
+    if (_isCameraBusy || _controller == null || !_controller!.value.isInitialized) return;
+
+    setState(() => _isCameraBusy = true);
+
+    try {
+      final image = await _controller!.takePicture();
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final targetPath =
+          '${appDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
+        image.path,
+        targetPath,
+        quality: 80,
+        minWidth: 1000,
+        minHeight: 1000,
+        format: CompressFormat.jpeg,
+      );
+
+      if (compressedFile == null) {
+        debugPrint('Compression failed.');
+        return;
+      }
+
+      final originalKb = (await File(image.path).length()) / 1024;
+      final compressedKb = (await File(compressedFile.path).length()) / 1024;
+
+      final watermarkedFile = await addWatermark(
+        File(compressedFile.path),
+        flip: isFrontCamera,
+      );
+
+      final finalKb = (await watermarkedFile.length()) / 1024;
+      debugPrint("NORMAL SIZE: camera=${originalKb.toStringAsFixed(0)} KB, "
+          "compressed=${compressedKb.toStringAsFixed(0)} KB, "
+          "final(watermarked)=${finalKb.toStringAsFixed(0)} KB "
+          "(${(finalKb / 1024).toStringAsFixed(2)} MB)");
+      if (!mounted) return;
+
+      setState(() {
+        initial = true;
+        if (widget.fromScreen == "Punch In") {
+          punchInController.isSelect.value = true;
+          punchInController.imageFile.value = XFile(watermarkedFile.path);
+        } else if (widget.fromScreen == "Punch Out") {
+          punchInController.isSelect.value = true;
+          punchInController.punchOutImageFile.value = XFile(watermarkedFile.path);
+        } else {
+          _addImageToController(watermarkedFile);
+        }
+      });
+    } catch (e, s) {
+      debugPrint("Error taking picture: $e\n$s");
+    } finally {
+      if (mounted) setState(() => _isCameraBusy = false);
+    }
+  }
+
+  Future<void> takePictures() async {
     if (_isCameraBusy) return;
 
     setState(() => _isCameraBusy = true);
@@ -299,21 +500,52 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
                       width: double.infinity,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(),
-                      child: FutureBuilder(
-                        future: _initializeControllerFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            return FittedBox(
-                              fit: BoxFit.cover,
-                              child: SizedBox(
-                                width: _controller!.value.previewSize!.height,
-                                height: _controller!.value.previewSize!.width,
-                                child: CameraPreview(_controller!),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          FutureBuilder(
+                            future: _initializeControllerFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done &&
+                                  _controller != null &&
+                                  _controller!.value.isInitialized) {
+                                return FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: SizedBox(
+                                    width: _controller!.value.previewSize!.height,
+                                    height: _controller!.value.previewSize!.width,
+                                    child: CameraPreview(_controller!),
+                                  ),
+                                );
+                              }
+                              return const SizedBox();
+                              },
+                          ),
+                          if (_scanMode)
+                            IgnorePointer(
+                                child: CustomPaint(
+                                    painter: _ScanGuidePainter()
+                                )
+                            ),
+                          if (_scanMode)
+                            Positioned(
+                              left: 16,
+                              right: 16,
+                              bottom: 12,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Text(
+                                  "Fit the page in the frame",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
+                            ),
+                        ],
                       ),
                     ),
 
@@ -322,8 +554,18 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
                       children: [
                         Expanded(
                           flex: 1,
-                          child: SizedBox(
-                          ),
+                          child: _showScan
+                              ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(18),
+                              backgroundColor: Colors.black,
+                              elevation: 4,
+                            ),
+                            onPressed: _isCameraBusy ? null : _toggleScan,
+                            child: Icon(_scanMode ? Icons.close : Icons.document_scanner, size: 24),
+                          )
+                              : const SizedBox(),
                         ),
 
                         Expanded(
@@ -335,17 +577,17 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
                               backgroundColor: Theme.of(context).primaryColor,
                               elevation: 4,
                             ),
-                            onPressed: _isCameraBusy ? null : takePicture, // 🔒 disable tap
+                            onPressed: _isCameraBusy ? null : (_scanMode ? scanInApp : takePicture),
                             child: _isCameraBusy
-                                ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                                : const Icon(Icons.camera_alt, size: 24),
+                              ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                              : const Icon(Icons.camera_alt, size: 24),
                           ),
                         ),
                         Expanded(
@@ -357,7 +599,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
                               backgroundColor: Colors.black,
                               elevation: 4,
                             ),
-                            onPressed: _isCameraBusy ? null : _switchCamera,
+                            onPressed: (_isCameraBusy || _scanMode) ? null : _switchCamera,
                             child: const Icon(Icons.flip_camera_ios_sharp, size: 24),
                           ),
                         ),
@@ -511,4 +753,44 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
       ),
     );
   }
+}
+
+class _ScanGuidePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(
+      size.width * 0.03,
+      size.height * 0.03,
+      size.width * 0.94,
+      size.height * 0.94,
+    );
+    final outside = Path.combine(
+      PathOperation.difference,
+      Path()..addRect(Offset.zero & size),
+      Path()..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8))),
+    );
+    canvas.drawPath(outside, Paint()..color = Colors.black38);
+
+    final p = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+    const len = 28.0;
+    for (final c in [
+      [rect.topLeft, 1.0, 1.0],
+      [rect.topRight, -1.0, 1.0],
+      [rect.bottomLeft, 1.0, -1.0],
+      [rect.bottomRight, -1.0, -1.0],
+    ]) {
+      final o = c[0] as Offset;
+      final sx = c[1] as double;
+      final sy = c[2] as double;
+      canvas.drawLine(o, o + Offset(len * sx, 0), p);
+      canvas.drawLine(o, o + Offset(0, len * sy), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }
