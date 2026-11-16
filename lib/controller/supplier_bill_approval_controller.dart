@@ -362,9 +362,8 @@ class SupplierBillApprovalController extends GetxController {
 
     double toTwoDecimal(double value) =>
         double.parse(value.toStringAsFixed(2));
-
     for (final item in getSupplierBillItemViewDbList) {
-      totalNet += _toDouble(item.netAmount);
+      totalNet += _toDouble(suppBillAppEditListValue[0].result.poBillType=="W"?item.amount:item.netAmount);
       totalSgst += _toDouble(item.sgstAmt);
       totalCgst += _toDouble(item.cgstAmt);
       totalIgst += _toDouble(item.igstAmt);

@@ -739,7 +739,7 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
 
     double getAmount(String key) {
       return double.tryParse(
-        controllers[key]?.text.trim() ?? '',
+        controllers[key]?.text.trim() ?? '0',
       ) ??
           0.0;
     }
@@ -751,175 +751,214 @@ class _SupplierBillItemListState extends State<SupplierBillItemList> {
     // 1. Preserve original API values
     initializeOriginalAmounts();
 
-    // 2. Additional charges
+    // 2. Additional Charges
     final freight = getAmount('Freight Charges');
     final labour = getAmount('Labour Charges');
     final other = getAmount('Other Charges');
 
-    final additionalCharges = freight + labour + other;
+    final bill = supplierBillApprovalController
+        .suppBillAppEditListValue[0].result;
 
-    // 3. SGST + CGST calculation
-    if (isSgstMode) {
-      final sgstPercentage = getAmount('S-GST %');
-      final sgstAmount = additionalCharges * sgstPercentage / 100;
+    final additionalCharges = bill?.poBillType == "W"
+        ? freight + labour + other + (bill?.totalAmount ?? 0.0)
+        : freight + labour + other;
+    // 3. GST calculation
+    // Calculate using percentages directly.
+    // Do not depend on isSgstMode / isIgstMode.
 
-      setAmount('S-GST Amt', sgstAmount);
+    final sgstPercentage = getAmount('S-GST %');
+    final cgstPercentage = getAmount('C-GST %');
+    final igstPercentage = getAmount('I-GST %');
 
-      controllers['C-GST %']?.text =
-          controllers['S-GST %']?.text ?? '0.00';
+    double sgstAmount = 0.0;
+    double cgstAmount = 0.0;
+    double igstAmount = 0.0;
 
-      setAmount('C-GST Amt', sgstAmount);
-      setAmount('I-GST Amt', 0);
-    }
-
-    // 4. IGST calculation
-    else if (isIgstMode) {
-      final igstPercentage = getAmount('I-GST %');
-      final igstAmount = additionalCharges * igstPercentage / 100;
-
-      setAmount('I-GST Amt', igstAmount);
-
-      setAmount('S-GST Amt', 0);
-      setAmount('C-GST Amt', 0);
+    if (igstPercentage > 0) {
+      // IGST mode
+      igstAmount = additionalCharges * igstPercentage / 100;
 
       controllers['S-GST %']?.text = '0.00';
       controllers['C-GST %']?.text = '0.00';
+    } else {
+      // SGST + CGST mode
+      sgstAmount = additionalCharges * sgstPercentage / 100;
+      cgstAmount = additionalCharges * cgstPercentage / 100;
     }
 
-    // 5. TCS and TDS calculation
+    setAmount('S-GST Amt', sgstAmount);
+    setAmount('C-GST Amt', cgstAmount);
+    setAmount('I-GST Amt', igstAmount);
 
-    double amountTotal = 0.0;
+    // 4. Calculate item amount
+    // Keep your existing item amount calculation for G, P and W.
 
-    final apiItems = supplierBillApprovalController
-        .suppBillAppEditListValue[0]
-        .materialPurOrdBilldetLink;
+    double itemTotal = 0.0;
 
-// Get total Amount (sum of item.amount)
+    final response =
+    supplierBillApprovalController.suppBillAppEditListValue[0];
+
+    final apiItems = response.materialPurOrdBilldetLink ?? [];
+
+    final isWorkOrder = bill?.poBillType == "W";
+    final isPO = bill?.poBillType == "P";
+
     for (final item in apiItems) {
-      amountTotal += double.tryParse(
-        item.amount.toString(),
-      ) ??
-          0.0;
+      itemTotal += isWorkOrder
+          ? (item.amount ?? 0.0)
+          : (item.netAmount ?? 0.0);
     }
 
+// Use the actual item total
+    final amountTotal = itemTotal;
+
+    // 5. TCS and TDS
     final tcsPercentage = getAmount('TCS %');
     final tdsPercentage = getAmount('TDS %');
 
-// Amount + Additional Charges
-    final tcsBaseAmount = amountTotal + additionalCharges;
+    double tcsAmount;
+    double tdsAmount;
 
-    final tcsAmount = double.parse(
-      (tcsBaseAmount * tcsPercentage / 100).toStringAsFixed(2),
-    );
+    if (!isPO) {
+      // W: Calculate TCS and TDS using the same base as Discount.
+      tcsAmount = originalNetAmount * tcsPercentage / 100;
+      tdsAmount = originalNetAmount * tdsPercentage / 100;
+    } else {
+      // G and P: Keep existing calculation unchanged.
+      final tcsBaseAmount = amountTotal + additionalCharges;
 
-    final tdsAmount = double.parse(
-      (tcsBaseAmount * tdsPercentage / 100).toStringAsFixed(2),
-    );
+      tcsAmount = double.parse(
+        (tcsBaseAmount * tcsPercentage / 100).toStringAsFixed(2),
+      );
+
+      tdsAmount = double.parse(
+        (tcsBaseAmount * tdsPercentage / 100).toStringAsFixed(2),
+      );
+    }
 
     setAmount('TCS Amt', tcsAmount);
     setAmount('TDS Amt', tdsAmount);
 
-    // 6. Discount calculation
-    final discountBaseAmount = originalNetAmount;
+    // 6. Discount
     final discountPercentage = getAmount('Discount %');
 
     final discountAmount =
-        discountBaseAmount * discountPercentage / 100;
+        originalNetAmount * discountPercentage / 100;
 
     setAmount('Disc Amt', discountAmount);
 
-    // 7. Net GST = original API value + current GST amount
-    setAmount(
-      'Net S-GST',
-      originalNetSgst + getAmount('S-GST Amt'),
-    );
+    // 7. Net GST
+    final netSgst = originalNetSgst + sgstAmount;
+    final netCgst = originalNetCgst + cgstAmount;
+    final netIgst = originalNetIgst + igstAmount;
 
-    setAmount(
-      'Net C-GST',
-      originalNetCgst + getAmount('C-GST Amt'),
-    );
+    setAmount('Net S-GST', netSgst);
+    setAmount('Net C-GST', netCgst);
+    setAmount('Net I-GST', netIgst);
 
-    setAmount(
-      'Net I-GST',
-      originalNetIgst + getAmount('I-GST Amt'),
-    );
+    // 8. GST Inclusive adjustment
+    final totalNetGst = netSgst + netCgst + netIgst;
 
-    // 8. Total GST added during this edit
-    final sgstAmount = getAmount('S-GST Amt');
-    final cgstAmount = getAmount('C-GST Amt');
-    final igstAmount = getAmount('I-GST Amt');
-
-    final totalGst = sgstAmount + cgstAmount + igstAmount;
-
-    final gstAdjustment = supplierBillApprovalController.isGstInclusive.value
-        ? -(getAmount('Net S-GST') +
-        getAmount('Net C-GST') +
-        getAmount('Net I-GST'))
+    final gstAdjustment =
+    supplierBillApprovalController.isGstInclusive.value
+        ? -totalNetGst
         : 0.0;
 
-
-// 9. Round Off
+    // 9. Round Off and Deduction
     double roundOffAmount = getAmount('Round Off');
-
-// 10. Deduction
     final deductionAmount = getAmount('Deduction Amount');
 
-// 11. Calculate Net Amount
-    double netAmount = originalNetAmount +
-        additionalCharges +
-        totalGst +
-        tcsAmount +
-        tdsAmount -
-        discountAmount +
-        roundOffAmount + gstAdjustment;
+    // 10. Common calculation
+    double calculateNetAmount(double roundOff) {
+      if (isWorkOrder) {
+        // W: Start from API item total + current charges.
+        return additionalCharges +
+            sgstAmount +
+            cgstAmount +
+            igstAmount +
+            tcsAmount -
+            tdsAmount -
+            discountAmount +
+            roundOff +
+            gstAdjustment;
+      }
 
-// 12. Calculate Net Pay Amount
-    double netPayAmount = originalNetPayAmount +
-        additionalCharges +
-        totalGst +
-        tcsAmount +
-        tdsAmount -
-        discountAmount +
-        roundOffAmount +
-        originalDeductionAmount -
-        deductionAmount + gstAdjustment;
+      // G and P: Keep the existing calculation unchanged.
+      return originalNetAmount +
+          additionalCharges +
+          sgstAmount +
+          cgstAmount +
+          igstAmount +
+          tcsAmount -
+          tdsAmount -
+          discountAmount +
+          roundOff +
+          gstAdjustment;
+    }
 
-// 13. Validate negative values
+    double calculateNetPayAmount(double roundOff) {
+      if (isWorkOrder) {
+        return calculateNetAmount(roundOff) +
+            originalDeductionAmount -
+            deductionAmount;
+      }
+
+      // G and P: Keep the existing calculation unchanged.
+      return originalNetPayAmount +
+          additionalCharges +
+          sgstAmount +
+          cgstAmount +
+          igstAmount +
+          tcsAmount -
+          tdsAmount -
+          discountAmount +
+          roundOff +
+          originalDeductionAmount -
+          deductionAmount +
+          gstAdjustment;
+    }
+
+    // 11. Calculate totals
+    double netAmount = calculateNetAmount(roundOffAmount);
+    double netPayAmount = calculateNetPayAmount(roundOffAmount);
+
+    // 12. Validate negative totals
     if (netAmount < 0 || netPayAmount < 0) {
       roundOffAmount = previousValidRoundOff;
 
       controllers['Round Off']?.text =
-          previousValidRoundOff.toStringAsFixed(2);
+          roundOffAmount.toStringAsFixed(2);
 
       BaseUtitiles.showToast(
         "The Net Amount should not be negative value",
       );
 
-      // Recalculate Net Amount
-      netAmount = originalNetAmount +
-          additionalCharges +
-          totalGst +
-          tcsAmount +
-          tdsAmount -
-          discountAmount +
-          roundOffAmount;
-
-      // Recalculate Net Pay Amount
-      netPayAmount = originalNetPayAmount +
-          additionalCharges +
-          totalGst +
-          tcsAmount +
-          tdsAmount -
-          discountAmount +
-          roundOffAmount -
-          deductionAmount;
+      // Recalculate using the same formula
+      netAmount = calculateNetAmount(roundOffAmount);
+      netPayAmount = calculateNetPayAmount(roundOffAmount);
     } else {
       previousValidRoundOff = roundOffAmount;
     }
 
-// 14. Update both totals
+    // 13. Update totals
     setAmount('Net Amount', netAmount);
     setAmount('Net Pay Amount', netPayAmount);
+
+    debugPrint('========== SUPPLIER BILL RECALCULATION ==========');
+    debugPrint('Freight: $freight');
+    debugPrint('Labour: $labour');
+    debugPrint('Other: $other');
+    debugPrint('Additional Charges: $additionalCharges');
+    debugPrint('SGST: $sgstAmount');
+    debugPrint('CGST: $cgstAmount');
+    debugPrint('IGST: $igstAmount');
+    debugPrint('TCS: $tcsAmount');
+    debugPrint('TDS: $tdsAmount');
+    debugPrint('Discount: $discountAmount');
+    debugPrint('GST Adjustment: $gstAdjustment');
+    debugPrint('Net Amount: $netAmount');
+    debugPrint('Net Pay Amount: $netPayAmount');
+    debugPrint('================================================');
   }
 
   Future ApproveAlert(BuildContext context) async {
