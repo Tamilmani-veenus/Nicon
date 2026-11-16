@@ -139,6 +139,7 @@ class ApiConstant {
   static String get GETREPORTMATERIALDROPDOWNLIST => BASE_URL_CORE + "api/GenericMaster/GetMaterials";
   static String get GETALLMATERIALDROPDOWNLIST => BASE_URL_CORE + "api/GenericMaster/GetAllMaterial";
   static String get GETSUBCONTRACTLIST => BASE_URL_CORE + "api/GenericMaster/GetSubContractorByProject";
+  static String get GETMATERIAL_RETURNLIST => BASE_URL_CORE + "api/MaterialReturn/GetAllMaterialReturnMas";
 
   static String get GETSUBCONTRACTLISTRPT => BASE_URL_CORE + "api/BOQReports/GetAllActiveSubContractorName";
   static String get GETCOMPANYLISTRPT => BASE_URL_CORE + "api/GenericMaster/GetCompany";
@@ -487,6 +488,7 @@ class ApiConstant {
   static String get DELETE_BOQBILL_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/DeleteSubContractorWorkQty";
   static String get DELETE_MANPOWERLIST_API => BASE_URL_CORE + "api/ManPower/DeleteManPower";
   static String get DELETE_MACHINERY_ENTRYLIST_API => BASE_URL_CORE + "api/Machinery/DeleteMachinery";
+  static String get DELETE_MATERIALRETURN_ENTRYLIST_API => BASE_URL_CORE + "api/MaterialReturn/DeleteMaterialReturn";
 
   static String get DELETE_INWARDPENDINGLIST_API => BASE_URL_CORE + "api/MaterialInward/DeleteMaterialInward";
   static String get DELETE_TRANSFERBET_API => BASE_URL_CORE + "api/MaterialTransfer/DeleteMaterialTransfer";
