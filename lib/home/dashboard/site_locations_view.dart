@@ -10,17 +10,16 @@ import '../../constants/ui_constant/icons_const.dart';
 import '../../controller/logincontroller.dart';
 import '../../controller/punch_in_controller.dart';
 import '../../controller/site_location_controller.dart';
-import '../../utilities/apiconstant.dart';
 import '../../utilities/baseutitiles.dart';
 import '../punch_in_out/punch_in.dart';
 import '../punch_in_out/punch_out.dart';
-import 'map_view.dart';
 
 class SiteLocationView extends StatefulWidget {
   const SiteLocationView(
-      {super.key, required this.allotedStatus, required this.checkValue});
+      {super.key, required this.allotedStatus, required this.checkValue, this.Url});
   final String allotedStatus;
   final String checkValue;
+  final String? Url;
 
   @override
   State<SiteLocationView> createState() => _SiteLocationViewState();
@@ -175,8 +174,9 @@ class _SiteLocationViewState extends State<SiteLocationView> {
                                   FocusScope.of(context).unfocus();
                                   siteLocationController
                                       .projectNameSearch.text = "";
-                                  if (loginController.user.value.userType ==
-                                      "A") {
+                                  if(widget.Url == "PIN SITE VIEW"){
+                                  // if (loginController.user.value.userType ==
+                                  //     "A") {
                                     siteLocationController.projectId =
                                         siteLocationController
                                             .projectNameRxList[i].projectId

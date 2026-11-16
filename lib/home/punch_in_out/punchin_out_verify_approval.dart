@@ -273,7 +273,7 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                               flex: 4,
                               child: TextFormField(
                                 readOnly: true,
-                                initialValue: widget.inStatus=="NA"?"Non-Alloted":"OnDuty",
+                                initialValue: widget.inStatus=="NA" ? "Non-Alloted": widget.inStatus=="AL" ? "Alloted" : "OnDuty",
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black,fontSize: RequestConstant.Dropdown_Font_SIZE),
                                 decoration:  InputDecoration(
@@ -310,13 +310,13 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                               flex: 4,
                               child: TextFormField(
                                 onTap: () {
-                                  if(widget.inStatus=="OD") {
+                                  // if(widget.inStatus=="OD") {
                                     if (widget.inLocation != "" &&
-                                        widget.inLocation != "-") {
+                                        widget.inLocation != "-" && widget.inLocation.length > 15) {
                                       addressShowingAlert(
                                           context, widget.inLocation);
                                     }
-                                  }
+                                  // }
                                 },
                                 readOnly: true,
                                 initialValue: widget.inLocation,
@@ -614,7 +614,7 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                               flex: 4,
                               child: TextFormField(
                                 readOnly: true,
-                                initialValue: widget.outStatus=="NA"?"Non-Alloted":widget.outStatus=="-"?"-":"OnDuty",
+                                initialValue: widget.outStatus=="NA"?"Non-Alloted":widget.outStatus=="-"?"-": widget.outStatus=="AL"? "Alloted" : "OnDuty",
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black,fontSize: RequestConstant.Dropdown_Font_SIZE),
                                 decoration:  InputDecoration(
@@ -651,13 +651,13 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                               flex: 4,
                               child: TextFormField(
                                 onTap: () {
-                                  if(widget.outStatus == "OD") {
+                                  // if(widget.outStatus == "OD") {
                                     if (widget.outLocation != "" &&
-                                        widget.outLocation != "-") {
+                                        widget.outLocation != "-" && widget.outLocation.length > 15) {
                                       addressShowingAlert(
                                           context, widget.outLocation);
                                     }
-                                  }
+                                  // }
                                 },
                                 readOnly: true,
                                 initialValue: widget.outLocation,
@@ -899,6 +899,7 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                         SizedBox(
                           height: BaseUtitiles.getheightofPercentage(context, 2),
                         ),
+                        if(widget.outStatus=="NA" || widget.outStatus=="OD")
                         Row(mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
@@ -906,9 +907,11 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
                                 child: Text("Remarks", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12),)),
                           ],
                         ),
+                        if(widget.outStatus=="NA" || widget.outStatus=="OD")
                         SizedBox(
                           height: BaseUtitiles.getheightofPercentage(context, 1),
                         ),
+                        if(widget.outStatus=="NA" || widget.outStatus=="OD")
                         Row(mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
@@ -1138,7 +1141,7 @@ class _PunchVerifyApprovalScreenState extends State<PunchVerifyApprovalScreen> {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Address'),
+        // title: Text('Address'),
         content: Text('${address}',style: TextStyle(fontSize: 13),),
       ),
     );

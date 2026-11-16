@@ -12,6 +12,7 @@ import '../../controller/dashboard_controller.dart';
 import '../../controller/expensencecontroller.dart';
 import '../../controller/logincontroller.dart';
 import '../../controller/menu_controller.dart';
+import '../../controller/punch_in_controller.dart';
 import '../../controller/site_location_controller.dart';
 import '../../controller/projectcontroller.dart';
 import '../../home/account_settings/account_setting.dart';
@@ -56,6 +57,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
   final _pageController = PageController();
   LoginController loginController = Get.put(LoginController());
   Menu_Controller menuController = Get.put(Menu_Controller());
+  PunchInController punchInController = Get.put(PunchInController());
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,10 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
             onTap: (int index) {
               menuController.formMenuId.value = 0;
               _pageController.jumpToPage(index);
-              setState(() => _currentPage = index);
+              setState(() {
+                _currentPage = index;
+                _showPunchPage = false;
+              });
             },
             items: const <BottomBarItem>[
               BottomBarItem(
@@ -147,6 +152,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                           offset: const Offset(70, 35),
                           onSelected: (value) {
                             setState(() {
+                              _showPunchPage = false;
                               isLabour = value == "Labour";
                               isAdmin = value == "Admin";
                               isMaterial = value == "Material";
@@ -282,7 +288,15 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                         Container(
                           alignment: Alignment.center,
                           child: _showPunchPage
-                              ? const HomeScreenOtherUser(Url: "Admin")
+                              ? HomeScreenOtherUser(
+                      Url: "Admin",
+                      onPunchCompleted: () {
+                        setState(() {
+                          _showPunchPage = false;
+                        });
+                        punchInController.getProjectPunchInSts();
+                      },
+                    )
                               : isLabour ? const HomeScreen() : isAdmin ? AdminHomeScreen(onPunchTap: () {
                             setState(() {
                               _showPunchPage = true;

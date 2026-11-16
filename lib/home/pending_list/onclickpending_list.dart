@@ -2246,15 +2246,21 @@ class _MrnPreApprovalState extends State<MrnPreApproval> {
                                           Expanded(
                                               flex: 8,
                                               child: Text(
+                                                  widget.checkheading == "MRN PRE APPROVAL PENDING - GM" ||
+                                                      widget.checkheading == "MRN PRE APPROVAL PENDING - AM" ?
                                                 pendingListController
                                                     .mainlist
                                                     .value[index]
                                                     .purchaseType
-                                                    .toString() ,
-                                                    // ==
-                                                    // "PO"
-                                                    // ? "General Items"
-                                                    // : "Asset Materials",
+                                                    .toString() : pendingListController
+                                                      .mainlist
+                                                      .value[index]
+                                                      .requestType
+                                                      .toString()
+                                                    ==
+                                                    "PO"
+                                                    ? "General Items"
+                                                    : "Asset Materials",
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                 ),
