@@ -723,6 +723,142 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                           ),
                         ),
                       ),
+                      if (supplierBillApprovalController
+                              .suppBillAppEditListValue[0].result.poBillType ==
+                          "W") ...{
+                        Container(
+                          margin: const EdgeInsets.only(
+                              top: 2, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                autovalidateMode: AutovalidateMode.always,
+                                readOnly: true,
+                                controller: TextEditingController(
+                                    text: supplierBillApprovalController
+                                        .suppBillAppEditListValue[0]
+                                        .result
+                                        .fromDate
+                                        .toString()),
+                                cursorColor: Colors.black,
+                                style: const TextStyle(color: Colors.black),
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: "From Date",
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                  ),
+                                  prefixIconConstraints:
+                                      BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.date,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              top: 2, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                autovalidateMode: AutovalidateMode.always,
+                                readOnly: true,
+                                controller: TextEditingController(
+                                    text: supplierBillApprovalController
+                                        .suppBillAppEditListValue[0]
+                                        .result
+                                        .toDate
+                                        .toString()),
+                                cursorColor: Colors.black,
+                                style: const TextStyle(color: Colors.black),
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: "To Date",
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                  ),
+                                  prefixIconConstraints:
+                                      BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.accountName,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              top: 2, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                autovalidateMode: AutovalidateMode.always,
+                                readOnly: true,
+                                controller: TextEditingController(
+                                    text: supplierBillApprovalController
+                                        .suppBillAppEditListValue[0]
+                                        .result
+                                        .workOrdMasNo
+                                        .toString()),
+                                cursorColor: Colors.black,
+                                style: const TextStyle(color: Colors.black),
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: "Rental Work Order No",
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                  ),
+                                  prefixIconConstraints:
+                                      BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: ConstIcons.dcNo,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      },
                       const SizedBox(
                         height: 10,
                       ),
@@ -895,7 +1031,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
         onTap: onTap,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
         cursorColor: Colors.black,
@@ -940,11 +1076,39 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
       margin: const EdgeInsets.only(top: 10, left: 5, right: 3),
       child: Row(
         children: [
-          label(leftLabel),
-          Expanded(flex: 4, child: leftField),
-          label(rightLabel),
-          Expanded(flex: 4, child: rightField),
-        ],
+            Expanded(
+              flex: 2,
+              child: Text(
+                leftLabel,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+
+            Expanded(
+              flex: (leftLabel == 'Desc' &&
+                  supplierBillApprovalController
+                      .suppBillAppEditListValue[0]
+                      .result.poBillType == "W")
+                  ? 10
+                  : 4,
+              child: leftField,
+            ),
+
+            if (!(leftLabel == 'Desc' &&
+                supplierBillApprovalController
+                    .suppBillAppEditListValue[0]
+                    .result.poBillType == "W")) ...[
+              label(rightLabel),
+              Expanded(
+                flex: 4,
+                child: rightField,
+              ),
+            ],
+                  ],
       ),
     );
   }
@@ -1021,43 +1185,48 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                                 ),
                               ),
                             ),
-                            InkWell(
-                              onTap: () => showAmountDetailsDialog(
-                                context,
-                                item,
-                                index,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
+                            if (supplierBillApprovalController
+                                    .suppBillAppEditListValue[0]
+                                    .result
+                                    .poBillType !=
+                                "W")
+                              InkWell(
+                                onTap: () => showAmountDetailsDialog(
+                                  context,
+                                  item,
+                                  index,
                                 ),
-                                decoration: BoxDecoration(
-                                  color: primary.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'View Details',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: primary,
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'View Details',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: primary,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Icon(
-                                      Icons.remove_red_eye_outlined,
-                                      color: primary,
-                                      size: 16,
-                                    ),
-                                  ],
+                                      const SizedBox(width: 5),
+                                      Icon(
+                                        Icons.remove_red_eye_outlined,
+                                        color: primary,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                         if (supplierBillApprovalController
@@ -1093,7 +1262,11 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                             context,
                             controller: supplierBillApprovalController
                                 .itemlist_qtyControllers[index],
-                            readOnly: false,
+                            readOnly: supplierBillApprovalController
+                                .suppBillAppEditListValue[0]
+                                .result
+                                .poBillType ==
+                                "W",
                             onChanged: (value) async {
                               await supplierBillApprovalController
                                   .updateBillQty(
@@ -1119,16 +1292,19 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                             context,
                             initialValue: item.rate.toString(),
                             readOnly: supplierBillApprovalController
-                                .suppBillAppEditListValue[0]
-                                .result
-                                .poBillType == "P",
+                                    .suppBillAppEditListValue[0]
+                                    .result
+                                    .poBillType !=
+                                "G",
                             onChanged: (value) {
                               if (supplierBillApprovalController
-                                  .suppBillAppEditListValue[0]
-                                  .result
-                                  .poBillType == "G") {
+                                      .suppBillAppEditListValue[0]
+                                      .result
+                                      .poBillType ==
+                                  "G") {
                                 supplierBillApprovalController
-                                    .updateGeneralBillItem(index, 'rate', value);
+                                    .updateGeneralBillItem(
+                                        index, 'rate', value);
                               }
                             },
                             margin: const EdgeInsets.only(left: 8),
@@ -1136,56 +1312,93 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
                         ),
 
                         // Description and Amount
-                        Container(
+                        _supplierFieldRow(
+                          context,
+                          leftLabel: supplierBillApprovalController
+                                      .suppBillAppEditListValue[0]
+                                      .result
+                                      .poBillType !=
+                                  "W"
+                              ? 'Desc'
+                              : "Approx\nDays",
+                          leftField: supplierBillApprovalController
+                                      .suppBillAppEditListValue[0]
+                                      .result
+                                      .poBillType !=
+                                  "W"
+                              ? _supplierInput(
+                                  context,
+                                  initialValue: item.description ?? '',
+                                  readOnly: supplierBillApprovalController
+                                          .suppBillAppEditListValue[0]
+                                          .result
+                                          .poBillType ==
+                                      "P",
+                                  validateNumber: false,
+                                  onChanged: (value) {
+                                    if (supplierBillApprovalController
+                                            .suppBillAppEditListValue[0]
+                                            .result
+                                            .poBillType ==
+                                        "G") {
+                                      supplierBillApprovalController
+                                          .updateGeneralBillItem(
+                                              index, 'description', value);
+                                    }
+                                  },
+                                )
+                              : _supplierInput(
+                                  context,
+                                  initialValue: item.approxDays.toString() ,
+                                  readOnly: true,
+                                  validateNumber: false,
+                                ),
+                          rightLabel: 'Amount',
+                          rightField: Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              height: BaseUtitiles.getheightofPercentage(
+                                  context, 4),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.05),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  (item.amount ?? 0).toString(),
+                                  softWrap: false,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )),
+                        ),
+                        if(supplierBillApprovalController
+                            .suppBillAppEditListValue[0]
+                            .result
+                            .poBillType ==
+                            "W") Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           child: _supplierFieldRow(
                             context,
-                            leftLabel: 'Desc',
+                            leftLabel:  'Desc',
                             leftField: _supplierInput(
                               context,
-                              initialValue: item.description ?? '',
-                              readOnly: supplierBillApprovalController
-                                  .suppBillAppEditListValue[0]
-                                  .result
-                                  .poBillType == "P",
+                              initialValue: item.description.toString() ,
+                              readOnly: true,
                               validateNumber: false,
-                              onChanged: (value) {
-                                if (supplierBillApprovalController
-                                    .suppBillAppEditListValue[0]
-                                    .result
-                                    .poBillType == "G") {
-                                  supplierBillApprovalController
-                                      .updateGeneralBillItem(index, 'description', value);
-                                }
-                              },
+                              margin: const EdgeInsets.only(left: 0),
                             ),
-                            rightLabel: 'Amount',
-                            rightField: Container(
-                                margin: const EdgeInsets.only(left: 8),
-                                height: BaseUtitiles.getheightofPercentage(
-                                    context, 4),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(0.05),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    (item.amount ?? 0).toString(),
-                                    softWrap: false,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                )),
+                            rightLabel: '',
+                            rightField: const SizedBox(),
                           ),
                         ),
                       ],
@@ -1274,131 +1487,128 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
 
     showDialog(
       context: context,
-        builder: (dialogContext)
-    {
-      return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              titlePadding: const EdgeInsets.fromLTRB(18, 12, 12, 4),
-              contentPadding: const EdgeInsets.fromLTRB(18, 8, 18, 16),
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.receipt_long_rounded,
-                    color: primaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Expanded(
-                    child: Text(
-                      'Amount Details',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+      builder: (dialogContext) {
+        return StatefulBuilder(builder: (context, setDialogState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            titlePadding: const EdgeInsets.fromLTRB(18, 12, 12, 4),
+            contentPadding: const EdgeInsets.fromLTRB(18, 8, 18, 16),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.receipt_long_rounded,
+                  color: primaryColor,
+                ),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Text(
+                    'Amount Details',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    icon: const Icon(Icons.close_rounded),
-                  ),
-                ],
-              ),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          const spacing = 10.0;
-                          const columnCount = 2;
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        const spacing = 10.0;
+                        const columnCount = 2;
 
-                          final fieldWidth =
-                              (constraints.maxWidth -
-                                  spacing * (columnCount - 1)) /
-                                  columnCount;
+                        final fieldWidth = (constraints.maxWidth -
+                                spacing * (columnCount - 1)) /
+                            columnCount;
 
-                          final fields = values.keys
-                              .where((e) =>
-                          e != 'Net Amount' && e != 'Expiry Date')
-                              .toList();
+                        final fields = values.keys
+                            .where(
+                                (e) => e != 'Net Amount' && e != 'Expiry Date')
+                            .toList();
 
-                          return Wrap(
-                            spacing: spacing,
-                            runSpacing: 10,
-                            children: fields.map((field) {
-                              return SizedBox(
-                                width: fieldWidth,
-                               child: _buildAmountDetailField(
+                        return Wrap(
+                          spacing: spacing,
+                          runSpacing: 10,
+                          children: fields.map((field) {
+                            return SizedBox(
+                              width: fieldWidth,
+                              child: _buildAmountDetailField(
                                 field,
                                 primaryColor,
                                 item: item,
                                 index: index,
                                 setDialogState: setDialogState,
                               ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
 
-                      const SizedBox(height: 14),
+                    const SizedBox(height: 14),
 
-                      // Net Amount
-                      _buildAmountDetailField(
-                        'Expiry Date',
-                        primaryColor,
-                        item: item,
-                        index: index,
-                        setDialogState: setDialogState,
-                      ),
+                    // Net Amount
+                    _buildAmountDetailField(
+                      'Expiry Date',
+                      primaryColor,
+                      item: item,
+                      index: index,
+                      setDialogState: setDialogState,
+                    ),
 
-                      const SizedBox(height: 14),
+                    const SizedBox(height: 14),
 
-                      _buildAmountDetailField(
-                        'Net Amount',
-                        primaryColor,
-                        item: item,
-                        index: index,
-                        setDialogState: setDialogState,
-                      ),
-                    ],
-                  ),
+                    _buildAmountDetailField(
+                      'Net Amount',
+                      primaryColor,
+                      item: item,
+                      index: index,
+                      setDialogState: setDialogState,
+                    ),
+                  ],
                 ),
               ),
-            );
-          });
+            ),
+          );
+        });
       },
     );
   }
 
   Widget _buildAmountDetailField(
-      String label,
-      Color primaryColor, {
-        required dynamic item,
-        required int index,
-        required StateSetter setDialogState,
-      }) {
+    String label,
+    Color primaryColor, {
+    required dynamic item,
+    required int index,
+    required StateSetter setDialogState,
+  }) {
     final bool isNetAmount = label == 'Net Amount';
     final poBillType = supplierBillApprovalController
         .suppBillAppEditListValue[0].result.poBillType;
 
     final double sgstValue = double.tryParse(
-      amountDetailControllers['SGST %']?.text.trim() ?? '0',
-    ) ??
+          amountDetailControllers['SGST %']?.text.trim() ?? '0',
+        ) ??
         0.0;
 
     final double igstValue = double.tryParse(
-      amountDetailControllers['IGST %']?.text.trim() ?? '0',
-    ) ??
+          amountDetailControllers['IGST %']?.text.trim() ?? '0',
+        ) ??
         0.0;
 
-    final bool isEditable = poBillType == "G" &&
-        ['Disc %', 'SGST %', 'IGST %'].contains(label);
+    final bool isEditable =
+        poBillType == "G" && ['Disc %', 'SGST %', 'IGST %'].contains(label);
 
     final bool isReadOnly = !isEditable ||
         (label == 'IGST %' && sgstValue != 0) ||
@@ -1409,15 +1619,15 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
         color: isNetAmount
             ? primaryColor.withOpacity(0.10)
             : isEditable && !isReadOnly
-            ? Colors.white
-            : const Color(0xFFF5F6FA),
+                ? Colors.white
+                : const Color(0xFFF5F6FA),
         borderRadius: BorderRadius.circular(13),
         border: Border.all(
           color: isNetAmount
               ? primaryColor.withOpacity(0.30)
               : isEditable && !isReadOnly
-              ? primaryColor.withOpacity(0.45)
-              : const Color(0xFFE8EAF0),
+                  ? primaryColor.withOpacity(0.45)
+                  : const Color(0xFFE8EAF0),
         ),
       ),
       child: Padding(
@@ -1429,15 +1639,14 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
           controller: amountDetailControllers[label],
           readOnly: isReadOnly,
           cursorColor: primaryColor,
-
           onChanged: (value) {
             if (!isEditable) return;
 
             final field = label == 'Disc %'
                 ? 'disc'
                 : label == 'SGST %'
-                ? 'sgst'
-                : 'igst';
+                    ? 'sgst'
+                    : 'igst';
 
             supplierBillApprovalController.updateGeneralBillItem(
               index,
@@ -1451,7 +1660,6 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
               setDialogState(() {});
             }
           },
-
           onTap: () {
             if (!isEditable || isReadOnly) return;
 
@@ -1468,9 +1676,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
             signed: true,
           ),
           style: TextStyle(
-            color: isNetAmount
-                ? primaryColor
-                : const Color(0xFF29234D),
+            color: isNetAmount ? primaryColor : const Color(0xFF29234D),
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -1480,9 +1686,7 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
             border: InputBorder.none,
             labelText: label,
             labelStyle: TextStyle(
-              color: isNetAmount
-                  ? primaryColor
-                  : Colors.grey.shade600,
+              color: isNetAmount ? primaryColor : Colors.grey.shade600,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -1497,10 +1701,10 @@ class _SupplierBillEntryState extends State<SupplierBillEntry> {
             ),
             suffixIcon: isNetAmount
                 ? Icon(
-              Icons.check_circle_rounded,
-              size: 17,
-              color: primaryColor,
-            )
+                    Icons.check_circle_rounded,
+                    size: 17,
+                    color: primaryColor,
+                  )
                 : null,
           ),
         ),
