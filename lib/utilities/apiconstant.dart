@@ -416,6 +416,7 @@ class ApiConstant {
   static String get PUT_REQUISITIONSLIP_UPDATE_API => BASE_URL_CORE + "api/StaffRequisition/UpdateStaffRequisitionSlip";
   static String get PUT_MRNFINALAPPROVAL_APPROVE_API => BASE_URL_CORE + "api/MaterialPreApprovalRequest/UpdateFinalApprovalMas";
   static String get PUT_SUPP_BILL_APPROVE_API => BASE_URL_CORE + "api/MaterialPurOrdBill/UpdatematerialPurOrdBillMas";
+  static String get PUT_SUPP_BILL_WO_APPROVE_API => BASE_URL_CORE + "api/MaterialPurOrdBillDirect/UpdatematerialPurOrdBillMasDirect";
 
   static String get PROJECT_NAME_TRANSFER => BASE_URL_CORE + "api/GenericMaster/ToProDiff";
   static String get TOPROJECT_NAME_TRANSFER => BASE_URL_CORE + "api/GenericMaster/GetAllToPro";
