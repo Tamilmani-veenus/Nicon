@@ -57,7 +57,7 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                     color:   Theme.of(context).primaryColor ,
                   ),
                   alignment: Alignment.center,
-                  child: Text(matreturnController.editCheck == 1 ?"Re-Submit":"Submit",
+                  child: Text(matreturnController.saveButton.value,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,
                         color:   Colors.white ),
@@ -439,13 +439,12 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
   }
 
   Future SubmitAlert(BuildContext context) async {
-    matreturnController.buttonControl = 0;
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Alert!'),
-        content: Text(matreturnController.editCheck == 1 ? 'Are you sure to Re-Submit?' :
-        'Are you sure to Submit?' ),
+        content: Text(
+        'Are you sure to ${matreturnController.saveButton.value}?' ),
         actions:[
           Container(
             margin: EdgeInsets.only(left: 20,right: 20),
@@ -478,13 +477,9 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                             }
                         },
                         child: Text(
-                          matreturnController.editCheck == 1
-                              ? RequestConstant.RESUBMIT
-                              : RequestConstant.SUBMIT,
+                          matreturnController.saveButton.value,
                           style: TextStyle(
-                            color: matreturnController.buttonControl == 0
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey, // Change color when button is disabled
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: RequestConstant.Lable_Font_SIZE,
                           ),
