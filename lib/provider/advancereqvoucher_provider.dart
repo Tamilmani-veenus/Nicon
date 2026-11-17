@@ -52,7 +52,7 @@ class AdvanceReqVoucherProvider{
     try {
       var response;
 
-      if (saveButton==RequestConstant.RESUBMIT || saveButton==RequestConstant.APPROVAL) {
+      if (saveButton==RequestConstant.RESUBMIT || saveButton==RequestConstant.VERIFY || saveButton==RequestConstant.APPROVAL) {
         response = await ApiManager.putUpdateAPIButton("${ApiConstant.PUT_ADVREQ_UPDATE_API}?id=$id", body);
       } else if (saveButton==RequestConstant.SUBMIT) {
         response = await ApiManager.postAPICall(ApiConstant.ADVREQ_SAVE, body);

@@ -14627,6 +14627,7 @@ class _AdvanceReqAprovalState extends State<AdvanceReqAproval> {
                                 FocusScope.of(context).unfocus();
                                 await advanceReqVoucherController_new
                                     .EntryList_EditApi(
+                                    widget.checkheading == "ADV REQ VERIFICATION PENDING" ? "verify" :
                                     "approve",
                                     pendingListController
                                         .mainlist.value[index].voucherId,

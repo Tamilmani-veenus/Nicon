@@ -1,7 +1,10 @@
 import 'package:nicon/home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_entry_site.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/comman_controller.dart';
+import '../../../../controller/logincontroller.dart';
+import '../../../../utilities/apiconstant.dart';
 import '../../../../utilities/requestconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +25,7 @@ class _Subcont_NMR_EntryListScreenState_Site
   TextEditingController editingController = TextEditingController();
   NMRWklyController nmrWklyController = Get.put(NMRWklyController());
   CommanController commanController = Get.put(CommanController());
+  LoginController loginController = Get.put(LoginController());
 
   @override
   void initState() {
@@ -594,25 +598,51 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                   children: [
                                                                     Expanded(
                                                                       child: Container(
-                                                                        margin: EdgeInsets.only(
-                                                                            right: 10),
+                                                                        margin: const EdgeInsets.only(right: 10),
                                                                         child: Text(
                                                                           nmrWklyController.NmrEtyList.value[index].workNo.toString(),
                                                                           style: TextStyle(
-                                                                              fontWeight:
-                                                                              FontWeight
-                                                                                  .bold,
-                                                                              color: Theme.of(
-                                                                                  context)
-                                                                                  .primaryColor),
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: Theme.of(context).primaryColor,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    InkWell(
+                                                                      borderRadius: BorderRadius.circular(20),
+                                                                      onTap: () async{
+                                                                        await download(
+                                                                          nmrWklyController.NmrEtyList.value[index].id,
+                                                                        );
+                                                                      },
+                                                                      child: Container(
+                                                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                                                        decoration: BoxDecoration(
+                                                                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                                                          borderRadius: BorderRadius.circular(10),
+                                                                          border: Border.all(color: Theme.of(context).primaryColor),
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          children: [
+                                                                            Icon(Icons.print_outlined, size: 18, color: Theme.of(context).primaryColor),
+                                                                            const SizedBox(width: 4),
+                                                                            Text(
+                                                                              "Print",
+                                                                              style: TextStyle(
+                                                                                fontSize: 13,
+                                                                                fontWeight: FontWeight.w600,
+                                                                                color: Theme.of(context).primaryColor,
+                                                                              ),
+                                                                            ),
+                                                                          ],
                                                                         ),
                                                                       ),
                                                                     ),
                                                                     IconButton(
-                                                                      onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      icon:  ConstIcons.cancle,)
+                                                                      onPressed: () => Navigator.pop(context),
+                                                                      icon: ConstIcons.cancle,
+                                                                    ),
                                                                   ],
                                                                 ),
                                                                 InkWell(
@@ -710,5 +740,10 @@ class _Subcont_NMR_EntryListScreenState_Site
       ),
     );
 
+  }
+
+  download(int nmrId) {
+    launch("${ApiConfig.WebURL}mobile-nmr-bill-print?nmrBillId=$nmrId&access_token=${loginController.user.value.accessToken}");
+    print("${ApiConfig.WebURL}mobile-nmr-bill-print?nmrBillId=$nmrId&access_token=${loginController.user.value.accessToken}");
   }
 }

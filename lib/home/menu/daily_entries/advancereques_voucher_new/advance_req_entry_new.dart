@@ -72,7 +72,8 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
 
       }
 
-      else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+      else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+          || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
         advanceReqVoucherController_new.editListApiDatas.forEach((element) async {
           advanceReqVoucherController_new.vocId = element.id;
           advanceReqVoucherController_new.autoYearWiseNoController.text = element.advanceReqVoucherNo;
@@ -132,7 +133,8 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                             child: Text(
                               widget.heading,
                               style: TextStyle(
-                                  fontSize: advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL ? 16 : RequestConstant.Heading_Font_SIZE,
+                                  fontSize: advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL
+                                      || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY ? 16 : RequestConstant.Heading_Font_SIZE,
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -249,7 +251,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                   child: ConstIcons.types),
                             ),
                             onTap: () {
-                              if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+                              if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                   || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
                               } else {
                                 showDialog(
                                     context: context,
@@ -304,7 +308,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                   child: ConstIcons.projectName),
                             ),
                             onTap: () async {
-                                if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+                                if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                    || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                    || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
                                 } else {
                                   await projectController.getProjectList();
                                   bottomsheetControllers.ProjectName(context,
@@ -363,7 +369,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                 Fluttertoast.showToast(
                                     msg:
                                     "Voc type is site petty cash so can't access");
-                              } else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+                              } else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
                               } else {
                                 await commonVoucherController
                                     .getAccountTypeList(type: "AdvReq");
@@ -430,7 +438,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                 Fluttertoast.showToast(
                                     msg:
                                     "Voc type is site petty cash so can't access");
-                              } else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+                              } else if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
                               } else {
                                 await commonVoucherController
                                     .getAccountName(type:"AdvReq");
@@ -472,7 +482,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                              TextFormField(
                               autovalidateMode:
                               AutovalidateMode.always,
-                              readOnly: advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL
+                              readOnly: advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL
                                   ? true
                                   : commonVoucherController.VocType.value=="P"
                                   ? true
@@ -562,7 +574,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                               return null;
                             },
                             onTap: () async {
-                              if(advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL){
+                              if(advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                  || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL){
 
                               }
                               else if (commonVoucherController.selectedAccTypeId.value == 5){
@@ -715,7 +729,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                           primary: Setmybackground,
                         ),
                         onPressed: () async {
-                          if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT|| advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
+                          if (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                              || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                              || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL) {
                           }
                           else {
                             if (_formKey.currentState!.validate()) {
@@ -1223,7 +1239,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                             fontSize: 15),
                                       ),
                                     ),
-                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
+                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                        || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                        || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
                                     Expanded(
                                       child: InkWell(
                                         child: Container(
@@ -1420,7 +1438,9 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                             fontSize: 15),
                                       ),
                                     ),
-                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
+                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT
+                                        || advanceReqVoucherController_new.saveButton.value == RequestConstant.VERIFY
+                                        || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
                                     Expanded(
                                       child: InkWell(
                                         child: Container(

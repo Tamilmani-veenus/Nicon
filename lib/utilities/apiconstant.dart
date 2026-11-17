@@ -21,14 +21,14 @@ class ApiConfig {
     if (liveEndpoint != null) {
 
       APIURL = "${liveEndpoint}VishaalAPI/";
-      WebURL = "${liveEndpoint}Nicon/";
+      WebURL = "${liveEndpoint}erpnewUi2/";
 
     } else {
 
       APIURL = DEFAULT_BASE_URL;
       WebURL = DEFAULT_BASE_URL.replaceAll(
         "VishaalAPI/",
-        "Nicon/",
+        "erpnewUi2/",
       );
     }
 
@@ -319,6 +319,8 @@ class ApiConstant {
   static String get GETBOQAPPROLIST => BASE_URL_CORE + "api/BOQRevised/GetBOQRevisedToBeApproved";
   static String get GETSITEVOUCHERAPPROLIST => BASE_URL_CORE + "api/SiteVoucher/GetAccountSiteVoucherToBeApproved";
   static String get GETADVREQAPPROLIST => BASE_URL_CORE + "api/AdvanceReqVoucher/GetAdvanceReqToBeApproved";
+  static String get GETSITEPETTY_ADVREQAPPROLIST => BASE_URL_CORE + "api/AdvanceReqVoucher/GetAdvanceReqSitePettyCashApp";
+
   static String get GETCOMPANYNMRAPPROLIST => BASE_URL_CORE + "api/NMRLabourAttendance/GetApprovalPendingNMRAttendance";
   static String get GETPO_SUPTRADERSAGEN_PENDLIST => BASE_URL_CORE + "api/MaterialPurOrdMas/GetAllPendingPOBySupplierCategory";
   static String get GET_ONDUTY_PUNCHINOUT_VERIFILIST => BASE_URL_CORE + "api/PunchInandOut/GetAllOnDutyverificationpending";

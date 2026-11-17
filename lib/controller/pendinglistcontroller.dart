@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:nicon/utilities/apiconstant.dart';
+
 import '../commonpopup/pendinglistdet_alert.dart';
 import '../commonpopup/po_suppliernamelist_alert.dart';
 import '../commonpopup/transferackmateriallist_alert.dart';
@@ -1071,7 +1073,7 @@ class PendingListController extends GetxController {
                                                         heading: entryTypeName!,
                                                         checkheading: name)),
                                           )
-                : name == "WORK PRE APPROVAL PENDING"
+                                          : name == "WORK PRE APPROVAL PENDING"
                                             ? Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -1248,7 +1250,15 @@ class PendingListController extends GetxController {
                                                                                                                                             context,
                                                                                                                                             MaterialPageRoute(builder: (context) => BillGenDirectAproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                                                           )
-                                                                                                                                        : name == "ADV REQ APPROVAL PENDING"
+                                                                                                                                      //     : name == "ADV REQ SITE PETTY APPROVAL PENDING"
+                                                                                                                                      //     ? Navigator.push(
+                                                                                                                                      //   context,
+                                                                                                                                      //   MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                                                      // )
+                                                                                                                                        : (name == "ADV REQ APPROVAL PENDING" ||
+                                                                                                                                        (AppClient.isNicon &&
+                                                                                                                                            (name == "ADV REQ VERIFICATION PENDING" ||
+                                                                                                                                                name == "ADV REQ SITE PETTY APPROVAL PENDING")))
                                                                                                                                             ? Navigator.push(
                                                                                                                                                 context,
                                                                                                                                                 MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),

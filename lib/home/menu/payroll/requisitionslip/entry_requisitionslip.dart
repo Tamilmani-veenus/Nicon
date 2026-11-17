@@ -578,7 +578,9 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                       ),
                                         onTap: (){
                                           setState(() {
-                                            requisitionSlipController.Totaldays.text == "0" ? requisitionSlipController.Totaldays.text = "" : requisitionSlipController.Totaldays.text;
+                                            requisitionSlipController.Totaldays.text == "0" ?
+                                            requisitionSlipController.Totaldays.text = "" :
+                                            requisitionSlipController.Totaldays.text;
                                           });
                                         },
                                         validator: (value) {
@@ -603,26 +605,33 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                       ),
                       side: BorderSide(
                         width: 1,
-                        color: requisitionSlipController.totalLeaveValue.value!="1" && requisitionSlipController.totalLeaveValue.value!="0.5"?Colors.grey:Theme.of(context).primaryColor,
+                        color:
+                        // requisitionSlipController.totalLeaveValue.value!="1"
+                        //     && requisitionSlipController.totalLeaveValue.value!="0.5"
+                        //     ?Colors.grey :
+                        Theme.of(context).primaryColor,
                       ),
-                      activeColor: requisitionSlipController.totalLeaveValue.value!="1" && requisitionSlipController.totalLeaveValue.value!="0.5"?Colors.grey:Theme.of(context).primaryColor,
+                      activeColor:
+                      // requisitionSlipController.totalLeaveValue.value!="1"
+                      //     && requisitionSlipController.totalLeaveValue.value!="0.5"?Colors.grey:
+                      Theme.of(context).primaryColor,
                       checkColor: Colors.white,
                       onChanged: (bool? value) {
-                        setState(() {
-                          if(requisitionSlipController.totalLeaveValue.value=="1" ||requisitionSlipController.totalLeaveValue.value=="0.5") {
-                            requisitionSlipController.isHalfDay.value = value ?? false;
-                            if (requisitionSlipController.isHalfDay.value == true) {
-                              requisitionSlipController.Totaldays.text = "0.5";
-                            }
-                            else {
-                              requisitionSlipController.Totaldays.text = "1";
-                            }
-                          }
-                        });
+                        requisitionSlipController.isHalfDay.value = value ?? false;
+
+                        requisitionSlipController.calculateTotalLeaveDays();
                       },
                     );},
                   ),
-                  Text("Half Day", style:  TextStyle(fontWeight: FontWeight.bold,color: requisitionSlipController.totalLeaveValue.value!="1" && requisitionSlipController.totalLeaveValue.value!="0.5"?Colors.grey:Colors.black),),
+                  Text("Half Day", style:  TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color:
+                      // requisitionSlipController.totalLeaveValue.value!="1"
+                      //     && requisitionSlipController.totalLeaveValue.value!="0.5"
+                      //     ?Colors.grey
+                      //     :
+                      Colors.black
+                  ),),
                 ],
               ),
             ),
@@ -868,26 +877,41 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                         ),
                                         side: BorderSide(
                                           width: 1,
-                                          color: requisitionSlipController.Totaldays.text!="1" && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:Theme.of(context).primaryColor,
+                                          color:
+                                          // requisitionSlipController.Totaldays.text!="1"
+                                          //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
+                                          Theme.of(context).primaryColor,
                                         ),
-                                        activeColor: requisitionSlipController.Totaldays.text!="1" && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:Theme.of(context).primaryColor,
+                                        activeColor:
+                                        // requisitionSlipController.Totaldays.text!="1"
+                                        //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
+                                        Theme.of(context).primaryColor,
                                         checkColor: Colors.white,
                                         onChanged: (bool? value) {
-                                          setState(() {
-                                            if(requisitionSlipController.Totaldays.text=="1" ||requisitionSlipController.Totaldays.text=="0.5") {
-                                              requisitionSlipController.isHalfDay.value = value ?? false;
-                                              if (requisitionSlipController.isHalfDay.value == true) {
-                                                requisitionSlipController.Totaldays.text = "0.5";
-                                              }
-                                              else {
-                                                requisitionSlipController.Totaldays.text = "1";
-                                              }
-                                            }
-                                          });
+                                          requisitionSlipController.isHalfDay.value = value ?? false;
+
+                                          requisitionSlipController.calculateTotalLeaveDays();
                                         },
+                                        // onChanged: (bool? value) {
+                                        //   setState(() {
+                                        //     if(requisitionSlipController.Totaldays.text=="1" ||requisitionSlipController.Totaldays.text=="0.5") {
+                                        //       requisitionSlipController.isHalfDay.value = value ?? false;
+                                        //       if (requisitionSlipController.isHalfDay.value == true) {
+                                        //         requisitionSlipController.Totaldays.text = "0.5";
+                                        //       }
+                                        //       else {
+                                        //         requisitionSlipController.Totaldays.text = "1";
+                                        //       }
+                                        //     }
+                                        //   });
+                                        // },
                                       );},
                                     ),
-                                    Text("Half Day", style:  TextStyle(fontWeight: FontWeight.bold,color: requisitionSlipController.Totaldays.text!="1" && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:Colors.black),),
+                                    Text("Half Day", style:  TextStyle(fontWeight: FontWeight.bold,
+                                        color:
+                                        // requisitionSlipController.Totaldays.text!="1"
+                                        //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
+                                        Colors.black),),
                                   ],
                                 ),
                               ),

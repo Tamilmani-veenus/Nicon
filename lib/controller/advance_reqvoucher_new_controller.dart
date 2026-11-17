@@ -317,7 +317,7 @@ class AdvanceReqVoucherController_new extends GetxController {
       actualVoucherAmount: double.tryParse(entry_amount.text),
       createdBy: saveButton.value == RequestConstant.SUBMIT?int.tryParse(loginController.EmpId()):createdById.value,
       // createdDt: BaseUtitiles().convertToUtcIso(entryDateController.text),
-      verifyStatus: saveButton.value == RequestConstant.APPROVAL?"Y":"N",
+      verifyStatus: saveButton.value == RequestConstant.APPROVAL || saveButton.value == RequestConstant.VERIFY ? "Y":"N",
       approveStatus: saveButton.value == RequestConstant.APPROVAL?"Y":"N",
       accountAdvanceReqVoucherSwPayments : commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value == "A"
             ? getDetPayforAdvDetails(id)
@@ -420,7 +420,7 @@ class AdvanceReqVoucherController_new extends GetxController {
     if (value != null) {
       if(value.success==true){
         editListApiDatas.value = [value.result];
-        saveButton.value = type == "edit"? RequestConstant.RESUBMIT : RequestConstant.APPROVAL;
+        saveButton.value = type == "edit"? RequestConstant.RESUBMIT : type == "verify"? RequestConstant.VERIFY : RequestConstant.APPROVAL;
         if(editListApiDatas.isNotEmpty){
           for (var element in editListApiDatas.value) {
             if (element.payForType == "A") {

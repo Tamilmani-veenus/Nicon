@@ -427,8 +427,9 @@ class ManPowerController extends GetxController {
         manPowerAllocationMasId: id,
         categoryId: element.catId,
         // level3ItemId: selectedIds.isEmpty?"0": selectedIds.join(','),
-        nos: saveButton.value==RequestConstant.APPROVAL ?int.tryParse(element.savedNos):int.tryParse(element.nos),
-        appNos: saveButton.value==RequestConstant.APPROVAL ?int.tryParse(element.nos):0,
+        nos: saveButton.value==RequestConstant.APPROVAL ?double.tryParse(element.savedNos):double.tryParse(element.nos),
+        appNos: saveButton.value==RequestConstant.APPROVAL ?double.tryParse(element.nos):0,
+
         // remarks: element.remarks
       );
       getManPowerDetList.add(list);

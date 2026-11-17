@@ -289,14 +289,32 @@ class  RequisitionSlipControllerNew extends GetxController{
   //
   // }
 
+  // void vehicleAge(DateTime fromDate, DateTime toDate) {
+  //   int totalDays = toDate.difference(fromDate).inDays + 1;
+  //   totalDays = totalDays < 1 ? 1 : totalDays;
+  //   Totaldays.text = totalDays.toString();
+  //   totalLeaveValue.value = totalDays.toString();
+  // }
+
   void vehicleAge(DateTime fromDate, DateTime toDate) {
     int totalDays = toDate.difference(fromDate).inDays + 1;
+
     totalDays = totalDays < 1 ? 1 : totalDays;
-    Totaldays.text = totalDays.toString();
+
     totalLeaveValue.value = totalDays.toString();
+
+    calculateTotalLeaveDays();
   }
 
+  void calculateTotalLeaveDays() {
+    double totalDays = double.tryParse(totalLeaveValue.value) ?? 1;
 
+    if (isHalfDay.value) {
+      totalDays -= 0.5;
+    }
+
+    Totaldays.text = totalDays.toString();
+  }
 
   // void calculateTimeDifference() {
   //   // Assuming the times are in a 12-hour format with AM/PM
