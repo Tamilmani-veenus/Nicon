@@ -353,6 +353,40 @@ class _MainManusListState extends State<MainManusList> {
                                                                         ],
                                                                       ),
                                                                     )
+                                          : menuController
+                                          .subMatList[
+                                      index]
+                                          .menuName ==
+                                          "Material Return"
+                                          ? Container(
+                                        width: 40,
+                                        height:
+                                        40,
+                                        decoration:
+                                        BoxDecoration(
+                                          color: Theme.of(context)
+                                              .primaryColor,
+                                          borderRadius:
+                                          const BorderRadius.all(
+                                            Radius.circular(
+                                                10),
+                                          ),
+                                        ),
+                                        child:
+                                        const Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              FontAwesomeIcons.arrowRotateLeft,
+                                              color:
+                                              Colors.white,
+                                              size:
+                                              20,
+                                            )
+                                          ],
+                                        ),
+                                      )
                                                                   : SizedBox
                                                                       .shrink(),
                                     ],

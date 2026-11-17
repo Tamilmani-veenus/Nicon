@@ -2,6 +2,7 @@ import 'package:nicon/controller/punch_in_controller.dart';
 import 'package:nicon/controller/requisitionslip_controller_new.dart';
 import 'package:nicon/controller/site_location_controller.dart';
 import 'package:nicon/home/menu/main_menu/workOrder_BOQ/workOrder_BOQ_entrylist.dart';
+import 'package:nicon/home/menu/materials/material_return/material_return_entryList.dart';
 import '../controller/billgenerationdirect_controller.dart';
 import '../controller/cashbook_site_controller.dart';
 import '../controller/dailyentries_controller.dart';
@@ -267,6 +268,15 @@ class Menu_Controller extends GetxController {
     }
     else if (value == "Consumption") {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Consumption_List(heading: MenuName,)),);
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Material_Consumption(0)),
+      // );
+
+    }
+    else if (value == "Material Return") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MaterialReturnEntryList(heading: MenuName,)),);
 
       // Navigator.push(
       //   context,
