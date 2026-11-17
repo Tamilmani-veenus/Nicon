@@ -183,6 +183,39 @@ class BaseUtitiles {
     }
   }
 
+  static grnListPopupAlert(String value,list)  {
+    dummyListData.value.clear();
+    if (value.isNotEmpty) {
+      list.forEach((item) {
+        if (item.transNo.toString().toLowerCase().contains(value) ||
+            item.transNo.toString().toUpperCase().contains(value) )
+        {
+          dummyListData.value.add(item);
+        }
+      });
+      return  dummyListData.value;
+    }
+    else {
+      return  list;
+    }
+  }
+  static grnMaterialDetailsPopupAlert(String value,list)  {
+    dummyListData.value.clear();
+    if (value.isNotEmpty) {
+      list.forEach((item) {
+        if (item.materialName.toString().toLowerCase().contains(value) ||
+            item.materialName.toString().toUpperCase().contains(value))
+        {
+          dummyListData.value.add(item);
+        }
+      });
+      return  dummyListData.value;
+    }
+    else {
+      return  list;
+    }
+  }
+
 
   static MaterialheadNamePopupAlert(String value,list)  {
     dummyListData.value.clear();
