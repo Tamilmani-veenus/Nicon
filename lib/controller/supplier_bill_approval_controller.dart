@@ -126,9 +126,20 @@ class SupplierBillApprovalController extends GetxController {
     });
   }
 
-  Future approveSuppBillApi( context, value) async {
+  Future approveSuppBillApi(context, value) async {
     await Future.delayed(const Duration(seconds: 0));
-    String body = approveSuppBillApiModelToJson(ApproveSuppBillApiModel(
+
+    double getAmount(String key) {
+      return double.tryParse(controllers[key]?.text.trim() ?? '') ?? 0.0;
+    }
+
+    final approveBy = int.tryParse(loginController.EmpId()) ?? 0;
+    final approveDate = BaseUtitiles()
+        .convertToUtcIso(punchInController.currentDate!);
+
+    final materialDetails = getPurOrdBillDet(value.id);
+
+    final model = ApproveSuppBillApiModel(
       id: value.id,
       billNo: value.billNo,
       entrydate: value.entrydate,
@@ -144,75 +155,116 @@ class SupplierBillApprovalController extends GetxController {
       purOrdMasId: value.purOrdMasId,
       workOrdMasId: value.workOrdMasId,
       reqOrdMasId: value.reqOrdMasId,
-      frieghtCharges: double.tryParse(controllers['Freight Charges']!.text) ?? 0.0,
-      labourCharges: double.tryParse(controllers['Labour Charges']!.text) ?? 0.0,
-      otherCharges: double.tryParse(controllers['Other Charges']!.text) ?? 0.0,
-      roundOff: double.tryParse(controllers['Round Off']!.text) ?? 0.0,
-      sgstPercentage: double.tryParse(controllers['S-GST %']!.text) ?? 0.0,
-      sgstAmount: double.tryParse(controllers['S-GST Amt']!.text) ?? 0.0,
-      netSgstAmount: double.tryParse(controllers['Net S-GST']!.text) ?? 0.0,
-      cgstPercentage: double.tryParse(controllers['C-GST %']!.text) ?? 0.0,
-      cgstAmount: double.tryParse(controllers['C-GST Amt']!.text) ?? 0.0,
-      netCgstAmount: double.tryParse(controllers['Net C-GST']!.text) ?? 0.0,
-      igstPercentage: double.tryParse(controllers['I-GST %']!.text) ?? 0.0,
-      igstAmount: double.tryParse(controllers['I-GST Amt']!.text) ?? 0.0,
-      netIgstAmount: double.tryParse(controllers['Net I-GST']!.text) ?? 0.0,
-      tdsPercentage: double.tryParse(controllers['TDS %']!.text) ?? 0.0,
-      tdsAmount: double.tryParse(controllers['TDS Amt']!.text) ?? 0.0,
-      tcsPercentage: double.tryParse(controllers['TCS %']!.text) ?? 0.0,
-      tcsAmount: double.tryParse(controllers['TCS Amt']!.text) ?? 0.0,
-      discntPercentage: double.tryParse(controllers['Discount %']!.text) ?? 0.0,
-      discntAmount: double.tryParse(controllers['Disc Amt']!.text) ?? 0.0,
-      netAmount: double.tryParse(controllers['Net Amount']!.text) ?? 0.0,
-      netPayAmount: double.tryParse(controllers['Net Pay Amount']!.text) ?? 0.0,
-      advanceAmount: double.tryParse(controllers['Deduction Amount']!.text) ?? 0.0,
-      remarks: controllers['Remarks']!.text,
+
+      frieghtCharges: getAmount('Freight Charges'),
+      labourCharges: getAmount('Labour Charges'),
+      otherCharges: getAmount('Other Charges'),
+      roundOff: getAmount('Round Off'),
+
+      sgstPercentage: getAmount('S-GST %'),
+      sgstAmount: getAmount('S-GST Amt'),
+      netSgstAmount: getAmount('Net S-GST'),
+
+      cgstPercentage: getAmount('C-GST %'),
+      cgstAmount: getAmount('C-GST Amt'),
+      netCgstAmount: getAmount('Net C-GST'),
+
+      igstPercentage: getAmount('I-GST %'),
+      igstAmount: getAmount('I-GST Amt'),
+      netIgstAmount: getAmount('Net I-GST'),
+
+      tdsPercentage: getAmount('TDS %'),
+      tdsAmount: getAmount('TDS Amt'),
+
+      tcsPercentage: getAmount('TCS %'),
+      tcsAmount: getAmount('TCS Amt'),
+
+      discntPercentage: getAmount('Discount %'),
+      discntAmount: getAmount('Disc Amt'),
+
+      netAmount: getAmount('Net Amount'),
+      netPayAmount: getAmount('Net Pay Amount'),
+      advanceAmount: getAmount('Deduction Amount'),
+
+      remarks: controllers['Remarks']?.text ?? '',
+
       createdBy: value.createdBy,
       createdDt: value.createdDt,
       verifyBy: value.verifyBy,
       verifyStatus: value.verifyStatus,
       verifydate: value.verifydate,
+
       approveStatus: "Y",
-      approveBy: int.tryParse(loginController.EmpId()),
-      approveDate: BaseUtitiles().convertToUtcIso(punchInController.currentDate!),
+      approveBy: approveBy,
+      approveDate: approveDate,
+
       debitNoteAmt: value.debitNoteAmt,
       debitNoteRemarks: value.debitNoteRemarks ?? "-",
       debitNoteType: value.debitNoteType,
+
       eWayBill: value.eWayBill,
       eWayBillNo: value.eWayBillNo ?? 0,
       subContractorId: value.subContractorId,
       eWayBillImage: value.eWayBillImage,
       eWayBillDate: value.eWayBillDate,
+
       tallyType: value.tallyType,
       materialInwMasId: value.materialInwMasId ?? "0",
+
       companyId: value.companyId,
       workOrderId: value.workOrderId,
       fromDate: value.fromDate,
       toDate: value.toDate,
+
       gstApply: isGstInclusive.value,
       totalAmount: 0,
-      materialPurOrdBilldetLink: getPurOrdBillDet(value.id)
-    ));
 
-    final list = await SupplierBillAppProvider.approveSuppBillApproveAPI(body, value.id);
-    final decodedJson = jsonDecode(body);
-    //
-    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-    final prettyJson = encoder.convert(decodedJson);
+      materialPurOrdBilldetLink: materialDetails,
+    );
 
-    debugPrint(prettyJson, wrapWidth: 1024);
+    dynamic list;
+
+    if (value.poBillType == "P") {
+
+      // FIRST FLOW - EXISTING JSON API
+      String body = approveSuppBillApiModelToJson(model);
+
+      final decodedJson = jsonDecode(body);
+      const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+
+      debugPrint(
+        encoder.convert(decodedJson),
+        wrapWidth: 1024,
+      );
+
+      list = await SupplierBillAppProvider
+          .approveSuppBillApproveAPI(body, value.id);
+
+    } else if (value.poBillType == "G" ||
+        value.poBillType == "W") {
+
+      // SECOND AND THIRD FLOW - FORMDATA API
+      list = await SupplierBillAppProvider
+          .approveSuppBillApproveFormDataAPI(model, value.id);
+    }
 
     if (list != null) {
       if (list["success"] == true) {
-          BaseUtitiles.showToast(list["message"]);
-          await pendingListController.getPendingList();
-          BaseUtitiles.popMultiple(context, count: 4);
+        BaseUtitiles.showToast(list["message"]);
+
+        await pendingListController.getPendingList();
+
+        BaseUtitiles.popMultiple(context, count: 4);
       } else {
-        BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+        BaseUtitiles.showToast(
+          list["message"] ?? "Something went wrong..",
+        );
+
         BaseUtitiles.popMultiple(context, count: 2);
       }
     } else {
       BaseUtitiles.showToast("Something went wrong..");
+
       BaseUtitiles.popMultiple(context, count: 2);
     }
   }
@@ -579,7 +631,6 @@ class SupplierBillApprovalController extends GetxController {
     syncSupplierBillItemTotals();
   }
 
-
   Future<void> updateGeneralBillItem(
       int index,
       String field,
@@ -718,7 +769,6 @@ class SupplierBillApprovalController extends GetxController {
     syncSupplierBillItemTotals();
   }
 
-
   textControllersInitiate() {
     itemlist_qtyControllers.add(TextEditingController());
   }
@@ -734,6 +784,7 @@ class SupplierBillApprovalController extends GetxController {
   delete_SuppBill_itemlist_Table() async {
     await suppBillAppService.suppBillAppList_table_delete();
   }
+
   double? toDoubleValue(dynamic value) {
     if (value == null) return null;
     if (value is num) return value.toDouble();
