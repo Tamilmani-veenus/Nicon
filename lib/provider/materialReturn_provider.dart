@@ -9,7 +9,7 @@ import '../utilities/requestconstant.dart';
 
 class MaterialReturnProvider{
 
-  static Future<MaterialReturnEntryListResponse?> getMatReturn_List(String frdate, String todate) async {
+  static Future<MaterialReturnEntryListResponse?>  getMatReturn_List(String frdate, String todate) async {
     try {
       var value = await ApiManager.getAPICall(
           "${ApiConstant.GETMATERIAL_RETURNLIST}?fromDate=$frdate&toDate=$todate");
@@ -97,79 +97,35 @@ class MaterialReturnProvider{
     }
   }
 
-  // static Future<String?> SaveGRNMaterialSaveAPI(String body, String returnId, int buttonControl, context) async {
-  //   String? ratingRes;
-  //
-  //   try {
-  //     if (returnId != "0") {
-  //       final value = await ApiManager.putUpdateAPIButton(ApiConstant.PUT_GRNMATERIAL_RETURN_SAVEAPI, body);
-  //       var response = saveDeduction_SaveResponseFromJson(value);
-  //       if (response.RetString != null) {
-  //         ratingRes = response.RetString;
-  //       }
-  //     } else {
-  //       final value = await ApiManager.postAPICall(ApiConstant.POST_GRNMATERIAL_RETURN_SAVEAPI, body);
-  //       var response = saveDeduction_SaveResponseFromJson(value);
-  //       if (response.RetString != null) {
-  //         ratingRes = response.RetString;
-  //       }
-  //     }
-  //   }
-  //
-  //   on SocketException catch (_) {
-  //     BaseUtitiles.showToast(RequestConstant.NOINTERNETCONNECTION);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     return null;
-  //   }
-  //
-  //   on TimeoutException catch (_) {
-  //     BaseUtitiles.showToast(RequestConstant.REQUESTTIMEOUT);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     return null;
-  //   }
-  //
-  //   on FormatException catch (_) {
-  //     BaseUtitiles.showToast(RequestConstant.BADRESPONSE);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     return null;
-  //   }
-  //
-  //   catch (error, stackTrace) {
-  //     print("Error in SaveMaterialScreenEntryAPI: $error");
-  //     print(stackTrace);
-  //     buttonControl = 0;
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     Navigator.pop(context);
-  //     BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
-  //   }
-  //
-  //   return ratingRes;
-  // }
+  static SaveMatReturnEntryAPI(String body, reqId) async {
 
-  static Future<List<GetMaterialRetEditModel>> MatRetrnList_editAPI(int ReturnId) async {
-    var data = null;
-    await ApiManager.getAPICall(ApiConstant.GET_MATRETURN_EDIT_LIST + "?ReturnId=$ReturnId").then((value) {
-      final res = getMaterialRetEditModelFromJson(value);
-      if (res != null && res.length > 0) {
-        data = res;
-        return data;
+    try {
+      var response;
+
+      if (reqId != "0") {
+        response = await ApiManager.putUpdateAPIButton("${ApiConstant.PUT_GRNMATERIAL_RETURN_SAVEAPI}/$reqId", body);
+      } else {
+        response = await ApiManager.postAPICall(ApiConstant.POST_GRNMATERIAL_RETURN_SAVEAPI, body);
       }
-    }, onError: (error) {
-      print(error);
-      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG+error);
-    });
-    return data;
+      return jsonDecode(response);
+
+    }  catch (error) {
+      print("Error == $error");
+      return null;
+    }
   }
+
+  static  MatRetrnList_editAPI(ReturnId) async {
+    try {
+      var value = await ApiManager.getAPICall(
+          "${ApiConstant.GET_MATRETURN_EDIT_LIST}/$ReturnId");
+
+      return getMaterialRetEditModelFromJson(value);
+    } catch (error,e) {
+      print(error);
+      return null;
+    }
+  }
+
 
 }

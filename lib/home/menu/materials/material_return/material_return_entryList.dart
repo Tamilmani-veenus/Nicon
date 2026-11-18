@@ -633,7 +633,7 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                                                                   materialReturn_Controller.GrnMaterialTabledelete();
                                                                   materialReturn_Controller.grnMaterialReadList.value=[];
                                                                   FocusScope.of(context).unfocus();
-                                                                  materialReturn_Controller.materialRetEntryList_EditApi(materialReturn_Controller.MatReturnList.value[index].returnId,widget.heading,context);
+                                                                  materialReturn_Controller.materialRetEntryList_EditApi(materialReturn_Controller.MatReturnList.value[index].id,widget.heading,context);
                                                                 }),
                                                           ),
                                                           Container(

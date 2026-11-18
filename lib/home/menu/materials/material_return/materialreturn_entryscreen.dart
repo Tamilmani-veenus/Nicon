@@ -60,17 +60,18 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
 
       else if(matreturnController.saveButton.value == RequestConstant.RESUBMIT) {
           matreturnController.isFromEdit.value=true;
+          matreturnController.GRN_StockInNo_Controller.text ="--SELECT--";
           matreturnController.grnMaterial_EditApiList.forEach((element) {
-          matreturnController.returnId.value = element.returnId.toString();
-          matreturnController.autoYearWiseNoController.text = element.returnNo;
-          matreturnController.MatRetEntryDate.text = element.returndate;
+          matreturnController.returnId.value = element.id.toString();
+          matreturnController.autoYearWiseNoController.text = element.returnNo.toString().trim();
+          matreturnController.MatRetEntryDate.text = element.entryDt;
           projectController.projectname.text = element.projectName;
-          projectController.selectedProjectId.value = element.projectId;
+          projectController.selectedProjectId.value = element.projectid;
           siteController.Sitename.text = element.siteName;
-          siteController.selectedsiteId.value = element.siteId;
-          reportsController.suppliername.text = element.supplierName;
-          reportsController.selectedsuppliertId.value = element.supplierid;
-          matreturnController.MatRetEntry_preparedbyController.text = element.preparedbyName;
+          siteController.selectedsiteId.value = element.siteid;
+          reportsController.suppliername.text = element.toSupplierName;
+          reportsController.selectedsuppliertId.value = element.toSuplierId;
+          matreturnController.MatRetEntry_preparedbyController.text = element.createdName;
           matreturnController.MatRetEntry_RemarksController.text = element.remarks;
         });
       }

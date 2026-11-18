@@ -187,8 +187,8 @@ class BaseUtitiles {
     dummyListData.value.clear();
     if (value.isNotEmpty) {
       list.forEach((item) {
-        if (item.transNo.toString().toLowerCase().contains(value) ||
-            item.transNo.toString().toUpperCase().contains(value) )
+        if (item["transNo"].toString().toLowerCase().contains(value) ||
+            item["transNo"].toString().toUpperCase().contains(value) )
         {
           dummyListData.value.add(item);
         }

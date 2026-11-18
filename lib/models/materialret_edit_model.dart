@@ -4,118 +4,182 @@
 
 import 'dart:convert';
 
-List<GetMaterialRetEditModel> getMaterialRetEditModelFromJson(String str) => List<GetMaterialRetEditModel>.from(json.decode(str).map((x) => GetMaterialRetEditModel.fromJson(x)));
+GetMaterialRetEditModel getMaterialRetEditModelFromJson(String str) => GetMaterialRetEditModel.fromJson(json.decode(str));
 
-String getMaterialRetEditModelToJson(List<GetMaterialRetEditModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String getMaterialRetEditModelToJson(GetMaterialRetEditModel data) => json.encode(data.toJson());
 
 class GetMaterialRetEditModel {
-  int? returnId;
-  String? returnNo;
-  String? returndate;
-  int? projectId;
-  int? siteId;
-  int? supplierid;
-  String? projectName;
-  String? siteName;
-  String? supplierName;
-  String? remarks;
-  int? preparedby;
-  String? preparedbyName;
-  String? userId;
-  String? entryMode;
-  List<ReturnEditDet>? returnEditDet;
+  bool? success;
+  Result? result;
+  String? message;
 
   GetMaterialRetEditModel({
-    this.returnId,
-    this.returnNo,
-    this.returndate,
-    this.projectId,
-    this.siteId,
-    this.supplierid,
-    this.projectName,
-    this.siteName,
-    this.supplierName,
-    this.remarks,
-    this.preparedby,
-    this.preparedbyName,
-    this.userId,
-    this.entryMode,
-    this.returnEditDet,
+    this.success,
+    this.result,
+    this.message,
   });
 
   factory GetMaterialRetEditModel.fromJson(Map<String, dynamic> json) => GetMaterialRetEditModel(
-    returnId: json["ReturnId"],
-    returnNo: json["ReturnNo"],
-    returndate: json["Returndate"],
-    projectId: json["ProjectId"],
-    siteId: json["SiteId"],
-    supplierid: json["Supplierid"],
-    projectName: json["ProjectName"],
-    siteName: json["SiteName"],
-    supplierName: json["SupplierName"],
-    remarks: json["Remarks"],
-    preparedby: json["Preparedby"],
-    preparedbyName: json["PreparedbyName"],
-    userId: json["UserId"],
-    entryMode: json["EntryMode"],
-    returnEditDet: List<ReturnEditDet>.from(json["ReturnEditDet"].map((x) => ReturnEditDet.fromJson(x))),
+    success: json["success"],
+    message: json["message"],
+    result: Result.fromJson(json["result"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "ReturnId": returnId,
-    "ReturnNo": returnNo,
-    "Returndate": returndate,
-    "ProjectId": projectId,
-    "SiteId": siteId,
-    "Supplierid": supplierid,
-    "ProjectName": projectName,
-    "SiteName": siteName,
-    "SupplierName": supplierName,
-    "Remarks": remarks,
-    "Preparedby": preparedby,
-    "PreparedbyName": preparedbyName,
-    "UserId": userId,
-    "EntryMode": entryMode,
-    "ReturnEditDet": List<dynamic>.from(returnEditDet!.map((x) => x.toJson())),
+    "success": success,
+    "message": message,
+    "result": result ?? result!.toJson(),
   };
 }
 
-class ReturnEditDet {
-  int? materialId;
-  String? materialName;
-  String? unit;
-  String? grnNo;
-  int? stockinId;
-  double? stockQty;
-  double? qty;
+class Result {
+  int? id;
+  String? returnNo;
+  String? entryDt;
+  int? projectid;
+  int? siteid;
+  int? toSuplierId;
+  String? remarks;
+  int? createdBy;
+  String? createdDt;
+  int? updatedBy;
+  String? updatedDt;
+  String? projectName;
+  String? siteName;
+  String? toSupplierName;
+  String? createdName;
+  List<MatReturnLink>? matReturnLink;
 
-  ReturnEditDet({
-    this.materialId,
-    this.materialName,
-    this.unit,
-    this.grnNo,
-    this.stockinId,
-    this.stockQty,
-    this.qty,
+  Result({
+    this.id,
+    this.returnNo,
+    this.entryDt,
+    this.projectid,
+    this.siteid,
+    this.toSuplierId,
+    this.remarks,
+    this.createdBy,
+    this.createdDt,
+    this.updatedBy,
+    this.updatedDt,
+    this.projectName,
+    this.siteName,
+    this.toSupplierName,
+    this.createdName,
+    this.matReturnLink,
   });
 
-  factory ReturnEditDet.fromJson(Map<String, dynamic> json) => ReturnEditDet(
-    materialId: json["MaterialId"],
-    materialName: json["MaterialName"],
-    unit: json["Unit"],
-    grnNo: json["GrnNo"],
-    stockinId: json["stockinId"],
-    stockQty: json["StockQty"],
-    qty: json["Qty"],
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    id: json["id"],
+    returnNo: json["returnNo"],
+    entryDt: json["entryDt"],
+    projectid: json["projectid"],
+    siteid: json["siteid"],
+    toSuplierId: json["toSuplierID"],
+    remarks: json["remarks"],
+    createdBy: json["createdBy"],
+    createdDt: json["createdDt"],
+    updatedBy: json["updatedBy"],
+    updatedDt: json["updatedDt"],
+    projectName: json["projectName"],
+    siteName: json["siteName"],
+    toSupplierName: json["toSupplierName"],
+    createdName: json["createdName"],
+    matReturnLink: List<MatReturnLink>.from(json["matReturnLink"].map((x) => MatReturnLink.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "MaterialId": materialId,
-    "MaterialName": materialName,
-    "Unit": unit,
-    "GrnNo": grnNo,
+    "id": id,
+    "returnNo": returnNo,
+    "entryDt": entryDt,
+    "projectid": projectid,
+    "siteid": siteid,
+    "toSuplierID": toSuplierId,
+    "remarks": remarks,
+    "createdBy": createdBy,
+    "createdDt": createdDt,
+    "updatedBy": updatedBy,
+    "updatedDt": updatedDt,
+    "projectName": projectName,
+    "siteName": siteName,
+    "toSupplierName": toSupplierName,
+    "createdName": createdName,
+    "matReturnLink": List<dynamic>.from(matReturnLink!.map((x) => x.toJson())),
+  };
+}
+
+class MatReturnLink {
+  int? id;
+  int? returnId;
+  int? materialId;
+  double? qty;
+ double? rate;
+ double? amount;
+  int? stockinId;
+  String? grNno;
+  double? stockQty;
+  String? materialName;
+  int? unitId;
+  String? unitName;
+  int? createdBy;
+  String? createdDt;
+  int?updatedBy;
+  String? updatedDt;
+
+  MatReturnLink({
+    this.id,
+    this.returnId,
+    this.materialId,
+    this.qty,
+    this.rate,
+    this.amount,
+    this.stockinId,
+    this.grNno,
+    this.stockQty,
+    this.materialName,
+    this.unitId,
+    this.unitName,
+    this.createdBy,
+    this.createdDt,
+    this.updatedBy,
+    this.updatedDt,
+  });
+
+  factory MatReturnLink.fromJson(Map<String, dynamic> json) => MatReturnLink(
+    id: json["id"],
+    returnId: json["returnId"],
+    materialId: json["materialId"],
+    qty: json["qty"],
+    rate: json["rate"],
+    amount: json["amount"],
+    stockinId: json["stockinId"],
+    grNno: json["grNno"],
+    stockQty: json["stockQty"],
+    materialName: json["materialName"],
+    unitId: json["unitID"],
+    unitName: json["unitName"],
+    createdBy: json["createdBy"],
+    createdDt: json["createdDt"],
+    updatedBy: json["updatedBy"],
+    updatedDt: json["updatedDt"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "returnId": returnId,
+    "materialId": materialId,
+    "qty": qty,
+    "rate": rate,
+    "amount": amount,
     "stockinId": stockinId,
-    "StockQty": stockQty,
-    "Qty": qty,
+    "grNno": grNno,
+    "stockQty": stockQty,
+    "materialName": materialName,
+    "unitID": unitId,
+    "unitName": unitName,
+    "createdBy": createdBy,
+    "createdDt": createdDt,
+    "updatedBy": updatedBy,
+    "updatedDt": updatedDt,
   };
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:nicon/controller/projectcontroller.dart';
 import 'package:nicon/controller/reports_controller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
@@ -63,9 +65,8 @@ class MaterialReturn_Controller extends GetxController {
   RxList getGRN_List = [].obs;
   RxList getGRN_MaterialList = [].obs;
   RxList GRNmainlist = [].obs;
-  RxList Consum_EditListApiValue = [].obs;
   RxList searchCatNameList = [].obs;
-  RxList<ReturnDet> getReturnDetList = <ReturnDet>[].obs;
+  RxList<MatReturnLink> getReturnDetList = <MatReturnLink>[].obs;
   RxList grnMaterialReadList = [].obs;
   RxList grnMaterial_EditApiList = [].obs;
 
@@ -101,20 +102,32 @@ class MaterialReturn_Controller extends GetxController {
   // EDIT / DELETE
   // ==========================================================
 
+
+
   Future materialRetEntryList_EditApi(int returnId,MenuName, BuildContext context) async {
-    await MaterialReturnProvider.MatRetrnList_editAPI(returnId).then((value) async {
-      if (value != null && value.length > 0) {
-        GrnMaterialTabledelete();
-        saveButton.value = RequestConstant.RESUBMIT;
-        grnMaterial_EditApiList.value = value;
-        grnMaterial_Details_EditTableSave();
-        getGrnMaterialTablesDatas();
-        return Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MaterialReturn_Entry(heading: MenuName)),
-        );
+    var response = await MaterialReturnProvider.MatRetrnList_editAPI(
+        returnId);
+    if (response != null) {
+      if (response.success == true) {
+        grnMaterial_EditApiList.value = [response.result!];
+
+        if (grnMaterial_EditApiList.isNotEmpty) {
+          saveButton.value = RequestConstant.RESUBMIT;
+          await grnMaterial_Details_EditTableSave();
+          await getGrnMaterialTablesDatas();
+          return Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MaterialReturn_Entry(heading: MenuName)),
+          );
+        } else {
+          BaseUtitiles.showToast("No Data Found");
+        }
+      } else {
+        BaseUtitiles.showToast(response.message ?? 'Something went wrong..');
       }
-    });
+    } else {
+      BaseUtitiles.showToast("Something Went Wrong...");
+    }
   }
 
 
@@ -217,64 +230,62 @@ class MaterialReturn_Controller extends GetxController {
   // ==========================================================
 
   Future SaveButton_GRNMaterialScreen(BuildContext context, String returnId) async {
-    // buttonControl = 1;
-    // getReturnDetList.value = [];
-    // await Future.delayed(const Duration(seconds: 0));
-    // String body = GrnMaterialsaveResponseToJson(GrnMaterialsaveResponse(
-    //   returnId: returnId,
-    //   returnNo: autoYearWiseNoController.text,
-    //   returnDate: MatRetEntryDate.text,
-    //   projectId: projectController.selectedProjectId.value.toString(),
-    //   siteId: siteController.selectedsiteId.value.toString(),
-    //   supplierId: supplierController.selectedsuppliertId.value.toString(),
-    //   remarks: MatRetEntry_RemarksController.text,
-    //   preparedby: loginController.EmpId(),
-    //   userId: loginController.UserId(),
-    //   entryMode: returnId != "0" ? "UPDATE" : "ADD",
-    //   deviceName: BaseUtitiles.deviceName,
-    //   returnDet: getReturnDetList.value.isEmpty
-    //       ? getReturnDet()
-    //       : getReturnDetList.value,
-    // ));
-    // final list = await MaterialReturn_Provider.SaveGRNMaterialSaveAPI(
-    //     body, returnId, buttonControl, context);
-    //
-    // print('MaterialReturn response..${list}');
-    //
-    // if (list != null) {
-    //   if (list == "Record Saved Successfully..." ||
-    //       list == "Record Updated Successfully...") {
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     BaseUtitiles.showToast(list!);
-    //     await getMatRtrn_EntryList();
-    //     GrnMaterialTabledelete();
-    //     grnMaterialReadList.value = [];
-    //     buttonControl = 0;
-    //   } else {
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     BaseUtitiles.showToast("Something went wrong");
-    //   }
-    // }
+    await Future.delayed(const Duration(seconds: 0));
+    String body = grnMaterialsaveResponseToJson(GrnMaterialsaveResponse(
+      id: int.tryParse(returnId),
+      returnNo: autoYearWiseNoController.text,
+      entryDt: MatRetEntryDate.text,
+      projectid: projectController.selectedProjectId.value,
+      siteid: siteController.selectedsiteId.value,
+      toSuplierId: reportsController.selectedsuppliertId.value,
+      remarks: MatRetEntry_RemarksController.text,
+      createdDt: saveButton.value == RequestConstant.SUBMIT?BaseUtitiles().convertToUtcIso(MatRetEntryDate.text):grnMaterial_EditApiList.value[0].createdDt,
+      updatedDt: DateTime.now().toUtc().toIso8601String(),
+      matReturnLink: getReturnDet(int.tryParse(returnId),saveButton.value == RequestConstant.SUBMIT?BaseUtitiles().convertToUtcIso(MatRetEntryDate.text):grnMaterial_EditApiList.value[0].createdDt),
+    ));
+    final decodedJson = jsonDecode(body);
+
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(decodedJson);
+
+    debugPrint(prettyJson, wrapWidth: 1024);
+    final list = await MaterialReturnProvider.SaveMatReturnEntryAPI(
+        body, returnId);
+    if (list != null ) {
+      if(list["success"] == true){
+        BaseUtitiles.showToast(list["message"]);
+        await getMaterialReturn_List();
+        BaseUtitiles.popMultiple(context, count: 4);
+      }
+      else {
+        BaseUtitiles.showToast(list["message"] ?? 'Something went wrong..');
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    }
+    else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 2);
+    }
   }
 
-  List<ReturnDet>? getReturnDet() {
+  List<MatReturnLink>? getReturnDet(returnId,createdDt) {
     getReturnDetList.value = [];
-    grnMaterialReadList.value.forEach((element) {
-      var list = ReturnDet(
-        materialId: element.materialId.toString(),
-        rate: "0",
-        qty: element.returnQty.toString(),
-        amount: "0",
-        stockInId: element.stockinId.toString(),
+    for (var element in grnMaterialReadList.value) {
+      var list = MatReturnLink(
+        id: element.reqDetId,
+        returnId: returnId,
+        materialId: element.materialId,
+        qty: double.tryParse(element.returnQty),
+        rate: 0,
+        amount: 0,
+        stockinId: element.stockinId,
+        grNno: element.transNo,
+        stockQty: element.stockQty,
+        createdDt: createdDt,
+        updatedDt:DateTime.now().toUtc().toIso8601String()
       );
       getReturnDetList.value.add(list);
-    });
+    }
     return getReturnDetList.value;
   }
 
@@ -295,7 +306,8 @@ class MaterialReturn_Controller extends GetxController {
     grnMaterialReadList.value = [];
     datas.forEach((value) {
       var grnMaterialTable = grnMaterial_Table();
-      grnMaterialTable.stockinId = value['stockInId'];
+      grnMaterialTable.reqDetId = value['reqDetId'];
+      grnMaterialTable.stockinId = value['stockinId'];
       grnMaterialTable.transNo = value['transNo'];
       grnMaterialTable.materialId = value['materialId'];
       grnMaterialTable.materialName = value['materialName'];
@@ -321,6 +333,7 @@ class MaterialReturn_Controller extends GetxController {
       if (element['isCheck'] != true) continue;
 
       final grnMaterialTable = grnMaterial_Table();
+      grnMaterialTable.reqDetId = 0;
       grnMaterialTable.stockinId = element['stockInId'];
       grnMaterialTable.transNo = element['transNo'];
       grnMaterialTable.materialId = int.tryParse(selectedGRN_Id.value);
@@ -354,12 +367,13 @@ class MaterialReturn_Controller extends GetxController {
   grnMaterial_Details_EditTableSave() async {
     grnMaterialTableModelList.clear();
     grnMaterial_EditApiList.value.forEach((element) {
-      element.returnEditDet.forEach((data) {
+      element.matReturnLink.forEach((data) {
         var grnMaterialTable = grnMaterial_Table();
+        grnMaterialTable.reqDetId = data.id;
         grnMaterialTable.materialId = data.materialId;
         grnMaterialTable.materialName = data.materialName;
-        grnMaterialTable.scale = data.unit;
-        grnMaterialTable.transNo = data.grnNo;
+        grnMaterialTable.scale = data.unitName;
+        grnMaterialTable.transNo = data.grNno;
         grnMaterialTable.stockQty = data.stockQty;
         grnMaterialTable.returnQty = data.qty.toString();
         grnMaterialTable.stockinId = data.stockinId;
@@ -376,6 +390,7 @@ class MaterialReturn_Controller extends GetxController {
     grnMat_UpdateModelListReadList = [];
     grnMaterialReadList.forEach((element) {
       var grnMaterialTable = grnMaterial_Table();
+      grnMaterialTable.reqDetId = element.reqDetId;
       grnMaterialTable.stockinId = element.stockinId;
       grnMaterialTable.transNo = element.transNo;
       grnMaterialTable.materialId = element.materialId;
@@ -455,14 +470,11 @@ class MaterialReturn_Controller extends GetxController {
     for (var index = 0; index < grnMaterialReadList.length; index++) {
       final returnText = ReturnQtyController[index].text.trim();
       final stockQty = grnMaterialReadList[index].stockQty;
-      final returnQty = double.tryParse(returnText);
+      final returnQty = double.tryParse(returnText) ??  0.0;
 
-      if (returnText.isEmpty || returnQty == null || returnQty == 0.0) {
-        BaseUtitiles.showToast("Return qty should not be empty");
-        return; // Stop processing further
-      } else if (returnQty > stockQty) {
+       if (returnQty > stockQty) {
         ReturnQtyController[index].text = "0.0";
-        BaseUtitiles.showToast("Return qty should not exceed the stock qty");
+        BaseUtitiles.showToast("Return Qty should not exceed the Stock Qty");
         return; // Stop processing further
       }
     }
