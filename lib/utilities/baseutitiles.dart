@@ -203,8 +203,8 @@ class BaseUtitiles {
     dummyListData.value.clear();
     if (value.isNotEmpty) {
       list.forEach((item) {
-        if (item.materialName.toString().toLowerCase().contains(value) ||
-            item.materialName.toString().toUpperCase().contains(value))
+        if (item["materialName"].toString().toLowerCase().contains(value) ||
+            item["materialName"].toString().toUpperCase().contains(value))
         {
           dummyListData.value.add(item);
         }

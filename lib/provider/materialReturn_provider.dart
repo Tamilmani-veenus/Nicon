@@ -1,6 +1,5 @@
 import 'dart:convert';
 import '../apimanager/apimanager.dart';
-import '../models/getGrnMaterialsDetails_model.dart';
 import '../models/matRetGrnList_model.dart';
 import '../models/materialReturn_list_res.dart';
 import '../models/materialret_edit_model.dart';
@@ -49,34 +48,53 @@ class MaterialReturnProvider{
     }
   }
 
-  static Future<List<GetGrnListModel>> getGRNList_API(String? materialId, int? SiteId, int? Supplierid) async {
-    var data = null;
-    await ApiManager.getAPICall(ApiConstant.GET_GRN_LIST + "?MaterialId=$materialId&SiteId=$SiteId&SupplierId=$Supplierid").then((value) {
-      print("SubcontType:" + value);
-      data = getGrnListModelFromJson(value);
-      if (data != null && data.length > 0) {
-        return data;
-      }
-    }, onError: (error) {
+
+  static  getGRNList_API(String? materialId, int? SiteId, int? Supplierid) async {
+    try {
+      var value = await ApiManager.getAPICall(
+          "${ApiConstant.GET_GRN_LIST}?MaterialId=$materialId&SiteId=$SiteId&SupplierId=$Supplierid");
+
+      return jsonDecode(value);
+    } catch (error,e) {
       print(error);
-      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
-    });
-    return data;
+      return null;
+    }
   }
 
-  static Future<List<GetGrnMaterialDetailsList>> getMaterialDetailsList_API(int? Projectid, int? SiteId, int? Supplierid) async {
-    var data = null;
-    await ApiManager.getAPICall(ApiConstant.GET_GRN_MATERIALDETAILS_LIST + "?ProjectId=$Projectid&SiteId=$SiteId&SupplierId=$Supplierid").then((value) {
-      print("GrnMaterialDetails:" + value);
-      data = getGrnMaterialDetailsListFromJson(value);
-      if (data != null && data.length > 0) {
-        return data;
-      }
-    }, onError: (error) {
+  static  getUnitAPI(String? materialId) async {
+    try {
+      var value = await ApiManager.getAPICall(
+          "${ApiConstant.GET_MATRETURN_UNIT}?materialId=$materialId");
+
+      return jsonDecode(value);
+    } catch (error,e) {
       print(error);
-      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
-    });
-    return data;
+      return null;
+    }
+  }
+
+  static  getStockQty_API(stockInId) async {
+    try {
+      var value = await ApiManager.getAPICall(
+          "${ApiConstant.GET_MATRETURN_STOCKQTY}?StockInId=$stockInId");
+
+      return jsonDecode(value);
+    } catch (error,e) {
+      print(error);
+      return null;
+    }
+  }
+
+  static  getMaterialDetailsList_API(int? Projectid, int? SiteId, int? Supplierid) async {
+    try {
+      var value = await ApiManager.getAPICall(
+          "${ApiConstant.GET_GRN_MATERIALDETAILS_LIST}?ProjectId=$Projectid&SiteId=$SiteId&SupplierId=$Supplierid");
+
+      return jsonDecode(value);
+    } catch (error,e) {
+      print(error);
+      return null;
+    }
   }
 
   // static Future<String?> SaveGRNMaterialSaveAPI(String body, String returnId, int buttonControl, context) async {

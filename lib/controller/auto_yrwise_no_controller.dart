@@ -30,6 +30,7 @@ class AutoYearWiseNoController extends GetxController {
   RxString ManPower_autoYrsWise = "".obs;
   RxString WorkOrdDirect_autoYrWise = "".obs;
   RxString WorkOrdBoq_autoYrWise = "".obs;
+  RxString MaterialRet_autoYrWise = "".obs;
 
 
   Future AutoYearWiseNo(Url) async {
@@ -135,6 +136,10 @@ class AutoYearWiseNoController extends GetxController {
         else if (Url == "WORK ORDER BOQ") {
           WorkOrdBoq_autoYrWise.value = value["entryAutoNo"];
           return WorkOrdBoq_autoYrWise.value;
+        }
+        else if (Url == "MATERIAL RETURN") {
+          MaterialRet_autoYrWise.value = value["entryAutoNo"];
+          return MaterialRet_autoYrWise.value;
         }
       }
         else {

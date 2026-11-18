@@ -434,6 +434,10 @@ class CommonProvider {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=WorkOrderNo&tableName=SubcontractWorkOrderMas&formName=SubcontractWorkOrderMas");
       }
+      else if (Url == "MATERIAL RETURN") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETAUTONO_YEAR_WISE}?fieldName=ReturnNo&tableName=MaterialReturnMas&formName=MaterialReturn");
+      }
       final data = json.decode(response);
       return data;
     } catch (error) {

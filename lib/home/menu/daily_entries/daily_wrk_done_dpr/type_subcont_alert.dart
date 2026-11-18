@@ -165,10 +165,9 @@ class _GRN_AddMaterialsDialogState extends State<GRN_AddMaterialsDialog> {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () async {
-                            Future.delayed(const Duration(seconds: 0), () async {
-                              matreturnController.SelectedGRN_ID(matreturnController.getGRN_MaterialList.value[index].materialName!);
-                            });
-                            Navigator.pop(context);
+                              matreturnController.GRN_StockInNo_Controller.text =matreturnController.getGRN_MaterialList.value[index]["materialName"];
+                              matreturnController.selectedGRN_Id.value =matreturnController.getGRN_MaterialList.value[index]["id"].toString();
+                              Navigator.pop(context);
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +179,7 @@ class _GRN_AddMaterialsDialogState extends State<GRN_AddMaterialsDialog> {
                                   Container(
                                       width:
                                       BaseUtitiles.getWidthtofPercentage(context, 60),
-                                      child: Text( matreturnController.getGRN_MaterialList.value[index].materialName.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold),)),
+                                      child: Text( matreturnController.getGRN_MaterialList.value[index]["materialName"].toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold),)),
                                   Divider(
                                     color: Theme.of(context).primaryColorLight,
                                   )
@@ -271,20 +270,24 @@ class _GRNList_AlertState extends State<GRNList_Alert> {
                                 child: Row(
                                   children: [
                                     Checkbox(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
-                                        side: MaterialStateBorderSide.resolveWith((states) => BorderSide(
-                                          width: 1.0,
-                                          color: Theme.of(context).primaryColor,
-                                        )),
-                                        checkColor: Colors.white,
-                                        activeColor: Theme.of(context).primaryColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            matreturnController.setCheck(matreturnController.getGRN_List.value[index].stockinId, value!);
-                                            matreturnController.getGRN_List.value[index].isCheck = value;
-                                          });
-                                        },
-                                        value: matreturnController.getGRN_List.value[index].isCheck),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
+                                      side: MaterialStateBorderSide.resolveWith((states) => BorderSide(
+                                        width: 1.0,
+                                        color: Theme.of(context).primaryColor,
+                                      )),
+                                      checkColor: Colors.white,
+                                      activeColor: Theme.of(context).primaryColor,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          matreturnController.setCheck(
+                                            matreturnController.getGRN_List.value[index]['stockInId'],
+                                            value!,
+                                          );
+                                          matreturnController.getGRN_List.value[index]['isCheck'] = value;
+                                        });
+                                      },
+                                      value: matreturnController.getGRN_List.value[index]['isCheck'] ?? false,
+                                    ),
 
                                     RichText(
                                       textAlign: TextAlign.left,
@@ -296,8 +299,8 @@ class _GRNList_AlertState extends State<GRNList_Alert> {
                                         ),
                                         children: [
                                           TextSpan(
-                                              text: matreturnController.getGRN_List.value[index].transNo.toString(),
-                                              style: TextStyle(color: Colors.black)
+                                            text: matreturnController.getGRN_List.value[index]['transNo'].toString(),
+                                            style: TextStyle(color: Colors.black),
                                           ),
                                         ],
                                       ),
@@ -314,7 +317,8 @@ class _GRNList_AlertState extends State<GRNList_Alert> {
 
                 ElevatedButton(
                   onPressed: () async {
-                    bool isAnySelected = matreturnController.getGRN_List.value.any((value) => value.isCheck == true);
+                    bool isAnySelected = matreturnController.getGRN_List.value
+                        .any((value) => value['isCheck'] == true);
 
                     if (isAnySelected) {
                       await matreturnController.grnMaterial_DetailsTableSave(context);
