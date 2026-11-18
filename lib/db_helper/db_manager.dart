@@ -259,4 +259,14 @@ class DBManager {
     var connection =  _database;
     return await connection?.update(table, data, where: 'level3ItemId=?', whereArgs: [data['level3ItemId']]);
   }
+
+  Update_GrnMaterial_Table(table, data) async {
+    var connection =  _database;
+    return await connection?.update(table, data, where: 'stockinId=?', whereArgs: [data['stockinId']]);
+  }
+
+  grnMaterial_deleteDataById(table, data) async {
+    var connection =  _database;
+    return await connection?.rawDelete('delete from $table where stockinId=? AND materialId=?',[data['stockinId'],data['materialId']]);
+  }
 }

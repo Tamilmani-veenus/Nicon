@@ -9,7 +9,7 @@ import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/comman_controller.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
-import 'material_return_entryScreen.dart';
+import 'materialreturn_entryscreen.dart';
 
 class MaterialReturnEntryList extends StatefulWidget {
   final String heading;
@@ -65,7 +65,7 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MaterialReturnEntryScreen(heading: widget.heading,)));
+                              builder: (context) => MaterialReturn_Entry(heading: widget.heading)));
                     },
                     label: Text(
                       "Add",
@@ -628,29 +628,10 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                                                                   ],
                                                                 ),
                                                                 onTap: () {
-                                                                  materialReturn_Controller
-                                                                      .saveButton
-                                                                      .value =
-                                                                      RequestConstant
-                                                                          .RESUBMIT;
-                                                                  materialReturn_Controller
-                                                                      .delete_material_Return_itemlist_Table();
-                                                                  materialReturn_Controller
-                                                                      .MatReturn_itemview_GetDbList
-                                                                      .clear();
-                                                                  // materialReturn_Controller
-                                                                  //     .getusageDetList
-                                                                  //     .clear();
-                                                                  // FocusScope.of(
-                                                                  //     context)
-                                                                  //     .unfocus();
-                                                                  // materialReturn_Controller.ConsumEntryList_EditApi(
-                                                                  //     materialReturn_Controller
-                                                                  //         .MatReturnList
-                                                                  //         .value[
-                                                                  //     index]
-                                                                  //         .id,widget.heading,
-                                                                  //     context);
+                                                                  materialReturn_Controller.GrnMaterialTabledelete();
+                                                                  materialReturn_Controller.grnMaterialReadList.value=[];
+                                                                  FocusScope.of(context).unfocus();
+                                                                  materialReturn_Controller.materialRetEntryList_EditApi(materialReturn_Controller.MatRetrnEtyList.value[index].returnId,widget.heading,context);
                                                                 }),
                                                           ),
                                                           Container(
@@ -773,7 +754,7 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                               materialReturn_Controller.MatReturnList.value[index].id);
                           if (result) {
                             await materialReturn_Controller
-                                .delete_material_Return_itemlist_Table();
+                                .GrnMaterialTabledelete();
                             materialReturn_Controller
                                 .MatReturn_itemview_GetDbList.value
                                 .clear();

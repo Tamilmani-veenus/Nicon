@@ -103,54 +103,27 @@ class Menu_Controller extends GetxController {
 
 
   Future getMenuList(BuildContext context) async {
-    menuListDatas.value =[];
+    menuListDatas.value = [];
+
     print("User Id :: ${loginController.user.value.userId}");
 
-    await MenuProvider.getMenuListProvider().then((value)  {
-      if ( value != null ) {
+    await MenuProvider.getMenuListProvider().then((value) {
+      if (value != null) {
         if (value.success == true) {
-          if(value.result!.isNotEmpty) {
+          if (value.result!.isNotEmpty) {
+
             menuListDatas.value = value.result!;
-            value.result!.forEach((element) {
-              if (element.moduleName == "Materials") {
-                subMatList.clear();
-                subMatList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Main Menu") {
-                subMainmenuList.clear();
-                subMainmenuList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Daily Entries") {
-                dailyEntryList.clear();
-                dailyEntryList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Accounts") {
-                accountsList.clear();
-                accountsList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Payroll") {
-                payrollList.clear();
-                payrollList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Machinery") {
-                machineryList.clear();
-                machineryList.addAll(element.menu!);
-              }
-              if (element.moduleName == "Project Planning") {
-                projPlanningList.clear();
-                projPlanningList.addAll(element.menu!);
-              }
-            });
-          }else {
+
+          } else {
             BaseUtitiles.showToast("No Data Found");
           }
-        }
-        else {
+        } else {
           BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
         }
-      }
-      else {
-        BaseUtitiles.showToast("Something went wrong..");
+      } else {
+        BaseUtitiles.showToast(
+            'Something went wrong..'
+        );
       }
     });
   }
@@ -193,218 +166,184 @@ class Menu_Controller extends GetxController {
     }
   }
 
-
- MaterialScreen(String value,String MenuName, BuildContext context) async {
-    if (value == "MRN Request (Indent)") {
-      if (!AppClient.isAnusamm) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MRN_RequestIndent_Entrylist(heading: MenuName),
-          ),
-        );
-        return;
-      }
-
-      if (loginController.user.value.userType == "A" ||
-          loginController.user.value.userType == "O") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MRN_RequestIndent_Entrylist(heading: MenuName),
-          ),
-        );
-        return;
-      }
-
-      await punchInController.getNetworkTime();
-
-      if (punchInController.dayName == "Tuesday" ||
-          punchInController.dayName == "Wednesday") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MRN_RequestIndent_Entrylist(heading: MenuName),
-          ),
-        );
-      } else {
-        BaseUtitiles.showToast(
-          "You can't save this record on this date. It is only allowed on Tuesday and Wednesday.",
-        );
-      }
-
-
-    }
-    else if (value == "Site Request (Issue Slip)") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MRNRequest_PreIndent_List(heading: MenuName,)),);
-    }
-    else if (value == "Inward") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Inward_ListScreen(heading: MenuName,)),);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Material_Inward(2)),
-      // );
-
-    } else if (value == "Transfer Between Projects") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>  TransferBtweenProjects_Entrylist(heading: MenuName)),
-      );
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Transfer_Between_Projects(0)),      // );
-    } else if (value == "Transfer Between Sites") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TransferBetweenSites_Entrylist(heading: MenuName,)),
-      );
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Transfer_Between_Sites(0)),
-      // );
-    }else if(value == "Material Transfer Request"){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MatTransReqList(heading: MenuName,)),);
-    }
-    else if (value == "Consumption") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Consumption_List(heading: MenuName,)),);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Material_Consumption(0)),
-      // );
-
-    }
-    else if (value == "Material Return") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MaterialReturnEntryList(heading: MenuName,)),);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Material_Consumption(0)),
-      // );
-
-    }
+// Small helper so each route is one line
+  Future<void> _go(BuildContext context, Widget page) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
   }
 
-  NavigateScreen(String value,String MenuName, BuildContext context) async {
-    if (value == "SubContractor Attendance") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => SubAttendanceSiteEntryList(heading: MenuName)));
+  Future<void> navigateToMenu(
+      String value,
+      String menuName,
+      BuildContext context,
+      ) async {
+    switch (value) {
+    // ==========================================================
+    // MATERIALS
+    // ==========================================================
 
-    }
-    else if(value=="Company NMR Attendance"){
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>  Company_nmr_entrylist(heading: MenuName)),);
-    }
+      case "MRN Request (Indent)":
+      // Non-Anusamm: always allowed
+        if (!AppClient.isAnusamm) {
+          await _go(context, MRN_RequestIndent_Entrylist(heading: menuName));
+          return;
+        }
 
-    else if (value == "SubCont NMR Wkly Bill - Generation") {
-      Navigator.push(
-        context, MaterialPageRoute(
-            builder: (context) => Subcont_NMR_EntryListScreen_Site(heading: MenuName)),
-      );
-    } else if (value == "Daily Work Done (DPR)") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DailyWork_done_DPR_EntryList(heading: MenuName,)),
-      );
-    } else if (value == "Daily Work Done [DPR New]") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DailyWork_done_DPR_EntryListNew(heading: MenuName,)),
-      );
-    }
+        // Admin / Owner: always allowed
+        final userType = loginController.user.value.userType;
+        if (userType == "A" || userType == "O") {
+          await _go(context, MRN_RequestIndent_Entrylist(heading: menuName));
+          return;
+        }
 
-    else if (value == "Daily Work Done (DPR Labour)") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DailyWrk_Done_DPR_Labour(0)),
-      );
-    }
-    else if (value == "Bill Generation") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Bill_Generation_Boq_Entrylist(heading: MenuName,)),
-      );
+        // Others: only Tuesday & Wednesday
+        await punchInController.getNetworkTime();
+        if (!context.mounted) return;
 
-    }
+        if (punchInController.dayName == "Tuesday" ||
+            punchInController.dayName == "Wednesday") {
+          await _go(context, MRN_RequestIndent_Entrylist(heading: menuName));
+        } else {
+          BaseUtitiles.showToast(
+            "You can't save this record on this date. "
+                "It is only allowed on Tuesday and Wednesday.",
+          );
+        }
+        break;
 
-    else if (value == "Bill Generation - Direct") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Bill_Generation_direct_Entrylist(heading: MenuName,)),
-      );
+      case "Site Request (Issue Slip)":
+        await _go(context, MRNRequest_PreIndent_List(heading: menuName));
+        break;
 
-    } else if (value == "Advance Requisition Voucher") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AdvReq_Voucher_EntryList_new(heading: MenuName)),
-      );
-    }
-    else if (value == "Man Power") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Man_Power_Entrylist(heading: MenuName)),
-      );
-    }
-  }
+      case "Inward":
+        await _go(context, Inward_ListScreen(heading: menuName));
+        break;
 
-  AccountsScreen(String value,String MenuName, BuildContext context) {
-    if (value == "Site Voucher") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SiteVoucher_EntryListNew(heading: MenuName,)),
-      );
-    } else if (value == "Staff Voucher") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Staff_Voucher_EntryListScreen(heading: MenuName,)),
-      );
-    } else if (value == "Cash Book/Staff") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Case_Book_Staff(heading: MenuName)),
-      );
-    }
-    else if (value == "Cash Book/Site") {
-      Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CashBook_Site(heading: MenuName,)),
-      );
-    }
-  }
+      case "Transfer Between Projects":
+        await _go(context, TransferBtweenProjects_Entrylist(heading: menuName));
+        break;
 
-  MainmenuScreen(String value, String MenuName,BuildContext context) {
-    if (value == "BOQ - Revised") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Boq_Revised_EntryList(heading: MenuName,)),
-      );
-    }
-    else if (value == "Work Order - Direct") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WorkOrderDirect_EntryList(heading: MenuName,)),
-      );
-    }
-    else if (value == "Work Order - BOQ") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WorkOrderBoqEntrylist(heading: MenuName,)),
-      );
-    }
-  }
+      case "Transfer Between Sites":
+        await _go(context, TransferBetweenSites_Entrylist(heading: menuName));
+        break;
 
-  PayrollScreen(String value, String MenuName, BuildContext context) {
-    if (value == "Staff L & P Slip") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Requisitionslip_EntryList(heading: MenuName,)));
-    }
-  }
+      case "Material Transfer Request":
+        await _go(context, MatTransReqList(heading: menuName));
+        break;
 
-  MachineryScreen(String value, String MenuName, BuildContext context) {
-    if (value == "Machinery Indent") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MachineryIndentEntryList(
-            heading: MenuName,
-          ),
-        ),
-      );
+      case "Consumption":
+        await _go(context, Consumption_List(heading: menuName));
+        break;
+
+      case "Material Return":
+        await _go(context, MaterialReturnEntryList(heading: menuName));
+        break;
+
+    // ==========================================================
+    // DAILY ENTRIES
+    // ==========================================================
+
+      case "SubContractor Attendance":
+        await _go(context, SubAttendanceSiteEntryList(heading: menuName));
+        break;
+
+      case "Company NMR Attendance":
+        await _go(context, Company_nmr_entrylist(heading: menuName));
+        break;
+
+      case "SubCont NMR Wkly Bill - Generation":
+        await _go(context, Subcont_NMR_EntryListScreen_Site(heading: menuName));
+        break;
+
+      case "Daily Work Done (DPR)":
+        await _go(context, DailyWork_done_DPR_EntryList(heading: menuName));
+        break;
+
+      case "Daily Work Done [DPR New]":
+        await _go(context, DailyWork_done_DPR_EntryListNew(heading: menuName));
+        break;
+
+      case "Daily Work Done (DPR Labour)":
+        await _go(context, DailyWrk_Done_DPR_Labour(0));
+        break;
+
+      case "Bill Generation":
+        await _go(context, Bill_Generation_Boq_Entrylist(heading: menuName));
+        break;
+
+      case "Bill Generation - Direct":
+        await _go(context, Bill_Generation_direct_Entrylist(heading: menuName));
+        break;
+
+      case "Advance Requisition Voucher":
+        await _go(context, AdvReq_Voucher_EntryList_new(heading: menuName));
+        break;
+
+      case "Man Power":
+        await _go(context, Man_Power_Entrylist(heading: menuName));
+        break;
+
+    // ==========================================================
+    // ACCOUNTS
+    // ==========================================================
+
+      case "Site Voucher":
+        await _go(context, SiteVoucher_EntryListNew(heading: menuName));
+        break;
+
+      case "Staff Voucher":
+        await _go(context, Staff_Voucher_EntryListScreen(heading: menuName));
+        break;
+
+      case "Cash Book/Staff":
+        await _go(context, Case_Book_Staff(heading: menuName));
+        break;
+
+      case "Cash Book/Site":
+        await _go(context, CashBook_Site(heading: menuName));
+        break;
+
+    // ==========================================================
+    // PROJECT PLANNING
+    // ==========================================================
+
+      case "BOQ - Revised":
+        await _go(context, Boq_Revised_EntryList(heading: menuName));
+        break;
+
+      case "Work Order - Direct":
+        await _go(context, WorkOrderDirect_EntryList(heading: menuName));
+        break;
+
+      case "Work Order - BOQ":
+        await _go(context, WorkOrderBoqEntrylist(heading: menuName));
+        break;
+
+    // ==========================================================
+    // PAYROLL
+    // ==========================================================
+
+      case "Staff L & P Slip":
+        await _go(context, Requisitionslip_EntryList(heading: menuName));
+        break;
+
+    // ==========================================================
+    // MACHINERY
+    // ==========================================================
+
+      case "Machinery Indent":
+        await _go(context, MachineryIndentEntryList(heading: menuName));
+        break;
+
+    // ==========================================================
+    // MASTERS
+    // ==========================================================
+
+      // case "Labour Creation":
+      //   await _go(context, Lab_creation_EntryList(heading: menuName));
+      //   break;
     }
   }
 }

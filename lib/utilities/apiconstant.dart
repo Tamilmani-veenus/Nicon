@@ -147,6 +147,9 @@ class ApiConstant {
   static String get GETBOQWRKORDERNOLIST => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetWorkOrderNoDd";
   static String get GETINVOICENOLIST => BASE_URL_CORE + "api/SubContractorNMRBill/GetBillNo";
   static String get SITEDROPDWONLISTAPI => BASE_URL_CORE + "api/GenericMaster/GetProjectWiseSiteList";
+  static String get GET_GRN_LIST => BASE_URL_CORE + "api/MaterialReturn/GetLoadGRN";
+  static String get GET_GRN_MATERIALDETAILS_LIST => BASE_URL_CORE + "api/MaterialReturn/GetLoadmatrial";
+  static String get GET_MATRETURN_EDIT_LIST => BASE_URL_CORE + "api/MaterialReturn/GetbyReturnList";
 
   static String get TOSITEDROPDWONLISTAPI => BASE_URL_CORE + "api/GenericMaster/GetToSitesByFrSiteDd";
   static String get GETMRNREPORTSLISTAPI => BASE_URL_CORE + "api/MaterialReqOrdMas/GetAllMRNReportViewListMas";
@@ -420,6 +423,8 @@ class ApiConstant {
   static String get PUT_MRNFINALAPPROVAL_APPROVE_API => BASE_URL_CORE + "api/MaterialPreApprovalRequest/UpdateFinalApprovalMas";
   static String get PUT_SUPP_BILL_APPROVE_API => BASE_URL_CORE + "api/MaterialPurOrdBill/UpdatematerialPurOrdBillMas";
   static String get PUT_SUPP_BILL_WO_APPROVE_API => BASE_URL_CORE + "api/MaterialPurOrdBillDirect/UpdatematerialPurOrdBillMasDirect";
+  static String get PUT_GRNMATERIAL_RETURN_SAVEAPI => BASE_URL_CORE + "api/MaterialReturn/PUTMaterialReturn";
+  static String get POST_GRNMATERIAL_RETURN_SAVEAPI => BASE_URL_CORE + "api/MaterialReturn/PostMaterialReturn";
 
   static String get PROJECT_NAME_TRANSFER => BASE_URL_CORE + "api/GenericMaster/ToProDiff";
   static String get TOPROJECT_NAME_TRANSFER => BASE_URL_CORE + "api/GenericMaster/GetAllToPro";
