@@ -16,27 +16,48 @@ class ImageViewPage extends StatefulWidget {
 }
 
 class _ImageViewPageState extends State<ImageViewPage> {
+
+  int _quarterTurns = 0;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        title: const Text(
+          "Image View",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Rotate',
             onPressed: () {
-              Get.back();
+              setState(() {
+                _quarterTurns = (_quarterTurns + 1) % 4;
+              });
             },
             icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.black, // Specify your desired color
+              Icons.rotate_right,
+              color: Colors.black,
             ),
           ),
-          title: const Text("Image View",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.white,
-          centerTitle: true),
+        ],
+      ),
       body: SizedBox(
         height: ScreenUtil().screenHeight,
         width: ScreenUtil().screenWidth,
@@ -46,11 +67,14 @@ class _ImageViewPageState extends State<ImageViewPage> {
             panEnabled: false,
             maxScale: 10,
             boundaryMargin: const EdgeInsets.all(double.infinity),
-            child: widget.netUrl == true
-                ? Image.network(widget.imageUrl!)
-                : Image.file(
-                    widget.imagePath!,
-                  ),
+            child: Center(
+              child: RotatedBox(
+                quarterTurns: _quarterTurns,
+                child: widget.netUrl == true
+                    ? Image.network(widget.imageUrl!)
+                    : Image.file(widget.imagePath!),
+              ),
+            ),
           ),
         ),
       ),

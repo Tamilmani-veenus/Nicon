@@ -8,7 +8,7 @@ class ApiConfig {
 
   static const String LIVE_ENDPOINT_2 = "http://122.173.84.247:8080/";
 
-  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "VishaalAPI/";
+  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "ERPNEW/";
 
   static String APIURL = "";
   static String WebURL = "";
@@ -20,7 +20,7 @@ class ApiConfig {
 
     if (liveEndpoint != null) {
 
-      APIURL = "${liveEndpoint}VishaalAPI/";
+      APIURL = "${liveEndpoint}ERPNEW/";
       WebURL = "${liveEndpoint}erpnewUi2/";
 
     } else {
@@ -132,6 +132,7 @@ class ApiConstant {
   static String get GETMRPREAPROVALAPI => BASE_URL_CORE + "api/MaterialPreApprovalRequest/GetTobeApprovalByIDS";
   static String get GETPROJECTDROPDOWNLIST => BASE_URL_CORE + "api/GenericMaster/GetProjectBasedOnUserAllocation";
   static String get GETPROJECTREPORTLIST => BASE_URL_CORE + "api/GenericMaster/GetCompanyWiseProject";
+  static String get GETSUPPLIERLIST => BASE_URL_CORE + "api/GenericMaster/GetSupplier";
 
   static String get GETFROMPROAGAINSTMRNLIST => BASE_URL_CORE + "api/MaterialTransfer/FromPrject";
   static String get GETFROMSITELIST => BASE_URL_CORE + "api/StoreTransferPending/GetSiteDRP";
@@ -259,10 +260,14 @@ class ApiConstant {
   static String get CHECKMATERIALLISTBALQTY => BASE_URL_CORE + "api/Admin/Getmaterialcheckingbalqty";
   static String get CHECKBALQTYPROSITE => BASE_URL_CORE + "api/MaterialQtyFixingMas/CheckBalQtyForProAndSite";
   static String get GETCONSUMPTION_ENTRY_LIST => BASE_URL_CORE + "api/MaterialExpenseMas/GetAllMaterialExpenses";
+  static String get GETREPAIRCONSUM_ENTRY_LIST => BASE_URL_CORE + "api/Repair/GetAllRepair";
+
   static String get GETSTOCKMATERIALLIST => BASE_URL_CORE + "api/MaterialExpenseMas/GetMaterialBasedOnProjAndSite";
   static String get GETCONSTYPELIST => BASE_URL_CORE + "api/MaterialExpenseMas/GetExpenseTypeAll";
   static String get GETSTOCKLISTMATERIALWISE => BASE_URL_CORE + "api/MaterialReqOrdMas/MrnApprovalStockList";
   static String get GET_CONSUM_EDIT_API => BASE_URL_CORE + "api/MaterialExpenseMas/GetMaterialExpensesById";
+  static String get GET_REPAIR_CONSUM_EDIT_API => BASE_URL_CORE + "api/Repair/GetRepairDetailsById";
+
   static String get GET_MANPOWER_EDIT_API => BASE_URL_CORE + "api/ManPower/GetManPowerById";
   static String get GET_BOQ_ENTRY_LIST => BASE_URL_CORE + "api/BOQRevised/GetAllBOQRevise";
   static String get GET_APP_DET_LIST => BASE_URL_CORE + "api/BOQRevised/GetBOQRevisedByIdApprove";
@@ -415,6 +420,7 @@ class ApiConstant {
   static String get PUT_MATERIALREQUEST_UPDATE_API => BASE_URL_CORE + "api/MaterialReqOrdMas/UpdateReqOrdMas";
   static String get PUT_MACHINERY_UPDATE_API => BASE_URL_CORE + "api/Machinery/UpdateMachineryReqOrdMas";
   static String get PUT_MACHINERY_PREAPPROVE_API => BASE_URL_CORE + "api/Machinery/UpdateMachineryPreApprovalMas";
+  static String get PUT_REPAIR_CONUM_UPDATE_API => BASE_URL_CORE + "api/Repair/UpdateRepairDetails";
 
   static String get PUT_Conum_UPDATE_API => BASE_URL_CORE + "api/MaterialExpenseMas/UpdateMaterialExpenses";
   static String get PUT_BOQREVISED_UPDATE_API => BASE_URL_CORE + "api/BOQRevised/UpdateBoqRevise";
@@ -463,6 +469,8 @@ class ApiConstant {
 
   static String get COMPANY_NMR_SAVE_API => BASE_URL_CORE + "api/NMRLabourAttendance/AddOrUpdateNMRLabAttendance";
   static String get CONSUM_SAVE => BASE_URL_CORE + "api/MaterialExpenseMas/AddMaterialExpenses";
+  static String get REPAIR_CONSUM_SAVE => BASE_URL_CORE + "api/Repair/AddRepairDetails";
+
   static String get MANPOWER_SAVE => BASE_URL_CORE + "api/ManPower/AddManPower";
   static String get MANPOWER_EDIT => BASE_URL_CORE + "api/ManPower/UpdateManPower";
   static String get BOQREVISED_SAVE => BASE_URL_CORE + "api/BOQRevised/AddBoqRevised";
@@ -497,6 +505,7 @@ class ApiConstant {
   static String get DELETE_MANPOWERLIST_API => BASE_URL_CORE + "api/ManPower/DeleteManPower";
   static String get DELETE_MACHINERY_ENTRYLIST_API => BASE_URL_CORE + "api/Machinery/DeleteMachinery";
   static String get DELETE_MATERIALRETURN_ENTRYLIST_API => BASE_URL_CORE + "api/MaterialReturn/DeleteMaterialReturn";
+  static String get DELETE_REPAIR_CONSUMPTION_API => BASE_URL_CORE + "api/Repair/DeleteRepairDetails";
 
   static String get DELETE_INWARDPENDINGLIST_API => BASE_URL_CORE + "api/MaterialInward/DeleteMaterialInward";
   static String get DELETE_TRANSFERBET_API => BASE_URL_CORE + "api/MaterialTransfer/DeleteMaterialTransfer";
