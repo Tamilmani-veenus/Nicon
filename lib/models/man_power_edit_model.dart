@@ -121,7 +121,7 @@ class ManPowerEditDet {
   int? manPowerAllocationMasId;
   int? categoryId;
   String? level3ItemId;
-  int? nos;
+  double? nos;
   String? remarks;
   String? categoryName;
 

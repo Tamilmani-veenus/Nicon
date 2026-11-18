@@ -1,14 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
 import '../apimanager/apimanager.dart';
 import '../models/POApprovalSave.dart';
-import '../models/dailywrk_done_dpr_itemlist_save_model.dart';
 import '../models/mrnPreApproval_model.dart';
 import '../models/mrnfinalapproval_detlistmodel.dart';
 import '../models/mrnpreapproval_detlistmodel.dart';
-import '../models/mrnverification_model.dart';
 import '../models/onclick_pendinglist_model.dart';
 import '../models/onclickpendingdet_model.dart';
 import '../models/pendinglist_model.dart';
@@ -19,7 +15,6 @@ import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
 import 'package:flutter/material.dart';
-import '../models/subcont_entryscreen_save_model.dart';
 import '../models/trans_ackno_editapi_resmodel.dart';
 import '../models/transfer_acknowledgment_alldatas_resapi.dart';
 import '../models/transferack_entrylist_resapi.dart';
@@ -217,8 +212,14 @@ class PendingListProvider {
       else if (formName == "SITE VOUCHER APPROVAL") {
         response = await ApiManager.getAPICall(ApiConstant.GETSITEVOUCHERAPPROLIST);
       }
+      else if (formName == "ADV REQ SITE PETTY APPROVAL PENDING" && AppClient.isNicon) {
+        response = await ApiManager.getAPICall("${ApiConstant.GETSITEPETTY_ADVREQAPPROLIST}?Isverification=false");
+      }
+      else if (formName == "ADV REQ VERIFICATION PENDING" && AppClient.isNicon) {
+        response = await ApiManager.getAPICall("${ApiConstant.GETADVREQAPPROLIST}?Isverification=true");
+      }
       else if (formName == "ADV REQ APPROVAL PENDING") {
-        response = await ApiManager.getAPICall(ApiConstant.GETADVREQAPPROLIST);
+        response = await ApiManager.getAPICall(AppClient.isNicon ? "${ApiConstant.GETADVREQAPPROLIST}?Isverification=false" : ApiConstant.GETADVREQAPPROLIST);
       }
       else if (formName == "COMPANY LABOUR ATTENDANCE APPROVAL PENDING") {
         response = await ApiManager.getAPICall(ApiConstant.GETCOMPANYNMRAPPROLIST);

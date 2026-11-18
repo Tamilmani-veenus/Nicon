@@ -85,8 +85,8 @@ class ManPowerDet {
   int? manPowerAllocationMasId;
   int? categoryId;
   // String? level3ItemId;
-  int? nos;
-  int? appNos;
+  double? nos;
+  double? appNos;
   // String? remarks;
 
   ManPowerDet({
