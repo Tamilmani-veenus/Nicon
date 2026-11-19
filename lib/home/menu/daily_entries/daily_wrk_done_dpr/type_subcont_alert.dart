@@ -333,7 +333,7 @@ class _GRNList_AlertState extends State<GRNList_Alert> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColorLight,
+                    backgroundColor: Theme.of(context).primaryColor,
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   ),
                   child: const Row(

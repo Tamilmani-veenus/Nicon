@@ -524,7 +524,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                           BaseUtitiles.showToast("Please select supplierName");
                         }
                         else{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const MaterialReturn_ItemList()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  MaterialReturn_ItemList(heading: widget.heading)));
                         }
                       },
                     ),
