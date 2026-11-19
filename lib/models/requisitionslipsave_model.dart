@@ -35,6 +35,7 @@ class RequisitonSlipsaveRequest {
   String? approveRemarks;
   String? leaveType;
   bool? isHalfDay;
+  String? halfDaySession;
 
   RequisitonSlipsaveRequest({
     this.id,
@@ -63,6 +64,7 @@ class RequisitonSlipsaveRequest {
     this.approveRemarks,
     this.leaveType,
     this.isHalfDay,
+    this.halfDaySession
   });
 
   factory RequisitonSlipsaveRequest.fromJson(Map<String, dynamic> json) => RequisitonSlipsaveRequest(
@@ -92,6 +94,7 @@ class RequisitonSlipsaveRequest {
     approveRemarks: json["approveRemarks"],
     leaveType: json["leaveType"],
     isHalfDay: json["isHalfDay"],
+    halfDaySession: json["halfDaySession"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -121,5 +124,6 @@ class RequisitonSlipsaveRequest {
     "approveRemarks": approveRemarks,
     "leaveType": leaveType,
     "isHalfDay": isHalfDay,
+    "halfDaySession": halfDaySession,
   };
 }

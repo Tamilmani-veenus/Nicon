@@ -15365,7 +15365,7 @@ class _StaffRequisitionVerifyState extends State<StaffRequisitionVerify> {
                                                                 flex: 4,
                                                                 child: Text(
                                                                   "${pendingListController.mainlist.value[index].totalLeaveDays}"
-                                                                      "${isHalfDay == true ? ' (Half Day)' : ''}",
+                                                                      "${isHalfDay == true ? ' (Half Day - ${pendingListController.mainlist.value[index].HalfDaySession})' : ''}",
                                                                   style:
                                                                   TextStyle(
                                                                     fontSize:

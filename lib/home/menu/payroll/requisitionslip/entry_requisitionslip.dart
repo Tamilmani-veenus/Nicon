@@ -71,6 +71,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
         requisitionSlipController.ReqAutoyearwise.text = autoYearWiseNoController.RequisitionSlip_autoYrsWise.value;
         requisitionSlipController.type.value = "L";
         requisitionSlipController.isHalfDay.value=false;
+        requisitionSlipController.halfDayType.value="FN";
         if(loginController.user.value.userType == "A"){
         }else{
           await requisitionSlipController.getStaffLandPLeaveTaken(int.tryParse(loginController.EmpId()),requisitionSlipController.Reqdate.text);
@@ -106,6 +107,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
           requisitionSlipController.leaveTypeText.text=element.leaveTypeDesc;
           requisitionSlipController.leaveTypeValue.value=element.leaveType;
           requisitionSlipController.isHalfDay.value=element.isHalfDay;
+          requisitionSlipController.halfDayType.value=element.halfDaySession;
         }
         await requisitionSlipController.getStaffLandPLeaveTaken(staffController.selectedstaffId.value,requisitionSlipController.Reqdate.text);
       }
@@ -365,7 +367,8 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                           requisitionSlipController.leaveTypeText.text="--SELECT--";
                                           requisitionSlipController.leaveTypeValue.value="-";
                                           requisitionSlipController.isHalfDay.value=false;
-                                          },
+                                          requisitionSlipController.halfDayType.value="FN";
+                                        },
                                       ),
                                     ),
                                   ),
@@ -509,10 +512,6 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                     requisitionSlipController.Todate.text,
                                   ),
                                 );
-
-                                setState(() {
-                                  requisitionSlipController.isHalfDay.value = false;
-                                });
                               },
                             ),
 
@@ -539,9 +538,6 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                   ),
                                   date,
                                 );
-                                setState(() {
-                                  requisitionSlipController.isHalfDay.value = false;
-                                });
                               },
                             ),
                           ),
@@ -597,47 +593,93 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                 ),
                                 ),
                               ),
-            Expanded(flex: 1,
-              child: Row(
-                children: [
-                  Obx((){
-                    return Checkbox(
-                      value: requisitionSlipController.isHalfDay.value,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                      side: BorderSide(
-                        width: 1,
-                        color:
-                        // requisitionSlipController.totalLeaveValue.value!="1"
-                        //     && requisitionSlipController.totalLeaveValue.value!="0.5"
-                        //     ?Colors.grey :
-                        Theme.of(context).primaryColor,
-                      ),
-                      activeColor:
-                      // requisitionSlipController.totalLeaveValue.value!="1"
-                      //     && requisitionSlipController.totalLeaveValue.value!="0.5"?Colors.grey:
-                      Theme.of(context).primaryColor,
-                      checkColor: Colors.white,
-                      onChanged: (bool? value) {
-                        requisitionSlipController.isHalfDay.value = value ?? false;
+                              Expanded(
+                                flex: 2,
+                                child: Row(
+                                  children: [
+                                    Obx(() {
+                                      return Checkbox(
+                                        value: requisitionSlipController.isHalfDay.value,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(2),
+                                        ),
+                                        side: BorderSide(
+                                          width: 1,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        activeColor: Theme.of(context).primaryColor,
+                                        checkColor: Colors.white,
+                                        onChanged: (bool? value) {
+                                          requisitionSlipController.isHalfDay.value = value ?? false;
 
-                        requisitionSlipController.calculateTotalLeaveDays();
-                      },
-                    );},
-                  ),
-                  Text("Half Day", style:  TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color:
-                      // requisitionSlipController.totalLeaveValue.value!="1"
-                      //     && requisitionSlipController.totalLeaveValue.value!="0.5"
-                      //     ?Colors.grey
-                      //     :
-                      Colors.black
-                  ),),
-                ],
-              ),
-            ),
+                                          // Reset selection to FN when Half Day is enabled
+                                          if (value == true) {
+                                            requisitionSlipController.halfDayType.value = "FN";
+                                          }
+
+                                          requisitionSlipController.calculateTotalLeaveDays();
+                                        },
+                                      );
+                                    }),
+
+                                    const Text(
+                                      "Half Day",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 10),
+
+                                    Obx(() {
+                                      if (!requisitionSlipController.isHalfDay.value) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return Container(
+                                        height: 27,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey.shade300),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: ["FN", "AN"].map((type) {
+                                            final selected =
+                                                requisitionSlipController.halfDayType.value == type;
+
+                                            return GestureDetector(
+                                              onTap: () {
+                                                requisitionSlipController.halfDayType.value = type;
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 9),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: selected
+                                                      ? Theme.of(context).primaryColor
+                                                      : Colors.white,
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                                child: Text(
+                                                  type,
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: selected ? Colors.white : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                           Padding(
@@ -785,10 +827,6 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                     requisitionSlipController.Todate.text,
                                   ),
                                 );
-
-                                setState(() {
-                                  requisitionSlipController.isHalfDay.value = false;
-                                });
                               },
                             ),
 
@@ -815,9 +853,6 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                   ),
                                   date,
                                 );
-                                setState(() {
-                                  requisitionSlipController.isHalfDay.value = false;
-                                });
                               },
                             ),
                           ),
@@ -869,10 +904,11 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                   ),
                                 ),
                               ),
-                              Expanded(flex: 1,
+                              Expanded(
+                                flex: 2,
                                 child: Row(
                                   children: [
-                                    Obx((){
+                                    Obx(() {
                                       return Checkbox(
                                         value: requisitionSlipController.isHalfDay.value,
                                         shape: RoundedRectangleBorder(
@@ -880,41 +916,78 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                                         ),
                                         side: BorderSide(
                                           width: 1,
-                                          color:
-                                          // requisitionSlipController.Totaldays.text!="1"
-                                          //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
-                                          Theme.of(context).primaryColor,
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                        activeColor:
-                                        // requisitionSlipController.Totaldays.text!="1"
-                                        //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
-                                        Theme.of(context).primaryColor,
+                                        activeColor: Theme.of(context).primaryColor,
                                         checkColor: Colors.white,
                                         onChanged: (bool? value) {
                                           requisitionSlipController.isHalfDay.value = value ?? false;
 
+                                          // Reset selection to FN when Half Day is enabled
+                                          if (value == true) {
+                                            requisitionSlipController.halfDayType.value = "FN";
+                                          }
+
                                           requisitionSlipController.calculateTotalLeaveDays();
                                         },
-                                        // onChanged: (bool? value) {
-                                        //   setState(() {
-                                        //     if(requisitionSlipController.Totaldays.text=="1" ||requisitionSlipController.Totaldays.text=="0.5") {
-                                        //       requisitionSlipController.isHalfDay.value = value ?? false;
-                                        //       if (requisitionSlipController.isHalfDay.value == true) {
-                                        //         requisitionSlipController.Totaldays.text = "0.5";
-                                        //       }
-                                        //       else {
-                                        //         requisitionSlipController.Totaldays.text = "1";
-                                        //       }
-                                        //     }
-                                        //   });
-                                        // },
-                                      );},
+                                      );
+                                    }),
+
+                                    const Text(
+                                      "Half Day",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    Text("Half Day", style:  TextStyle(fontWeight: FontWeight.bold,
-                                        color:
-                                        // requisitionSlipController.Totaldays.text!="1"
-                                        //     && requisitionSlipController.Totaldays.text!="0.5"?Colors.grey:
-                                        Colors.black),),
+
+                                    const SizedBox(width: 10),
+
+                                    Obx(() {
+                                      if (!requisitionSlipController.isHalfDay.value) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return Container(
+                                        height: 27,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey.shade300),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: ["FN", "AN"].map((type) {
+                                            final selected =
+                                                requisitionSlipController.halfDayType.value == type;
+
+                                            return GestureDetector(
+                                              onTap: () {
+                                                requisitionSlipController.halfDayType.value = type;
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 9),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: selected
+                                                      ? Theme.of(context).primaryColor
+                                                      : Colors.white,
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                                child: Text(
+                                                  type,
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: selected ? Colors.white : Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -1680,6 +1753,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                           requisitionSlipController.Reason.text="";
                           requisitionSlipController.LeaveReason.text="";
                           requisitionSlipController.isHalfDay.value=false;
+                          requisitionSlipController.halfDayType.value="FN";
                           Navigator.pop(context);
                         },
                         child: Text("Reset",

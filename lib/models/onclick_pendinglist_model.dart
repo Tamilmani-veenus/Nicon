@@ -71,7 +71,7 @@ class OnClickListResult {
   String? SiteName;
   String? createdName;
   String? CreatedName;
-  String? verifyName;
+  dynamic verifyName;
   String? approveName;
   String? approvedName;
   String? preApprovedName;
@@ -240,6 +240,7 @@ class OnClickListResult {
   String? LeaveType;
   String? LeaveTypeDesc;
   bool? isHalfDay;
+  String? HalfDaySession;
   String? transNo;
   String? transdate;
 
@@ -447,6 +448,7 @@ class OnClickListResult {
     this.rentalWrkType,
     this.LeaveType,
     this.LeaveTypeDesc,
+    this.HalfDaySession,
     this.isHalfDay,
     this.transNo,
     this.transdate,
@@ -656,6 +658,7 @@ class OnClickListResult {
     LeaveType: json["LeaveType"],
     LeaveTypeDesc: json["LeaveTypeDesc"],
     isHalfDay: json["IsHalfDay"],
+    HalfDaySession: json["HalfDaySession"],
     transNo: json["Transfer_No"],
     transdate: json["Transdate"],
   );
@@ -863,6 +866,7 @@ class OnClickListResult {
     "LeaveType": LeaveType,
     "LeaveTypeDesc": LeaveTypeDesc,
     "IsHalfDay": isHalfDay,
+    "HalfDaySession": HalfDaySession,
     "Transfer_No": transNo,
     "Transdate": transdate,
   };

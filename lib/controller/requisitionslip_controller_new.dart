@@ -40,6 +40,7 @@ class  RequisitionSlipControllerNew extends GetxController{
   var yearofLeavedays = ''.obs;
   var yearofPerHrs = ''.obs;
   RxBool isHalfDay = false.obs;
+  RxString halfDayType = "FN".obs;
 
   final ondutyDate=TextEditingController();
   final perDate=TextEditingController();
@@ -142,9 +143,6 @@ class  RequisitionSlipControllerNew extends GetxController{
     update();
   }
 
-
-
-
   Future SaveButtonStaffReqScreen(BuildContext context, int id) async {
     String body = requisitonSlipsaveRequestToJson(RequisitonSlipsaveRequest(
       id: reqId,
@@ -173,6 +171,7 @@ class  RequisitionSlipControllerNew extends GetxController{
       approveRemarks: "-",
       leaveType: leaveTypeValue.value,
       isHalfDay: isHalfDay.value,
+      halfDaySession: isHalfDay.value==false? "-": halfDayType.value
     ));
     final list = await RequisitionslipProvider.SaveReqslipScreenEntryAPI(body, reqId);
     if (list != null ) {
@@ -219,7 +218,8 @@ class  RequisitionSlipControllerNew extends GetxController{
       verifyStatus: type=="Verify-Reject"?"R":"Y",
       approveStatus: type=="Approve-Reject"?"R":type=="Approve"?"Y":"N",
       leaveType: data.LeaveType,
-      isHalfDay: data.isHalfDay
+      isHalfDay: data.isHalfDay,
+      halfDaySession: data.HalfDaySession
     ));
     final list = await RequisitionslipProvider.SaveReqslipScreenEntryAPI(body, data.id);
     if (list != null ) {
