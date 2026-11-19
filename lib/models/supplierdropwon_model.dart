@@ -50,16 +50,21 @@ class SupplierDropdownResponse {
     this.response,
   });
 
-  factory SupplierDropdownResponse.fromJson(Map<String, dynamic> json) => SupplierDropdownResponse(
-    success: json["success"],
-    message: json["message"],
-    response: List<SupplierResponse>.from(json["response"].map((x) => SupplierResponse.fromJson(x))),
-  );
+  factory SupplierDropdownResponse.fromJson(Map<String, dynamic> json) =>
+      SupplierDropdownResponse(
+        success: json["success"],
+        message: json["message"],
+        response: List<SupplierResponse>.from(
+          (json["response"] ?? json["result"] ?? [])
+              .map((x) => SupplierResponse.fromJson(x)),
+        ),
+      );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "response": List<dynamic>.from(response!.map((x) => x.toJson())),
+    "response": response?.map((x) => x.toJson()).toList(),
+    "result": response?.map((x) => x.toJson()).toList(),
   };
 }
 

@@ -1,5 +1,5 @@
 import '../../../../constants/ui_constant/icons_const.dart';
-import '../../../../controller/materialreturn_controller.dart';
+import '../../../../controller/materialReturn_controller.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
 import '../../../../utilities/baseutitiles.dart';
@@ -78,7 +78,7 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                       final returnText = controller.text;
                       if (returnText.isEmpty || returnText == "0" || double.tryParse(returnText) == 0.0) {
                         allValid = false;
-                        BaseUtitiles.showToast("Return qty should not be empty");
+                        BaseUtitiles.showToast("Return Qty should not be empty");
                         break;
                       }
                     }
@@ -279,24 +279,57 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                                           context: context,
                                           builder: (context) =>
                                               AlertDialog(
-                                                title: const Text(RequestConstant.DO_YOU_WANT_DELETE),
+                                                title:
+                                                const Text(
+                                                  RequestConstant.DO_YOU_WANT_DELETE,
+                                                  style:
+                                                  TextStyle(color: Colors.black),
+                                                ),
                                                 actions: <Widget>[
-                                                  ElevatedButton(
-                                                      child: const Text(RequestConstant.NO),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      }
-                                                  ),
-                                                  ElevatedButton(
-                                                      child: const Text(RequestConstant.YES),
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                        await matreturnController.deleteParticularList(matreturnController.grnMaterialReadList[index]);
-                                                        await matreturnController.getGrnMaterialTablesDatas();
-                                                      }
+                                                  Container(
+                                                    margin: const EdgeInsets.only(left: 20, right: 20),
+                                                    child: IntrinsicHeight(
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Expanded(
+                                                            child: TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: const Text(
+                                                                "Cancel",
+                                                                style: TextStyle(
+                                                                  color: Colors.grey,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: RequestConstant.Lable_Font_SIZE,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          VerticalDivider(
+                                                            color: Colors.grey.shade400,
+                                                            width: 5,
+                                                            thickness: 2,
+                                                            indent: 15,
+                                                            endIndent: 15,
+                                                          ),
+                                                          Expanded(
+                                                            child: TextButton(
+                                                                onPressed: () async{
+                                                                  await matreturnController.deleteParticularList(matreturnController.grnMaterialReadList[index]);
+                                                                  await matreturnController.getGrnMaterialTablesDatas();
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
+
                                         );
                                       },
                                       child: Image.asset('assets/cancle.png'),

@@ -3696,7 +3696,7 @@ class BottomsheetControllers {
     );
   }
 
-  supplierNameReport(context, list) {
+  supplierNameReport(context, list, {type}) {
     searchcontroller.text = "";
     showModalBottomSheet(
       context: context,

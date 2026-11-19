@@ -65,10 +65,10 @@ class ReportsProvider{
 
   //-----------Get Supplier Reports--------------------
 
-  static Future<SupplierDropdownResponse?> getsupplierReports() async {
+  static Future<SupplierDropdownResponse?> getsupplierReports(type) async {
     try {
       final response = await ApiManager.getAPICall(
-        "${ApiConstant.GETSUPPLIER_REPORTS}",
+        type=="MatReturn"?ApiConstant.GetSUPPLIER_MAT_RETURN:ApiConstant.GETSUPPLIER_REPORTS,
       );
       print("response...$response");
       return supplierDropdownResponseFromJson(response);

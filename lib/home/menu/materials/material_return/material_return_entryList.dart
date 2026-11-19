@@ -60,8 +60,10 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                     () => Visibility(
                   visible: commanController.addMode.value == 1 ? true : false,
                   child: FloatingActionButton.extended(
-                    onPressed: () {
+                    onPressed: () async {
                       materialReturn_Controller.saveButton.value = RequestConstant.SUBMIT;
+                      await materialReturn_Controller.GrnMaterialTabledelete();
+                      materialReturn_Controller.grnMaterialReadList.value=[];
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -631,7 +633,7 @@ class _MaterialReturnEntryListState extends State<MaterialReturnEntryList> {
                                                                   materialReturn_Controller.GrnMaterialTabledelete();
                                                                   materialReturn_Controller.grnMaterialReadList.value=[];
                                                                   FocusScope.of(context).unfocus();
-                                                                  materialReturn_Controller.materialRetEntryList_EditApi(materialReturn_Controller.MatRetrnEtyList.value[index].returnId,widget.heading,context);
+                                                                  materialReturn_Controller.materialRetEntryList_EditApi(materialReturn_Controller.MatReturnList.value[index].id,widget.heading,context);
                                                                 }),
                                                           ),
                                                           Container(

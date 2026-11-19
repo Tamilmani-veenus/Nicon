@@ -1,4 +1,5 @@
 class grnMaterial_Table{
+  int? reqDetId;
   int? stockinId;
   String? transNo;
   int? materialId;
@@ -13,6 +14,7 @@ class grnMaterial_Table{
 
   grnMaterial_Map(){
     var mapping =Map<String,dynamic>();
+    mapping['reqDetId'] = reqDetId!=null?reqDetId:null;
     mapping['stockinId'] = stockinId!=null?stockinId:null;
     mapping['transNo'] = transNo!=null?transNo:null;
     mapping['materialId'] = materialId!=null?materialId:null;

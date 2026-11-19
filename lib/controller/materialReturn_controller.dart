@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:nicon/controller/projectcontroller.dart';
+import 'package:nicon/controller/reports_controller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
 import 'package:nicon/controller/suppliercontroller.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,10 +29,6 @@ class MaterialReturn_Controller extends GetxController {
   // TEXT CONTROLLERS
   // ==========================================================
 
-  // Old list screen
-  final MatRtrnlistFrDate = TextEditingController();
-  final MatRtrnlistToDate = TextEditingController();
-
   // New list screen
   final MatReturnlistFrDate = TextEditingController();
   final MatReturnlistToDate = TextEditingController();
@@ -47,9 +46,8 @@ class MaterialReturn_Controller extends GetxController {
 
   ProjectController projectController = Get.put(ProjectController());
   SiteController siteController = Get.put(SiteController());
-  SupplierController supplierController = Get.put(SupplierController());
   LoginController loginController = Get.put(LoginController());
-
+  ReportsController reportsController = Get.put(ReportsController());
 
   // ==========================================================
   // OBSERVABLES
@@ -57,11 +55,9 @@ class MaterialReturn_Controller extends GetxController {
 
   RxString returnId = "0".obs;
   RxString selectedGRN_Id = "0".obs;
-  RxString selectedGRN_No = "".obs;
   RxString saveButton = RequestConstant.SUBMIT.obs;   // was in both
   RxBool isFromEdit = false.obs;
 
-  RxList MatRetrnEtyList = [].obs;                    // old list
   RxList MatReturnList = [].obs;                      // new list
   RxList mainEtyList = [].obs;                        // was in both
   RxList MatReturn_itemview_GetDbList = [].obs;
@@ -69,9 +65,8 @@ class MaterialReturn_Controller extends GetxController {
   RxList getGRN_List = [].obs;
   RxList getGRN_MaterialList = [].obs;
   RxList GRNmainlist = [].obs;
-  RxList Consum_EditListApiValue = [].obs;
   RxList searchCatNameList = [].obs;
-  RxList<ReturnDet> getReturnDetList = <ReturnDet>[].obs;
+  RxList<MatReturnLink> getReturnDetList = <MatReturnLink>[].obs;
   RxList grnMaterialReadList = [].obs;
   RxList grnMaterial_EditApiList = [].obs;
 
@@ -107,20 +102,32 @@ class MaterialReturn_Controller extends GetxController {
   // EDIT / DELETE
   // ==========================================================
 
+
+
   Future materialRetEntryList_EditApi(int returnId,MenuName, BuildContext context) async {
-    await MaterialReturnProvider.MatRetrnList_editAPI(returnId).then((value) async {
-      if (value != null && value.length > 0) {
-        GrnMaterialTabledelete();
-        saveButton.value = RequestConstant.RESUBMIT;
-        grnMaterial_EditApiList.value = value;
-        grnMaterial_Details_EditTableSave();
-        getGrnMaterialTablesDatas();
-        return Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MaterialReturn_Entry(heading: MenuName)),
-        );
+    var response = await MaterialReturnProvider.MatRetrnList_editAPI(
+        returnId);
+    if (response != null) {
+      if (response.success == true) {
+        grnMaterial_EditApiList.value = [response.result!];
+
+        if (grnMaterial_EditApiList.isNotEmpty) {
+          saveButton.value = RequestConstant.RESUBMIT;
+          await grnMaterial_Details_EditTableSave();
+          await getGrnMaterialTablesDatas();
+          return Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MaterialReturn_Entry(heading: MenuName)),
+          );
+        } else {
+          BaseUtitiles.showToast("No Data Found");
+        }
+      } else {
+        BaseUtitiles.showToast(response.message ?? 'Something went wrong..');
       }
-    });
+    } else {
+      BaseUtitiles.showToast("Something Went Wrong...");
+    }
   }
 
 
@@ -130,105 +137,155 @@ class MaterialReturn_Controller extends GetxController {
   }
 
 
-  // ==========================================================
-  // GRN
-  // ==========================================================
-
-  Future getGRNList(String materialId) async {
-    getGRN_List.value = [];
-    GRNmainlist.value = [];
-    await MaterialReturnProvider.getGRNList_API(
-        materialId,
-        siteController.selectedsiteId.value,
-        supplierController.selectedsuppliertId.value)
-        .then((value) async {
-      if (value != null && value.length > 0) {
-        GRNmainlist.value = value;
-        getGRN_List.value = GRNmainlist.value;
-        return GRNmainlist.value;
-      }
-    });
-  }
-
   Future getGrnMaterialDetails() async {
     getGRN_MaterialList.value = [];
     searchCatNameList.value = [];
-    await MaterialReturnProvider.getMaterialDetailsList_API(
+    var response =  await MaterialReturnProvider.getMaterialDetailsList_API(
         projectController.selectedProjectId.value,
         siteController.selectedsiteId.value,
-        supplierController.selectedsuppliertId.value)
-        .then((value) async {
-      if (value != null && value.length > 0) {
-        getGRN_MaterialList.value = value;
-        searchCatNameList.value = getGRN_MaterialList.value;
-        return searchCatNameList.value;
+        reportsController.selectedsuppliertId.value);
+    if (response != null) {
+      if (response["success"] == true) {
+        if (response["result"]!.isNotEmpty) {
+          getGRN_MaterialList.assignAll(response["result"]!);
+          searchCatNameList.assignAll(response["result"]!);
+        } else {
+          BaseUtitiles.showToast("No Data Found");
+        }
+      } else {
+        BaseUtitiles.showToast(response["message"] ?? 'Something went wrong..');
       }
-    });
+    } else {
+      BaseUtitiles.showToast("Something Went Wrong...");
+    }
   }
+
+  Future getGRNList(String materialId) async {
+    mainEtyList.value = [];
+    MatReturnList.value = [];
+    GRNmainlist.clear();
+    getGRN_List.clear();
+
+    var response = await MaterialReturnProvider.getGRNList_API(
+      materialId,
+      siteController.selectedsiteId.value,
+      reportsController.selectedsuppliertId.value,
+    );
+
+    if (response == null) {
+      BaseUtitiles.showToast("Something Went Wrong...");
+      return;
+    }
+
+    if (response["success"] != true) {
+      BaseUtitiles.showToast(response["message"] ?? 'Something went wrong..');
+      return;
+    }
+
+    final result = List<Map<String, dynamic>>.from(
+      (response["result"] as List? ?? []).map((e) => Map<String, dynamic>.from(e)),
+    );
+
+    if (result.isEmpty) {
+      BaseUtitiles.showToast("No Data Found");
+      return;
+    }
+
+    // 1) Unit: one call for the whole list (same material)
+    String unitName = '';
+    int unitId = 0;
+    try {
+      final unitRes = await MaterialReturnProvider.getUnitAPI(materialId);
+      if (unitRes != null && unitRes['success'] == true) {
+        unitName = unitRes['unitName']?.toString() ?? '';
+        unitId = unitRes['id'] ?? 0;
+      }
+    } catch (_) {}
+
+// 2) Stock qty: one call per row, in parallel
+    await Future.wait(result.map((item) async {
+      double qty = 0;
+      try {
+        final stockRes =
+        await MaterialReturnProvider.getStockQty_API(item['stockInId']);
+        if (stockRes != null && stockRes['success'] == true) {
+          qty = (stockRes['result']?['stockQty'] as num?)?.toDouble() ?? 0;
+        }
+      } catch (_) {}
+
+      item['stockQty'] = qty;
+      item['unitName'] = unitName;
+      item['unitId'] = unitId;
+      item['isCheck'] ??= false;
+    }));
+
+    // shared references on purpose: checks persist while searching
+    GRNmainlist.assignAll(result);
+    getGRN_List.assignAll(result);
+  }
+
 
   // ==========================================================
   // SAVE
   // ==========================================================
 
   Future SaveButton_GRNMaterialScreen(BuildContext context, String returnId) async {
-    // buttonControl = 1;
-    // getReturnDetList.value = [];
-    // await Future.delayed(const Duration(seconds: 0));
-    // String body = GrnMaterialsaveResponseToJson(GrnMaterialsaveResponse(
-    //   returnId: returnId,
-    //   returnNo: autoYearWiseNoController.text,
-    //   returnDate: MatRetEntryDate.text,
-    //   projectId: projectController.selectedProjectId.value.toString(),
-    //   siteId: siteController.selectedsiteId.value.toString(),
-    //   supplierId: supplierController.selectedsuppliertId.value.toString(),
-    //   remarks: MatRetEntry_RemarksController.text,
-    //   preparedby: loginController.EmpId(),
-    //   userId: loginController.UserId(),
-    //   entryMode: returnId != "0" ? "UPDATE" : "ADD",
-    //   deviceName: BaseUtitiles.deviceName,
-    //   returnDet: getReturnDetList.value.isEmpty
-    //       ? getReturnDet()
-    //       : getReturnDetList.value,
-    // ));
-    // final list = await MaterialReturn_Provider.SaveGRNMaterialSaveAPI(
-    //     body, returnId, buttonControl, context);
-    //
-    // print('MaterialReturn response..${list}');
-    //
-    // if (list != null) {
-    //   if (list == "Record Saved Successfully..." ||
-    //       list == "Record Updated Successfully...") {
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     BaseUtitiles.showToast(list!);
-    //     await getMatRtrn_EntryList();
-    //     GrnMaterialTabledelete();
-    //     grnMaterialReadList.value = [];
-    //     buttonControl = 0;
-    //   } else {
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     BaseUtitiles.showToast("Something went wrong");
-    //   }
-    // }
+    await Future.delayed(const Duration(seconds: 0));
+    String body = grnMaterialsaveResponseToJson(GrnMaterialsaveResponse(
+      id: int.tryParse(returnId),
+      returnNo: autoYearWiseNoController.text,
+      entryDt: MatRetEntryDate.text,
+      projectid: projectController.selectedProjectId.value,
+      siteid: siteController.selectedsiteId.value,
+      toSuplierId: reportsController.selectedsuppliertId.value,
+      remarks: MatRetEntry_RemarksController.text,
+      createdDt: saveButton.value == RequestConstant.SUBMIT?BaseUtitiles().convertToUtcIso(MatRetEntryDate.text):grnMaterial_EditApiList.value[0].createdDt,
+      updatedDt: DateTime.now().toUtc().toIso8601String(),
+      matReturnLink: getReturnDet(int.tryParse(returnId),saveButton.value == RequestConstant.SUBMIT?BaseUtitiles().convertToUtcIso(MatRetEntryDate.text):grnMaterial_EditApiList.value[0].createdDt),
+    ));
+    final decodedJson = jsonDecode(body);
+
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(decodedJson);
+
+    debugPrint(prettyJson, wrapWidth: 1024);
+    final list = await MaterialReturnProvider.SaveMatReturnEntryAPI(
+        body, returnId);
+    if (list != null ) {
+      if(list["success"] == true){
+        BaseUtitiles.showToast(list["message"]);
+        await getMaterialReturn_List();
+        BaseUtitiles.popMultiple(context, count: 4);
+      }
+      else {
+        BaseUtitiles.showToast(list["message"] ?? 'Something went wrong..');
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    }
+    else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 2);
+    }
   }
 
-  List<ReturnDet>? getReturnDet() {
+  List<MatReturnLink>? getReturnDet(returnId,createdDt) {
     getReturnDetList.value = [];
-    grnMaterialReadList.value.forEach((element) {
-      var list = ReturnDet(
-        materialId: element.materialId.toString(),
-        rate: "0",
-        qty: element.returnQty.toString(),
-        amount: "0",
-        stockInId: element.stockinId.toString(),
+    for (var element in grnMaterialReadList.value) {
+      var list = MatReturnLink(
+        id: element.reqDetId,
+        returnId: returnId,
+        materialId: element.materialId,
+        qty: double.tryParse(element.returnQty),
+        rate: 0,
+        amount: 0,
+        stockinId: element.stockinId,
+        grNno: element.transNo,
+        stockQty: element.stockQty,
+        createdDt: createdDt,
+        updatedDt:DateTime.now().toUtc().toIso8601String()
       );
       getReturnDetList.value.add(list);
-    });
+    }
     return getReturnDetList.value;
   }
 
@@ -249,6 +306,7 @@ class MaterialReturn_Controller extends GetxController {
     grnMaterialReadList.value = [];
     datas.forEach((value) {
       var grnMaterialTable = grnMaterial_Table();
+      grnMaterialTable.reqDetId = value['reqDetId'];
       grnMaterialTable.stockinId = value['stockinId'];
       grnMaterialTable.transNo = value['transNo'];
       grnMaterialTable.materialId = value['materialId'];
@@ -269,34 +327,35 @@ class MaterialReturn_Controller extends GetxController {
 
   grnMaterial_DetailsTableSave(BuildContext context) async {
     grnMaterialTableModelList = [];
-    bool entryExists = false;
     textControllersInitiate();
-    getGRN_List.forEach((element) {
-      if (element.isCheck == true) {
-        var grnMaterialTable = grnMaterial_Table();
-        grnMaterialTable.stockinId = element.stockinId;
-        grnMaterialTable.transNo = element.transNo;
-        grnMaterialTable.materialId = element.materialId;
-        grnMaterialTable.materialName = element.materialName;
-        grnMaterialTable.qty = element.qty;
-        grnMaterialTable.stockQty = element.stockQty;
-        grnMaterialTable.scale = element.scale;
-        grnMaterialTable.projectId = element.projectId;
-        grnMaterialTable.siteId = element.siteId;
-        grnMaterialTable.supplierId = element.supplierId;
-        grnMaterialTable.returnQty = "0.0";
 
-        entryExists = grnMaterialReadList.any((existingElement) =>
-        existingElement.materialId == grnMaterialTable.materialId &&
-            existingElement.stockinId == grnMaterialTable.stockinId);
+    for (final element in getGRN_List) {
+      if (element['isCheck'] != true) continue;
 
-        if (entryExists) {
-          BaseUtitiles.showToast("Entries already exist for ${element.transNo}");
-        } else {
-          grnMaterialTableModelList.add(grnMaterialTable);
-        }
+      final grnMaterialTable = grnMaterial_Table();
+      grnMaterialTable.reqDetId = 0;
+      grnMaterialTable.stockinId = element['stockInId'];
+      grnMaterialTable.transNo = element['transNo'];
+      grnMaterialTable.materialId = int.tryParse(selectedGRN_Id.value);
+      grnMaterialTable.materialName = GRN_StockInNo_Controller.text;
+      grnMaterialTable.qty = element['qty'];
+      grnMaterialTable.stockQty = element['stockQty'];   // from stock qty api
+      grnMaterialTable.scale = element['unitName'];      // from unit api
+      grnMaterialTable.projectId = projectController.selectedProjectId.value;
+      grnMaterialTable.siteId = siteController.selectedsiteId.value;
+      grnMaterialTable.supplierId = reportsController.selectedsuppliertId.value;
+      grnMaterialTable.returnQty = "0.0";
+
+      final entryExists = grnMaterialReadList.any((existing) =>
+      existing.materialId == grnMaterialTable.materialId &&
+          existing.stockinId == grnMaterialTable.stockinId);
+
+      if (entryExists) {
+        BaseUtitiles.showToast("Entries already exist for ${element['transNo']}");
+      } else {
+        grnMaterialTableModelList.add(grnMaterialTable);
       }
-    });
+    }
 
     if (grnMaterialTableModelList.isNotEmpty) {
       var savedatas = await materialReturn_Service
@@ -308,12 +367,13 @@ class MaterialReturn_Controller extends GetxController {
   grnMaterial_Details_EditTableSave() async {
     grnMaterialTableModelList.clear();
     grnMaterial_EditApiList.value.forEach((element) {
-      element.returnEditDet.forEach((data) {
+      element.matReturnLink.forEach((data) {
         var grnMaterialTable = grnMaterial_Table();
+        grnMaterialTable.reqDetId = data.id;
         grnMaterialTable.materialId = data.materialId;
         grnMaterialTable.materialName = data.materialName;
-        grnMaterialTable.scale = data.unit;
-        grnMaterialTable.transNo = data.grnNo;
+        grnMaterialTable.scale = data.unitName;
+        grnMaterialTable.transNo = data.grNno;
         grnMaterialTable.stockQty = data.stockQty;
         grnMaterialTable.returnQty = data.qty.toString();
         grnMaterialTable.stockinId = data.stockinId;
@@ -330,6 +390,7 @@ class MaterialReturn_Controller extends GetxController {
     grnMat_UpdateModelListReadList = [];
     grnMaterialReadList.forEach((element) {
       var grnMaterialTable = grnMaterial_Table();
+      grnMaterialTable.reqDetId = element.reqDetId;
       grnMaterialTable.stockinId = element.stockinId;
       grnMaterialTable.transNo = element.transNo;
       grnMaterialTable.materialId = element.materialId;
@@ -376,55 +437,31 @@ class MaterialReturn_Controller extends GetxController {
     }
   }
 
-  // ==========================================================
-  // SELECTION
-  // ==========================================================
-
-  SelectedGRN_ID(String value) {
-    if (getGRN_MaterialList.value.length > 0) {
-      getGRN_MaterialList.forEach((element) {
-        if (value == element.materialName) {
-          selectedGRN_Id(element.materialId);
-        }
-      });
-    }
-    SelectedGRN_No(selectedGRN_Id.value);
-  }
-
-  SelectedGRN_No(String id) {
-    if (getGRN_MaterialList.value.length > 0) {
-      getGRN_MaterialList.forEach((element) {
-        if (id == element.materialId) {
-          selectedGRN_No(element.materialName);
-        }
-      });
-    }
-    GRN_StockInNo_Controller.text = selectedGRN_No.value;
-  }
 
   // ==========================================================
   // CHECKBOX
   // ==========================================================
 
-  setCheck(int id, bool value) {
-    getGRN_List.forEach((element) {
-      if (element.stockinId == id) {
-        element.isCheck = value;
+  void setCheck(int id, bool value) {
+    for (final element in getGRN_List) {
+      if (element['stockInId'] == id) {
+        element['isCheck'] = value;
       }
-    });
+    }
+    getGRN_List.refresh(); // notify GetX listeners
   }
 
   void clearCheck() {
-    if (isChecked.isEmpty) {
+    if (isChecked.length != getGRN_MaterialList.length) {
       isChecked = List<bool>.filled(getGRN_MaterialList.length, false);
     }
 
     for (int i = 0; i < getGRN_MaterialList.length; i++) {
       isChecked[i] = false;
-      getGRN_MaterialList[i].isCheck = false;
+      getGRN_MaterialList[i]['isCheck'] = false;
     }
+    getGRN_MaterialList.refresh();
   }
-
   // ==========================================================
   // VALIDATION
   // ==========================================================
@@ -433,14 +470,11 @@ class MaterialReturn_Controller extends GetxController {
     for (var index = 0; index < grnMaterialReadList.length; index++) {
       final returnText = ReturnQtyController[index].text.trim();
       final stockQty = grnMaterialReadList[index].stockQty;
-      final returnQty = double.tryParse(returnText);
+      final returnQty = double.tryParse(returnText) ??  0.0;
 
-      if (returnText.isEmpty || returnQty == null || returnQty == 0.0) {
-        BaseUtitiles.showToast("Return qty should not be empty");
-        return; // Stop processing further
-      } else if (returnQty > stockQty) {
+       if (returnQty > stockQty) {
         ReturnQtyController[index].text = "0.0";
-        BaseUtitiles.showToast("Return qty should not exceed the stock qty");
+        BaseUtitiles.showToast("Return Qty should not exceed the Stock Qty");
         return; // Stop processing further
       }
     }

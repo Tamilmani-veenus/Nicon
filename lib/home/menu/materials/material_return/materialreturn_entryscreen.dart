@@ -8,8 +8,8 @@ import '../../../../controller/comman_controller.dart';
 import '../../../../controller/logincontroller.dart';
 import '../../../../controller/materialReturn_controller.dart';
 import '../../../../controller/projectcontroller.dart';
+import '../../../../controller/reports_controller.dart';
 import '../../../../controller/sitecontroller.dart';
-import '../../../../controller/suppliercontroller.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
 import 'materialreturn_itemlist.dart';
@@ -31,7 +31,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
   CommanController commanController = Get.put(CommanController());
   BottomsheetControllers bottomsheetControllers = Get.put(BottomsheetControllers());
   MaterialReturn_Controller matreturnController = Get.put(MaterialReturn_Controller());
-  SupplierController supplierController = Get.put(SupplierController());
+  ReportsController reportsController = Get.put(ReportsController());
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -40,46 +40,42 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
     var duration = Duration(seconds:0);
     Future.delayed(duration,() async {
 
-      if(matreturnController.saveButton.value == RequestConstant.RESUBMIT) {
-          matreturnController.isFromEdit.value=true;
-          matreturnController.grnMaterial_EditApiList.forEach((element) {
-          matreturnController.returnId.value = element.returnId.toString();
-          matreturnController.autoYearWiseNoController.text = element.returnNo;
-          matreturnController.MatRetEntryDate.text = element.returndate;
-          projectController.projectname.text = element.projectName;
-          projectController.selectedProjectId.value = element.projectId;
-          siteController.Sitename.text = element.siteName;
-          siteController.selectedsiteId.value = element.siteId;
-          supplierController.Suppliername.text = element.supplierName;
-          supplierController.selectedsuppliertId.value = element.supplierid;
-          matreturnController.MatRetEntry_preparedbyController.text = element.preparedbyName;
-          matreturnController.MatRetEntry_RemarksController.text = element.remarks;
-        });
-      }
-
       if(matreturnController.saveButton.value == RequestConstant.SUBMIT){
+        matreturnController.isFromEdit.value=false;
+        matreturnController.returnId.value="0";
         matreturnController.GRN_StockInNo_Controller.text="--SELECT--";
         matreturnController.selectedGRN_Id.value="0";
-        // await autoYearWiseNoController.MaterialReturn_AutoYearWise();
-        // await projectController.getProjectList(context,0);
-        // await supplierController.getSupplierList(context);
-        // matreturnController.autoYearWiseNoController.text = autoYearWiseNoController.MaterialReturn_autoyrwise.value;
-
-        matreturnController.isFromEdit.value=false;
-        await matreturnController.GrnMaterialTabledelete();
-        matreturnController.returnId.value="0";
-        matreturnController.grnMaterialReadList.value=[];
-        matreturnController.saveButton.value = RequestConstant.SUBMIT;
         projectController.projectname.text = "--SELECT--";
         projectController.selectedProjectId.value=0;
         siteController.Sitename.text = "--SELECT--";
         siteController.selectedsiteId.value=0;
-        supplierController.Suppliername.text = "--SELECT--";
-        supplierController.selectedsuppliertId.value=0;
+        reportsController.suppliername.text = "--SELECT--";
+        reportsController.selectedsuppliertId.value=0;
+        await autoYearWiseNoController.AutoYearWiseNo("MATERIAL RETURN");
+        matreturnController.autoYearWiseNoController.text = autoYearWiseNoController.MaterialRet_autoYrWise.value;
         matreturnController.MatRetEntryDate.text = BaseUtitiles.initiateCurrentDateFormat();
         matreturnController.MatRetEntry_preparedbyController.text = loginController.EmpName();
         matreturnController.MatRetEntry_RemarksController.text = "";
       }
+
+      else if(matreturnController.saveButton.value == RequestConstant.RESUBMIT) {
+          matreturnController.isFromEdit.value=true;
+          matreturnController.GRN_StockInNo_Controller.text ="--SELECT--";
+          matreturnController.grnMaterial_EditApiList.forEach((element) {
+          matreturnController.returnId.value = element.id.toString();
+          matreturnController.autoYearWiseNoController.text = element.returnNo.toString().trim();
+          matreturnController.MatRetEntryDate.text = element.entryDt;
+          projectController.projectname.text = element.projectName;
+          projectController.selectedProjectId.value = element.projectid;
+          siteController.Sitename.text = element.siteName;
+          siteController.selectedsiteId.value = element.siteid;
+          reportsController.suppliername.text = element.toSupplierName;
+          reportsController.selectedsuppliertId.value = element.toSuplierId;
+          matreturnController.MatRetEntry_preparedbyController.text = element.createdName;
+          matreturnController.MatRetEntry_RemarksController.text = element.remarks;
+        });
+      }
+
     });
     super.initState();
   }
@@ -111,7 +107,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Material Return",
+                              widget.heading,
                               style: TextStyle(
                                   fontSize: RequestConstant.Heading_Font_SIZE,
                                   fontWeight: FontWeight.bold),
@@ -273,14 +269,16 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                                         vertical: 8, horizontal: 8),
                                     child: ConstIcons.projectName),
                               ),
-                              onTap: () {
+                              onTap: () async {
                                 if(matreturnController.isFromEdit.value==true){
 
                                 }
                                 else{
-                                  setState(() {
-                                    bottomsheetControllers.ProjectName(context, projectController.getdropDownvalue.value );
-                                  });
+                                    await projectController.getProjectList();
+                                    bottomsheetControllers.ProjectName(
+                                        context,
+                                        projectController
+                                            .getdropDownvalue.value);
                                 }
                               },
                               validator: (value) {
@@ -324,9 +322,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
 
                                 }
                                 else{
-                                  setState(() {
                                     bottomsheetControllers.SiteName(context, siteController.getSiteDropdownvalue.value );
-                                  });
                                 }
                               },
                               validator: (value) {
@@ -354,7 +350,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                             child: TextFormField(
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               readOnly: true,
-                              controller: supplierController.Suppliername,
+                              controller: reportsController.suppliername,
                               cursorColor: Colors.black,
                               style: TextStyle(color: Colors.black),
                               decoration: InputDecoration(
@@ -367,15 +363,17 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                                 prefixIcon: Padding(padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                     child: ConstIcons.subcontractorName),
                               ),
-                              onTap: () {
-                                setState(() {
+                              onTap: () async {
                                   if(matreturnController.isFromEdit.value==true){
 
                                   }
                                else {
-                                 bottomsheetControllers.SupplierName(context, supplierController.supplierListDropdown.value);
+                                    await reportsController.getSupplierReportList(type:"MatReturn");
+                                    if(mounted) {
+                                      bottomsheetControllers.supplierNameReport(context,
+                                          reportsController.supplierListDropdown.value,type:"MatReturn");
+                                    }
                                }
-                                });
                               },
                               validator: (value) {
                                 if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
@@ -522,7 +520,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                         }else if(siteController.selectedsiteId.value == 0){
                           BaseUtitiles.showToast("Please select siteName");
                         }
-                        else if(supplierController.selectedsuppliertId.value == 0){
+                        else if(reportsController.selectedsuppliertId.value == 0){
                           BaseUtitiles.showToast("Please select supplierName");
                         }
                         else{
@@ -581,8 +579,8 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                             projectController.selectedProjectId.value=0;
                             siteController.Sitename.text = "--SELECT--";
                             siteController.selectedsiteId.value=0;
-                            supplierController.Suppliername.text = "--SELECT--";
-                            supplierController.selectedsuppliertId.value=0;
+                            reportsController.suppliername.text = "--SELECT--";
+                            reportsController.selectedsuppliertId.value=0;
                             matreturnController.MatRetEntryDate.text = BaseUtitiles.initiateCurrentDateFormat();
                             matreturnController.MatRetEntry_preparedbyController.text = loginController.EmpName();
                             matreturnController.MatRetEntry_RemarksController.text = "";

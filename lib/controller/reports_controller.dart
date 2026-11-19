@@ -126,9 +126,9 @@ class ReportsController extends GetxController{
 
 
 
-  Future getSupplierReportList() async {
+  Future getSupplierReportList({type}) async {
     supplierListDropdown.value.clear();
-    final value = await ReportsProvider.getsupplierReports();
+    final value = await ReportsProvider.getsupplierReports(type);
     if (value != null ) {
       if(value.success == true) {
         supplierListDropdown.value = value.response!;
