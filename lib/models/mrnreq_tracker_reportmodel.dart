@@ -4,8 +4,14 @@
 
 import 'dart:convert';
 
-MrnReqTrackerListModel mrnReqTrackerListModelFromJson(String str) => MrnReqTrackerListModel.fromJson(json.decode(str));
-
+MrnReqTrackerListModel mrnReqTrackerListModelFromJson(
+    String str, {
+      String rptType = "",
+    }) =>
+    MrnReqTrackerListModel.fromJson(
+      json.decode(str),
+      rptType: rptType,
+    );
 String mrnReqTrackerListModelToJson(MrnReqTrackerListModel data) => json.encode(data.toJson());
 
 class MrnReqTrackerListModel {
@@ -18,24 +24,46 @@ class MrnReqTrackerListModel {
     this.success,
     this.message,
     this.result,
-    this.abstractResult
+    this.abstractResult,
   });
 
-  factory MrnReqTrackerListModel.fromJson(Map<String, dynamic> json) => MrnReqTrackerListModel(
-    success: json["success"],
-    message: json["message"],
-    result: json["result"]==null?[]:List<ReqTrackResult>.from(json["result"].map((x) => ReqTrackResult.fromJson(x))),
-    abstractResult: json["abstractResult"] == null
-        ? []
-        : List<ProjectModel>.from(
-        json["abstractResult"].map((x) => ProjectModel.fromJson(x))),
-    // abstractResult: json["result"]==null?[]:List<ProjectModel>.from(json["result"].map((x) => ProjectModel.fromJson(x))),
-  );
+  factory MrnReqTrackerListModel.fromJson(
+      Map<String, dynamic> json, {
+        String rptType = "",
+      }) {
+    if (rptType.toUpperCase() == "A") {
+      // ABSTRACT API
+      return MrnReqTrackerListModel(
+        success: json["success"],
+        message: json["message"],
+        result: [],
+        abstractResult: json["result"] == null
+            ? []
+            : List<ProjectModel>.from(
+          json["result"].map((x) => ProjectModel.fromJson(x)),
+        ),
+      );
+    } else {
+      // DETAIL API
+      return MrnReqTrackerListModel(
+        success: json["success"],
+        message: json["message"],
+        abstractResult: [],
+        result: json["result"] == null
+            ? []
+            : List<ReqTrackResult>.from(
+          json["result"].map((x) => ReqTrackResult.fromJson(x)),
+        ),
+      );
+    }
+  }
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "result": result==null?[]:List<dynamic>.from(result!.map((x) => x.toJson())),
+    "result": result == null
+        ? []
+        : List<dynamic>.from(result!.map((x) => x.toJson())),
     "abstractResult": abstractResult == null
         ? []
         : List<dynamic>.from(abstractResult!.map((x) => x.toJson())),
@@ -313,7 +341,6 @@ class ReqTrackResult {
     "poApproveStatus": poApproveStatus,
   };
 }
-
 
 class ProjectModel {
   String? projectName;

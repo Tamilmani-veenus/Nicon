@@ -14,6 +14,7 @@ import '../../controller/projectcontroller.dart';
 import '../../controller/reports_controller.dart';
 import '../../controller/sitecontroller.dart';
 import '../../controller/subcontcontroller.dart';
+import '../../models/mrnreq_tracker_reportmodel.dart';
 import '../../utilities/apiconstant.dart';
 import '../../utilities/baseutitiles.dart';
 import '../../utilities/common_date_fields.dart';
@@ -432,12 +433,9 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
 
 
                 SizedBox(height: BaseUtitiles.getheightofPercentage(context, 2)),
-                if (reportsController.mrn_Track_type_DPR.value == "D") ...[
-                  ListDetails(),
-                ] else ...[
-                  AbstractListDetails(),
-                ],
-
+                Obx(() => reportsController.mrn_Track_type_DPR.value == "D"
+                    ? ListDetails()
+                    : AbstractListDetails()),
               ],
             ),
           ),
@@ -447,82 +445,35 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
   }
 
   download(int uid,String uType,int pId,int SId,int subId,String fdate,String todate,String pName,String sName,String subName,String wType,int repType){
-    launch(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
-    print(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
+    // launch(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
+    // print(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
   }
 
   Widget AbstractListDetails() {
-    return Container(
+    return SizedBox(
       height: BaseUtitiles.getheightofPercentage(context, 38),
       width: BaseUtitiles.getWidthtofPercentage(context, 100),
-      child: ListView(
-        padding: EdgeInsets.all(10),
-        children: [
+      child: Obx(() {
+        // read the observable inside Obx so the UI rebuilds on change
+        final projects = siteController.mrnReqTrackerAbstractListValue;
 
-          // PROJECT 1
-          _projectCard(
-            "Dq Villa",
-            [
-              {
-                "site": "DQ VILLA1",
-                "requests": [
-                  "REQ/26-27/00003",
-                  "REQ/26-27/00005",
-                ],
-              },
-            ],
-          ),
+        if (projects.isEmpty) {
+          return const Center(child: Text("No Data Found"));
+        }
 
-          // PROJECT 2
-          _projectCard(
-            "Veenus Head Office",
-            [
-              {
-                "site": "VEENUS HEAD OFFICE",
-                "requests": [
-                  "REQ/26-27/00004",
-                ],
-              },
-            ],
-          ),
-
-          // PROJECT 3
-          _projectCard(
-            "Gomathi Mills",
-            [
-              {
-                "site": "Industrial Gomathi Mills",
-                "requests": [
-                  "REQ/26-27/00006",
-                ],
-              },
-            ],
-          ),
-
-          // PROJECT 4
-          _projectCard(
-            "Anusamm Head Office",
-            [
-              {
-                "site": "Anusamm Head Office",
-                "requests": [
-                  "REQ/26-27/00007",
-                ],
-              },
-              {
-                "site": "Mani",
-                "requests": [
-                  "REQ/26-27/00008",
-                ],
-              },
-            ],
-          ),
-        ],
-      ),
+        return ListView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: projects.length,
+          itemBuilder: (context, index) => _projectCard(projects[index]),
+        );
+      }),
     );
   }
 
-  Widget _projectCard(String projectName, List<Map<String, dynamic>> sites) {
+  Widget _projectCard(ProjectModel project) {
+    final String projectName = (project.projectName ?? "").trim();
+    final List<SiteModel> sites = project.siteName ?? [];
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
       child: Card(
@@ -566,9 +517,8 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
 
               // SITE DETAILS
               ...sites.map((site) {
-                final String siteName = site["site"]?.toString() ?? "";
-                final List requests =
-                site["requests"] is List ? site["requests"] as List : [];
+                final String siteName = (site.siteName ?? "").trim();
+                final List<TransferModel> requests = site.transfers ?? [];
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -604,48 +554,58 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                       const SizedBox(height: 8),
 
                       // REQUEST NUMBERS
-                      ...requests.map((request) {
-                        return Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.only(
-                            left: 10,
-                            bottom: 6,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 9,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade50,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
+                      ...requests.map((transfer) {
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(6),
+                          onTap: () async {
+                            await mrn_request_controller.getCheckApprovalLevel();
+                            showDialog(
+                              context: context,
+                              builder: (_) => MrnReqTrackerAbstractPopup(transfer: transfer),
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              bottom: 6,
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.receipt_long_rounded,
-                                size: 16,
-                                color: Theme.of(context).primaryColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 9,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade50,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  request?.toString() ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.receipt_long_rounded,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    (transfer.reqordno ?? "").trim(),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 12,
-                                color: Colors.grey.shade500,
-                              ),
-                            ],
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 12,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),
@@ -659,6 +619,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
       ),
     );
   }
+
   Widget ListDetails(){
     return Container(
       height:BaseUtitiles.getheightofPercentage(context,38),

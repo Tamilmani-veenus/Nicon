@@ -273,3 +273,251 @@ class mrnReqTrackerPopup extends StatelessWidget {
     );
   }
 }
+
+class MrnReqTrackerAbstractPopup extends StatelessWidget {
+  const MrnReqTrackerAbstractPopup({Key? key, required this.transfer})
+      : super(key: key);
+
+  final TransferModel transfer;
+
+  // returns null for empty or "-" values
+  String? _c(String? v) {
+    final s = v?.trim();
+    return (s == null || s.isEmpty || s == "-") ? null : s;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = transfer;
+
+    // required: always shown, red cross if no data. Others show only when they have data.
+    final steps = <Map<String, dynamic>>[
+      {
+        "title": "MRN Made",
+        "date": t.reqorddate,
+        "by": t.mrnPreparedby,
+        "required": true,
+      },
+      {
+        "title": "MRN Verified",
+        "date": t.mrnVerifydate ?? t.indentVerifydate,
+        "time": t.mrnVerifyTime,
+        "by": t.mrnVerifiedBy,
+      },
+      {
+        "title": "MRN Pre-Approved",
+        "date": t.mrnPreApproveDate ?? t.indentPreApproveDate,
+        "time": t.mrnPreApproveTime,
+        "by": t.mrnPreApprovedby,
+      },
+      {
+        "title": "MRN Final Approved",
+        "date": t.mrnApprovedDate ?? t.indentApproveDate,
+        "time": t.mrnApprovedTime,
+        "by": t.mrnApprovedBy,
+      },
+      {
+        "title": "Quote Made",
+        "no": t.quoteNo,
+        "by": t.quoteCreatedName ?? t.quoteCreatedBy,
+      },
+      {
+        "title": "Quote Approved",
+        "date": t.quoteApprovedDt,
+        "time": t.quoteApprovedTime,
+        "by": t.quoteApproveName ?? t.quoteApprovedBy,
+      },
+      {
+        "title": "PO Made",
+        "no": t.purchaseOrdNo,
+        "date": t.purchaseOrdDate,
+        "by": t.poPreparedby,
+        "required": true,
+      },
+      {
+        "title": "PO Approved",
+        "date": t.poApprovedDate ?? t.purchaseApprovedDate,
+        "time": t.poApprovedTime,
+        "by": t.poApprovedBy,
+      },
+      {
+        "title": "Inward",
+        "no": t.inwardno,
+        "date": t.invoicedate,
+        "by": t.inwPreparedby,
+        "extra": t.invoiceno == null ? null : "Invoice No : ${t.invoiceno}",
+        "required": true,
+      },
+    ].where((s) {
+      final hasData = ["no", "date", "time", "by"].any((k) => _c(s[k]) != null);
+      return hasData || s["required"] == true;
+    }).toList();
+
+    return AlertDialog(
+      backgroundColor: Setmybackground,
+      contentPadding: const EdgeInsets.all(5.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      content: Stack(children: <Widget>[
+        Container(
+          height: BaseUtitiles.getheightofPercentage(context, 3),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
+            ),
+            color: Theme.of(context).primaryColor,
+            boxShadow: const [
+              BoxShadow(
+                  offset: Offset(0, 10), blurRadius: 3, color: Colors.white),
+            ],
+          ),
+          child: const Text("MRN - Request Tracker",
+              style: TextStyle(color: Colors.white)),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 30),
+          width: BaseUtitiles.getWidthtofPercentage(context, 80),
+          height: BaseUtitiles.getheightofPercentage(context, 58),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Card(
+              elevation: 3,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      (t.reqordno ?? "").trim(),
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: steps.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final step = entry.value;
+                            final isLast = index == steps.length - 1;
+
+                            final no = _c(step["no"]);
+                            final date = _c(step["date"]);
+                            final time = _c(step["time"]);
+                            final by = _c(step["by"]);
+                            final extra = _c(step["extra"]);
+                            final isCancelled =
+                                no == null && date == null && by == null;
+
+                            return IntrinsicHeight(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Icon(
+                                          isCancelled
+                                              ? Icons.cancel
+                                              : Icons.check_circle,
+                                          color: isCancelled
+                                              ? Colors.red
+                                              : Colors.green,
+                                          size: 22,
+                                        ),
+                                        if (!isLast)
+                                          Container(
+                                            width: 2,
+                                            height: 45,
+                                            color: Colors.grey.shade400,
+                                          ),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              step["title"],
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            if (no != null)
+                                              Text(
+                                                "$no".trim(),
+                                                style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 13),
+                                              ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    date ?? "-",
+                                                    style: const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontSize: 13),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    time ?? "-",
+                                                    style: const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontSize: 13),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            if (extra != null)
+                                              Text(
+                                                extra,
+                                                style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 13),
+                                              ),
+                                            if (by != null)
+                                              Text(
+                                                "By : $by",
+                                                style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 13),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+}
