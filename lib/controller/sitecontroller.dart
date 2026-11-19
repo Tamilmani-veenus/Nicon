@@ -39,6 +39,8 @@ class SiteController extends GetxController {
   final TodateController = TextEditingController();
   RxList mrnListValue = [].obs;
   RxList<ReqTrackResult> mrnReqTrackerListValue = <ReqTrackResult>[].obs;
+  RxList<ProjectModel> mrnReqTrackerAbstractListValue =
+      <ProjectModel>[].obs;
   List<PdfListModel> getMNRList_Pdf = <PdfListModel>[];
   RxList selctListDatas = [].obs;
   int checkColor = 0;
@@ -143,21 +145,68 @@ class SiteController extends GetxController {
     }
   }
 
+  // Future getMrnReqTrackerList() async {
+  //   mrnReqTrackerListValue.value=[];
+  //   final value = await ReportsProvider.getMrnReqTrackerRptList(
+  //       reportsController.selectedProjectId.value,
+  //       reportsController.selectedsiteId.value,
+  //       reportsController.materialDropdowntId.value,
+  //       FromdateController.text,
+  //       TodateController.text,reportsController.mrn_Track_type_DPR.value);
+  //   if (value != null) {
+  //     if (value.success == true) {
+  //       if (value.result!.isNotEmpty) {
+  //         mrnReqTrackerListValue.value = value.result!;
+  //       }
+  //       if (value.abstractResult != null &&
+  //           value.abstractResult!.isNotEmpty) {
+  //         mrnReqTrackerAbstractListValue.value = value.abstractResult!;
+  //       } else {
+  //         BaseUtitiles.showToast(value.message ?? "No Data Found");
+  //       }
+  //     } else {
+  //       BaseUtitiles.showToast(value.message ?? "Something went wrong..");
+  //     }
+  //   } else {
+  //     BaseUtitiles.showToast("Something went wrong..");
+  //   }
+  // }
+
   Future getMrnReqTrackerList() async {
-    mrnReqTrackerListValue.value=[];
+    mrnReqTrackerListValue.clear();
+    mrnReqTrackerAbstractListValue.clear();
+
     final value = await ReportsProvider.getMrnReqTrackerRptList(
-        reportsController.selectedProjectId.value,
-        reportsController.selectedsiteId.value,
-        reportsController.materialDropdowntId.value,
-        FromdateController.text,
-        TodateController.text,reportsController.mrn_Track_type_DPR.value);
+      reportsController.selectedProjectId.value,
+      reportsController.selectedsiteId.value,
+      reportsController.materialDropdowntId.value,
+      FromdateController.text,
+      TodateController.text,
+      reportsController.mrn_Track_type_DPR.value,
+    );
+
     if (value != null) {
       if (value.success == true) {
-        if (value.result!.isNotEmpty) {
-          mrnReqTrackerListValue.value = value.result!;
+
+        if (reportsController.mrn_Track_type_DPR.value == "D") {
+
+          if (value.result != null && value.result!.isNotEmpty) {
+            mrnReqTrackerListValue.value = value.result!;
+          } else {
+            BaseUtitiles.showToast(value.message ?? "No Data Found");
+          }
+
         } else {
-          BaseUtitiles.showToast(value.message ?? "No Data Found");
+
+          if (value.abstractResult != null &&
+              value.abstractResult!.isNotEmpty) {
+            mrnReqTrackerAbstractListValue.value =
+            value.abstractResult!;
+          } else {
+            BaseUtitiles.showToast(value.message ?? "No Data Found");
+          }
         }
+
       } else {
         BaseUtitiles.showToast(value.message ?? "Something went wrong..");
       }

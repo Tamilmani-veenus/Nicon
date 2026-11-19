@@ -441,7 +441,7 @@ class _RepairConsumptionEntryListState extends State<RepairConsumptionEntryList>
                                         repairConsumptionController
                                             .RepairConsList
                                             .value[index].repairType
-                                            .toString(),
+                                            .toString().trim() == "Return" ? "Service Return" : "Service Request",
                                         style: TextStyle(
                                           color: Colors.black,
                                         ),

@@ -3,6 +3,7 @@ import '../apimanager/apimanager.dart';
 import '../models/accountname_model.dart';
 import '../models/accounttype_model.dart';
 import '../models/companydropdownlist_model.dart';
+import '../models/datepicker_model.dart';
 import '../models/dpr_headname_model.dart';
 import '../models/invoiceno_billdir_model.dart';
 import '../models/materiallist_model.dart';
@@ -259,6 +260,19 @@ class CommonProvider {
           await ApiManager.getAPICall("${ApiConstant.GETMATERIALHEAD_REPORT}");
       print("response...$response");
       return materialWiseHeadResponseFromJson(response);
+    } catch (error, stackTrace) {
+      print("Error == $error");
+      print("StackTrace == $stackTrace");
+      return null;
+    }
+  }
+
+  static Future<DatePickerResponse?> getDateCount() async {
+    try {
+      final response =
+      await ApiManager.getAPICall("${ApiConstant.DATEPICKER_API}");
+      print("response...$response");
+      return datePickerResponseFromJson(response);
     } catch (error, stackTrace) {
       print("Error == $error");
       print("StackTrace == $stackTrace");

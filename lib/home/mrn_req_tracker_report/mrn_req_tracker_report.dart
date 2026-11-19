@@ -56,8 +56,8 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
       reportsController.selectedCompanyId.value = 0;
       reportsController.Subheadername.text = "--ALL--";
       reportsController.materialDropdowntId.value = 0;
-      reportsController.mrnTracker_Type_Controller.text = "Direct Details";
-      reportsController.mrn_Track_type_DPR.value = "D";
+      reportsController.mrnTracker_Type_Controller.text = "Abstract Details";
+      reportsController.mrn_Track_type_DPR.value = "A";
     });
     super.initState();
   }
@@ -329,7 +329,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                           prefixIcon: Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 8),
-                              child: ConstIcons.materialName
+                              child: ConstIcons.types
 
                           ),
                         ),
@@ -432,8 +432,11 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
 
 
                 SizedBox(height: BaseUtitiles.getheightofPercentage(context, 2)),
-
-                ListDetails(),
+                if (reportsController.mrn_Track_type_DPR.value == "D") ...[
+                  ListDetails(),
+                ] else ...[
+                  AbstractListDetails(),
+                ],
 
               ],
             ),
@@ -448,6 +451,214 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
     print(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
   }
 
+  Widget AbstractListDetails() {
+    return Container(
+      height: BaseUtitiles.getheightofPercentage(context, 38),
+      width: BaseUtitiles.getWidthtofPercentage(context, 100),
+      child: ListView(
+        padding: EdgeInsets.all(10),
+        children: [
+
+          // PROJECT 1
+          _projectCard(
+            "Dq Villa",
+            [
+              {
+                "site": "DQ VILLA1",
+                "requests": [
+                  "REQ/26-27/00003",
+                  "REQ/26-27/00005",
+                ],
+              },
+            ],
+          ),
+
+          // PROJECT 2
+          _projectCard(
+            "Veenus Head Office",
+            [
+              {
+                "site": "VEENUS HEAD OFFICE",
+                "requests": [
+                  "REQ/26-27/00004",
+                ],
+              },
+            ],
+          ),
+
+          // PROJECT 3
+          _projectCard(
+            "Gomathi Mills",
+            [
+              {
+                "site": "Industrial Gomathi Mills",
+                "requests": [
+                  "REQ/26-27/00006",
+                ],
+              },
+            ],
+          ),
+
+          // PROJECT 4
+          _projectCard(
+            "Anusamm Head Office",
+            [
+              {
+                "site": "Anusamm Head Office",
+                "requests": [
+                  "REQ/26-27/00007",
+                ],
+              },
+              {
+                "site": "Mani",
+                "requests": [
+                  "REQ/26-27/00008",
+                ],
+              },
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _projectCard(String projectName, List<Map<String, dynamic>> sites) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      child: Card(
+        elevation: 2,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // PROJECT NAME
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Project Name:",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      projectName,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const Divider(height: 18, thickness: 0.8),
+
+              // SITE DETAILS
+              ...sites.map((site) {
+                final String siteName = site["site"]?.toString() ?? "";
+                final List requests =
+                site["requests"] is List ? site["requests"] as List : [];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // SITE NAME
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Site Name:",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              siteName,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // REQUEST NUMBERS
+                      ...requests.map((request) {
+                        return Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                            bottom: 6,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 9,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.receipt_long_rounded,
+                                size: 16,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  request?.toString() ?? "",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 12,
+                                color: Colors.grey.shade500,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   Widget ListDetails(){
     return Container(
       height:BaseUtitiles.getheightofPercentage(context,38),

@@ -119,7 +119,7 @@ class ApiConstant {
   static String get PUT_PLANNING_CALENDAR_API => BASE_URL_CORE + "api/DashBoard/UpdateMeetingScheduler";
   static String get HRDASHBOARD_PLANNINGCALEN_API => BASE_URL_CORE + "api/DashBoard/GetAllMeetingScheduler";
 
-
+  static String get DATEPICKER_API => BASE_URL_CORE + "api/GenericMaster/GetAllDatePickercount";
 
   static String get PENDINGLISTAPI => BASE_URL_CORE + "api/Menu/GetMobilePendingList";
   static String get REQNOLISTAPI => BASE_URL_CORE + "api/MaterialPurOrdMas/GetReqMasDataByPO";
