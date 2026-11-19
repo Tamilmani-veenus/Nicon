@@ -6,6 +6,7 @@ import '../../../../commonpopup/worktype_alert.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/auto_yrwise_no_controller.dart';
 import '../../../../controller/bottomsheet_Controllers.dart';
+import '../../../../controller/comman_controller.dart';
 import '../../../../controller/logincontroller.dart';
 import '../../../../controller/reports_controller.dart';
 import '../../../../controller/requisitionslip_controller_new.dart';
@@ -30,7 +31,9 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
   LoginController loginController = Get.put(LoginController());
   AutoYearWiseNoController autoYearWiseNoController=Get.put(AutoYearWiseNoController());
   ReportsController reportsController = Get.put(ReportsController());
+  CommanController commonController = Get.put(CommanController());
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
 
   @override
   void initState() {
@@ -112,6 +115,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
         await requisitionSlipController.getStaffLandPLeaveTaken(staffController.selectedstaffId.value,requisitionSlipController.Reqdate.text);
       }
 
+      await commonController.getDateCount();
       if (!mounted) return;
 
       setState(() {});
@@ -495,10 +499,14 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                               initialDate: DateTime.tryParse(
                                   requisitionSlipController.Fromdate.text) ??
                                   DateTime.now(),
-
-                              firstDate: loginController.user.value.userType == "A"
-                                  ? DateTime(2000)
-                                  : DateTime.now().subtract(const Duration(days: 4)),
+                              firstDate: CommonDatePermissionUtils.getFirstDate(
+                                permissions: commonController.datePickerResponse,
+                                fieldName: "LeaveFromDate",
+                                userType: loginController.user.value.userType!,
+                              ),
+                              // firstDate: loginController.user.value.userType == "A"
+                              //     ? DateTime(2000)
+                              //     : DateTime.now().subtract(const Duration(days: 4)),
 
                               lastDate: DateTime(2100),
 
@@ -810,10 +818,14 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                               initialDate: DateTime.tryParse(
                                   requisitionSlipController.Fromdate.text) ??
                                   DateTime.now(),
-
-                              firstDate: loginController.user.value.userType == "A"
-                                  ? DateTime(2000)
-                                  : DateTime.now().subtract(const Duration(days: 4)),
+                              firstDate: CommonDatePermissionUtils.getFirstDate(
+                                permissions: commonController.datePickerResponse,
+                                fieldName: "compensateFromDate",
+                                userType: loginController.user.value.userType!,
+                              ),
+                              // firstDate: loginController.user.value.userType == "A"
+                              //     ? DateTime(2000)
+                              //     : DateTime.now().subtract(const Duration(days: 4)),
 
                               lastDate: DateTime(2100),
 
@@ -1051,9 +1063,14 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                               initialDate: DateTime.tryParse(
                                   requisitionSlipController.Date.text) ??
                                   DateTime.now(),
-                              firstDate: loginController.user.value.userType == "A"
-                                  ? DateTime(2000)
-                                  : DateTime.now().subtract(const Duration(days: 4)),
+                              firstDate: CommonDatePermissionUtils.getFirstDate(
+                                permissions: commonController.datePickerResponse,
+                                fieldName: "onDutyDate",
+                                userType: loginController.user.value.userType!,
+                              ),
+                              // firstDate: loginController.user.value.userType == "A"
+                              //     ? DateTime(2000)
+                              //     : DateTime.now().subtract(const Duration(days: 4)),
                               lastDate: DateTime(2100),
                               onChanged: (date) {
                                 setState(() {
@@ -1342,9 +1359,14 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
                               initialDate: DateTime.tryParse(
                                   requisitionSlipController.Date.text) ??
                                   DateTime.now(),
-                              firstDate: loginController.user.value.userType == "A"
-                                  ? DateTime(2000)
-                                  : DateTime.now().subtract(const Duration(days: 4)),
+                              firstDate: CommonDatePermissionUtils.getFirstDate(
+                                permissions: commonController.datePickerResponse,
+                                fieldName: "permissionDate",
+                                userType: loginController.user.value.userType!,
+                              ),
+                              // firstDate: loginController.user.value.userType == "A"
+                              //     ? DateTime(2000)
+                              //     : DateTime.now().subtract(const Duration(days: 4)),
                               lastDate: DateTime(2100),
                               onChanged: (date) {
                                 setState(() {

@@ -267,10 +267,10 @@ class CommonProvider {
     }
   }
 
-  static Future<DatePickerResponse?> getDateCount() async {
+  static Future<DatePickerResponse?> getDateCount(menuId) async {
     try {
       final response =
-      await ApiManager.getAPICall("${ApiConstant.DATEPICKER_API}");
+      await ApiManager.getAPICall("${ApiConstant.DATEPICKER_API}?MenuId=$menuId");
       print("response...$response");
       return datePickerResponseFromJson(response);
     } catch (error, stackTrace) {

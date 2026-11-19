@@ -105,6 +105,7 @@ class _InwardState extends State<Inward_entry> {
           inward_controller.InwardRemarksText.text = element.remarks == null ? "" : element.remarks.toString();
         });
       }
+      await commanController.getDateCount();
       if (!mounted) return;
 
       setState(() {});
@@ -404,9 +405,14 @@ class _InwardState extends State<Inward_entry> {
                         value: inward_controller.InwardInvoiceDateText.text,
                         controller: inward_controller.InwardInvoiceDateText,
                       initialDate: DateTime.now(),
-                      firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
-                          ? DateTime.now().subtract(const Duration(days: 2))
-                          : DateTime(2000),
+                      firstDate: CommonDatePermissionUtils.getFirstDate(
+                        permissions: commanController.datePickerResponse,
+                        fieldName: "InvoiceDate",
+                        userType: loginController.user.value.userType!,
+                      ),
+                      // firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
+                      //     ? DateTime.now().subtract(const Duration(days: 2))
+                      //     : DateTime(2000),
                       lastDate: DateTime.now(),
                       selectable: true,
                     ),
@@ -457,9 +463,14 @@ class _InwardState extends State<Inward_entry> {
                         value: inward_controller.InwardDCDateText.text,
                         controller: inward_controller.InwardDCDateText,
                       initialDate: DateTime.now(),
-                      firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
-                          ? DateTime.now().subtract(const Duration(days: 2))
-                          : DateTime(2000),
+                      firstDate: CommonDatePermissionUtils.getFirstDate(
+                        permissions: commanController.datePickerResponse,
+                        fieldName: "DcDate",
+                        userType: loginController.user.value.userType!,
+                      ),
+                      // firstDate: AppClient.isNicon && loginController.user.value.userType == "S"
+                      //     ? DateTime.now().subtract(const Duration(days: 2))
+                      //     : DateTime(2000),
                       lastDate: DateTime.now(),
                       selectable: true,
                     ),
