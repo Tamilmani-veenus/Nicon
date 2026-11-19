@@ -30,6 +30,7 @@ import 'dailywrk_done_dprnew_controller.dart';
 import 'expensencecontroller.dart';
 import 'fromproject_ccontroller.dart';
 import 'fromsite_controller.dart';
+import 'logincontroller.dart';
 import 'man_power_controller.dart';
 import 'material_transreq_controller.dart';
 import 'mrn_request_indent_controller.dart';
@@ -86,6 +87,7 @@ class BottomsheetControllers {
   ManPowerController manPowerController=Get.put(ManPowerController());
   MRN_Request_Controller mrn_request_controller =
   Get.put(MRN_Request_Controller());
+  LoginController loginController = Get.put(LoginController());
 
   final searchcontroller = TextEditingController();
   var list;
@@ -1430,7 +1432,7 @@ class BottomsheetControllers {
     );
   }
 
-  SupplierName(context, list) {
+  SupplierName(context, list,{String? type}) {
     searchcontroller.text = "";
     showModalBottomSheet(
       context: context,
@@ -1525,10 +1527,17 @@ class BottomsheetControllers {
                           ),
                         ),
                         onTap: () {
+                          if(type != "Repair Consumption"){
                           supplierController.Suppliername.text =
                               list[index].supplierName.toString();
                           supplierController.selectedsuppliertId.value =
                               list[index].supplierId;
+                          }
+                          else{
+                            subcontractorController.supplierName.text = list[index].supplierName.toString();
+                            subcontractorController.selectedSupplierId.value =
+                                list[index].id;
+                          }
                           searchcontroller.text = "";
                           Navigator.pop(context);
                         },
@@ -2531,7 +2540,7 @@ class BottomsheetControllers {
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
-                            onTap: () {
+                            onTap: () async{
                               staffController.selectedstaffId.value =
                                   list[index].id;
                               staffController.Staffname.text =
@@ -2539,6 +2548,12 @@ class BottomsheetControllers {
                                   ? list[index].employeeName.toString()
                                   : list[index].staffName.toString();
                               searchcontroller.text = "";
+                              if(type == "Staff l&p slip") {
+                                await requisitionSlipController
+                                    .getStaffLandPLeaveTaken(
+                                    staffController.selectedstaffId.value,
+                                    requisitionSlipController.Reqdate.text);
+                              }
                               Navigator.pop(context);
                             },
                           ),

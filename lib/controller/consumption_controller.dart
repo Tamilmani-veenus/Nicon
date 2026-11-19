@@ -416,21 +416,40 @@ class Consumption_Controller extends GetxController {
   }
   // ---------Edit Call API----------
 
-  Future Consum_entrylist_editSaveDetTable() async {
+
+
+  Future Consum_entrylist_editSaveDetTable({type,list}) async {
     consumItemListTableList.clear();
-    Consum_EditListApiValue.forEach((element) {
-      element.materialExpensesLink?.forEach((val) {
-        conumptionItemListTableModel = new ConsumptionItemlist();
-        conumptionItemListTableModel.materialid = val.materialId!;
-        conumptionItemListTableModel.reqDetId = val.id!;
-        conumptionItemListTableModel.material = val.materialName!;
-        conumptionItemListTableModel.scale = val.unit!;
-        conumptionItemListTableModel.scaleId = val.scaleId!;
-        conumptionItemListTableModel.Stockqty = val.stockQty!;
-        conumptionItemListTableModel.Usageqty = val.qty;
-        consumItemListTableList.add(conumptionItemListTableModel);
+    if(type == "Repair Consumption"){
+      list.forEach((element) {
+        element.repairDetLink?.forEach((val) {
+          conumptionItemListTableModel = new ConsumptionItemlist();
+          conumptionItemListTableModel.materialid = val.materialId!;
+          conumptionItemListTableModel.reqDetId = val.id!;
+          conumptionItemListTableModel.material = val.materialName!;
+          conumptionItemListTableModel.scale = val.scaleName!;
+          conumptionItemListTableModel.scaleId = val.scaleId!;
+          conumptionItemListTableModel.Stockqty = val.stockQty!;
+          conumptionItemListTableModel.Usageqty = val.qty;
+          consumItemListTableList.add(conumptionItemListTableModel);
+        });
       });
+    }
+    else{
+      Consum_EditListApiValue.forEach((element) {
+        element.materialExpensesLink?.forEach((val) {
+          conumptionItemListTableModel = new ConsumptionItemlist();
+          conumptionItemListTableModel.materialid = val.materialId!;
+          conumptionItemListTableModel.reqDetId = val.id!;
+          conumptionItemListTableModel.material = val.materialName!;
+          conumptionItemListTableModel.scale = val.unit!;
+          conumptionItemListTableModel.scaleId = val.scaleId!;
+          conumptionItemListTableModel.Stockqty = val.stockQty!;
+          conumptionItemListTableModel.Usageqty = val.qty;
+          consumItemListTableList.add(conumptionItemListTableModel);
+        });
     });
+    }
     var savedatas = await consumptionItemlistService.ConsumItemlist_table_Save(
         consumItemListTableList);
     return savedatas;

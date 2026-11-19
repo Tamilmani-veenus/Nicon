@@ -610,29 +610,53 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                     ),
                                                                     InkWell(
                                                                       borderRadius: BorderRadius.circular(20),
-                                                                      onTap: () async{
+                                                                      onTap: nmrWklyController.NmrEtyList.value[index].status
+                                                                          .toString() == "Approved"
+                                                                          ? null
+                                                                          : () async {
                                                                         await download(
                                                                           nmrWklyController.NmrEtyList.value[index].id,
                                                                         );
                                                                       },
                                                                       child: Container(
-                                                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                          horizontal: 12,
+                                                                          vertical: 4,
+                                                                        ),
                                                                         decoration: BoxDecoration(
-                                                                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                                                          color: nmrWklyController.NmrEtyList.value[index].status
+                                                                              .toString() == "Approved"
+                                                                              ? Colors.grey.shade100
+                                                                              : Theme.of(context).primaryColor.withOpacity(0.1),
                                                                           borderRadius: BorderRadius.circular(10),
-                                                                          border: Border.all(color: Theme.of(context).primaryColor),
+                                                                          border: Border.all(
+                                                                            color: nmrWklyController.NmrEtyList.value[index].status
+                                                                                .toString() == "Approved"
+                                                                                ? Colors.grey.shade400
+                                                                                : Theme.of(context).primaryColor,
+                                                                          ),
                                                                         ),
                                                                         child: Row(
                                                                           mainAxisSize: MainAxisSize.min,
                                                                           children: [
-                                                                            Icon(Icons.print_outlined, size: 18, color: Theme.of(context).primaryColor),
+                                                                            Icon(
+                                                                              Icons.print_outlined,
+                                                                              size: 18,
+                                                                              color: nmrWklyController.NmrEtyList.value[index].status
+                                                                                  .toString() == "Approved"
+                                                                                  ? Colors.grey
+                                                                                  : Theme.of(context).primaryColor,
+                                                                            ),
                                                                             const SizedBox(width: 4),
                                                                             Text(
                                                                               "Print",
                                                                               style: TextStyle(
                                                                                 fontSize: 13,
                                                                                 fontWeight: FontWeight.w600,
-                                                                                color: Theme.of(context).primaryColor,
+                                                                                color: nmrWklyController.NmrEtyList.value[index].status
+                                                                                    .toString() == "Approved"
+                                                                                    ? Colors.grey
+                                                                                    : Theme.of(context).primaryColor,
                                                                               ),
                                                                             ),
                                                                           ],
