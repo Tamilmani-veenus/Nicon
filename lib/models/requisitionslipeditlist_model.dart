@@ -65,6 +65,7 @@ class Result {
   String? hrRemarks;
   String? leaveType;
   bool? isHalfDay;
+  String? halfDaySession;
 
   Result({
     this.id,
@@ -99,6 +100,7 @@ class Result {
     this.hrRemarks,
     this.leaveType,
     this.isHalfDay,
+    this.halfDaySession
   });
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -134,6 +136,7 @@ class Result {
     hrRemarks: json["hrRemarks"],
     leaveType: json["leaveType"],
     isHalfDay: json["isHalfDay"],
+    halfDaySession: json["halfDaySession"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -169,5 +172,6 @@ class Result {
     "hrRemarks": hrRemarks,
     "leaveType": leaveType,
     "isHalfDay": isHalfDay,
+    "halfDaySession": halfDaySession
   };
 }

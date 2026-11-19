@@ -10,7 +10,8 @@ import '../../daily_entries/daily_wrk_done_dpr/type_subcont_alert.dart';
 
 
 class MaterialReturn_ItemList extends StatefulWidget {
-  const MaterialReturn_ItemList({Key? key}) : super(key: key);
+  final String heading;
+  const MaterialReturn_ItemList({Key? key,required this.heading}) : super(key: key);
 
   @override
   State<MaterialReturn_ItemList> createState() => _MaterialReturn_ItemListState();
@@ -103,8 +104,8 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Material Return",
+                      Text(
+                        widget.heading,
                         style: TextStyle(fontSize: RequestConstant.Heading_Font_SIZE, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
@@ -237,143 +238,131 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
 
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              matreturnController.grnMaterialReadList[index].transNo,
-                              style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 25,
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  matreturnController.grnMaterialReadList[index].materialName,
-                                  style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                                  matreturnController.grnMaterialReadList[index].transNo,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Expanded(
-                                flex: 8,
-                                child: Text("",
-                                  style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-
-                              Visibility(
-                                visible: true,
-                                child: Expanded(
-                                  flex: 3,
-                                  child: SizedBox(
-                                    height: BaseUtitiles.getheightofPercentage(context, 2),
-                                    width: BaseUtitiles.getWidthtofPercentage(context, 8),
-                                    child: InkWell(
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              AlertDialog(
-                                                title:
-                                                const Text(
-                                                  RequestConstant.DO_YOU_WANT_DELETE,
-                                                  style:
-                                                  TextStyle(color: Colors.black),
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        RequestConstant.DO_YOU_WANT_DELETE,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      actions: <Widget>[
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 20, right: 20),
+                                          child: IntrinsicHeight(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text("Cancel",
+                                                          style: TextStyle(
+                                                              color: Colors.grey,
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize:
+                                                              RequestConstant
+                                                                  .Lable_Font_SIZE))),
                                                 ),
-                                                actions: <Widget>[
-                                                  Container(
-                                                    margin: const EdgeInsets.only(left: 20, right: 20),
-                                                    child: IntrinsicHeight(
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Expanded(
-                                                            child: TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(context);
-                                                              },
-                                                              child: const Text(
-                                                                "Cancel",
-                                                                style: TextStyle(
-                                                                  color: Colors.grey,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontSize: RequestConstant.Lable_Font_SIZE,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          VerticalDivider(
-                                                            color: Colors.grey.shade400,
-                                                            width: 5,
-                                                            thickness: 2,
-                                                            indent: 15,
-                                                            endIndent: 15,
-                                                          ),
-                                                          Expanded(
-                                                            child: TextButton(
-                                                                onPressed: () async{
-                                                                  await matreturnController.deleteParticularList(matreturnController.grnMaterialReadList[index]);
-                                                                  await matreturnController.getGrnMaterialTablesDatas();
-                                                                  Navigator.pop(context);
-                                                                },
-                                                                child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-
-                                        );
-                                      },
-                                      child: Image.asset('assets/cancle.png'),
+                                                VerticalDivider(
+                                                  color: Colors.grey.shade400,
+                                                  width: 5,
+                                                  thickness: 2,
+                                                  indent: 15,
+                                                  endIndent:
+                                                  15, //Spacing at the bottom of divider.
+                                                ),
+                                                Expanded(
+                                                  child: TextButton(
+                                                      onPressed: () async {
+                                                        await matreturnController.deleteParticularList(matreturnController.grnMaterialReadList[index]);
+                                                        await matreturnController.getGrnMaterialTablesDatas();
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text("Delete",
+                                                          style: TextStyle(
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize:
+                                                              RequestConstant
+                                                                  .Lable_Font_SIZE))),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  );
+                                },
+                                child: Container(
+                                    margin:
+                                    const EdgeInsets.only(right: 5, top: 5),
+                                    child: ConstIcons.cancle))
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 5,
+                                  left: 10,
+                                  right: 25,
+                                ),
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: matreturnController.grnMaterialReadList[index].materialName,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                        ' (${matreturnController.grnMaterialReadList[index].scale})',
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 10, left: 5, right: 5),
+                          margin: const EdgeInsets.only(top: 10, left: 10, right: 5,bottom: 5),
                           child: Row(
                             children: <Widget>[
-                              const Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Unit",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 11),
-                                    height: BaseUtitiles.getheightofPercentage(context, 4),
-                                    child: TextFormField(
-                                      readOnly: true,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(color: Colors.black),
-                                        controller: TextEditingController(text: matreturnController.grnMaterialReadList[index].scale),
-                                        cursorColor: Colors.black,
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                                              borderRadius: const BorderRadius.all(Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                                              borderRadius: const BorderRadius.all(Radius.circular(10))),
-                                        ),
-                                    ),
-                                  )),
                               const Expanded(
                                 flex: 3,
                                 child: Text(
@@ -403,26 +392,19 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                                             borderRadius: const BorderRadius.all(Radius.circular(10))),
                                       ),
                                     ),),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min, // 👈 Makes the row only as wide as its children
-                              children: <Widget>[
-                                const Text(
+                              ),
+                              SizedBox(width: 8,),
+                              const Expanded(
+                                flex: 3,
+                                child: Text(
                                   "Return Qty",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
+                                  style: TextStyle(color: Colors.black),
                                 ),
-                                const SizedBox(width: 12), // spacing between label and field
-                                SizedBox(
-                                  width: 150, // set your preferred width
+                              ),
+                              Expanded(
+                                flex: 4,
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 8),
                                   height: BaseUtitiles.getheightofPercentage(context, 4),
                                   child: TextField(
                                     textAlign: TextAlign.center,
@@ -452,10 +434,9 @@ class _MaterialReturn_ItemListState extends State<MaterialReturn_ItemList> {
                                         matreturnController.ReturnQtyController[index].text = "";
                                       }
                                     },
-                                  ),
-                                ),
-                              ],
-                            ),
+                                  ),),
+                              )
+                            ],
                           ),
                         ),
 
