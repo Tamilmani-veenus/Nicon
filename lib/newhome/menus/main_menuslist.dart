@@ -194,6 +194,10 @@ class _MainManusListState extends State<MainManusList> {
       case "Machinery Indent":
         return Icons.precision_manufacturing;
 
+        // Repair
+      case "Repair Consumption":
+        return Icons.build_circle_outlined;
+
       default:
         return Icons.apps_rounded;
     }

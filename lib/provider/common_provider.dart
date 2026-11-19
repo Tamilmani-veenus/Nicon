@@ -17,6 +17,7 @@ import '../models/sitedropdownresponse_model.dart';
 import '../models/staffname_responsemodel.dart';
 import '../models/subcont_entrylist_rights_model.dart';
 import '../models/subcontract_dropdown_model.dart';
+import '../models/supplierName_model.dart';
 import '../models/workorderno_dropdown_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
@@ -184,6 +185,18 @@ class CommonProvider {
       await ApiManager.getAPICall(ApiConstant.GETCOMPANYDROPDOWNLIST);
       print("response...${response}");
       return companyDropdownListResponseFromJson(response);
+    } catch (error) {
+      print("Error == $error");
+      return null;
+    }
+  }
+
+  static Future<SupplierNameModel?> getSupplierName() async {
+    try {
+      final response =
+      await ApiManager.getAPICall(ApiConstant.GETSUPPLIERLIST);
+      print("response...${response}");
+      return supplierNameModelFromJson(response);
     } catch (error) {
       print("Error == $error");
       return null;
@@ -437,6 +450,10 @@ class CommonProvider {
       else if (Url == "MATERIAL RETURN") {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?fieldName=ReturnNo&tableName=MaterialReturnMas&formName=MaterialReturn");
+      }
+      else if (Url == "REPAIR CONSUMPTION") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=RepairNo&tableName=RepairMas&formName=Repair");
       }
       final data = json.decode(response);
       return data;

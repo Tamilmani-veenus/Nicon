@@ -10,7 +10,9 @@ import 'nmrweeklybill_controller.dart';
 
 class SubcontractorController extends GetxController {
 
-  final Subcontractorname=new TextEditingController();
+  final Subcontractorname = new TextEditingController();
+  final supplierName = new TextEditingController();
+
   final WorkOrderNo=new TextEditingController();
   final InvoiceNo=new TextEditingController();
   RxList getdropDownvalue = [].obs;
@@ -19,6 +21,8 @@ class SubcontractorController extends GetxController {
   RxList SubcontDropdownName = [].obs;
   RxList mainlist=[].obs;
 
+  RxList getSupplierdropDownvalue = [].obs;
+  RxInt selectedSupplierId = 0.obs;
 
   RxInt selectedSubcontId = 0.obs;
   RxString selectedSubconttName = "".obs;
@@ -106,6 +110,21 @@ class SubcontractorController extends GetxController {
       });
     }
     Subcontractorname.text=selectedSubconttName.value;
+  }
+
+  Future getSupplierList() async {
+    getSupplierdropDownvalue.value.clear();
+    final value = await CommonProvider.getSupplierName();
+    if (value != null) {
+      if(value.success == true){
+        getSupplierdropDownvalue.value = value.result!;
+      }else {
+        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+      }
+    }
+    else{
+      BaseUtitiles.showToast('Something went wrong..');
+    }
   }
 
   Future getWorkOrderNoList(type, int pid, int sid, int subid, {String? fromDate, String? toDate}) async {

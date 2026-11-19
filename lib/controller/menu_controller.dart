@@ -42,6 +42,7 @@ import '../home/menu/materials/mrn_request(preIndent)/mrnreq_preindent_list.dart
 import '../home/menu/materials/transfer_between_projects/transferbetween_projects_list.dart';
 import '../home/menu/materials/transfer_between_sites/transferbetween_sites_list.dart';
 import '../home/menu/payroll/requisitionslip/list_requisitionslip.dart';
+import '../home/menu/repair/repair_Consumption_Entrylist.dart';
 import '../models/home_menulistres_model.dart';
 import '../models/report_list_model.dart';
 import '../provider/menu_provider.dart';
@@ -335,6 +336,10 @@ class Menu_Controller extends GetxController {
 
       case "Machinery Indent":
         await _go(context, MachineryIndentEntryList(heading: menuName));
+        break;
+
+      case "Repair Consumption":
+        await _go(context, RepairConsumptionEntryList(heading: menuName));
         break;
 
     // ==========================================================

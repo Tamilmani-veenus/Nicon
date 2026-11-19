@@ -71,7 +71,10 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
         requisitionSlipController.ReqAutoyearwise.text = autoYearWiseNoController.RequisitionSlip_autoYrsWise.value;
         requisitionSlipController.type.value = "L";
         requisitionSlipController.isHalfDay.value=false;
-        await requisitionSlipController.getStaffLandPLeaveTaken(int.tryParse(loginController.EmpId()),requisitionSlipController.Reqdate.text);
+        if(loginController.user.value.userType == "A"){
+        }else{
+          await requisitionSlipController.getStaffLandPLeaveTaken(int.tryParse(loginController.EmpId()),requisitionSlipController.Reqdate.text);
+        }
       }
 
       else if(requisitionSlipController.saveButton.value==RequestConstant.RESUBMIT){
@@ -247,7 +250,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
 
                               } else if(loginController.user.value.userType == "A"){
                                 await staffController.get_staffDropdowntList(context, "");
-                                await bottomsheetControllers.StaffName(context, staffController.getStaffDropdownvalue.value);
+                                await bottomsheetControllers.StaffName(context, staffController.getStaffDropdownvalue.value,type: "Staff l&p slip");
                                 }
                                 FocusScope.of(context).unfocus();
                             },
