@@ -220,7 +220,9 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                           value: dailyEntriesController.AttendDateController.text,
                           controller: dailyEntriesController.AttendDateController,
                           initialDate: DateTime.now(),
-                          firstDate: CommonDatePermissionUtils.getFirstDate(
+                          firstDate: AppClient.isKc ? loginController.user.value.userType == "S"
+                              ? DateTime.now().subtract(const Duration(days: 8))
+                              : DateTime(2000) : CommonDatePermissionUtils.getFirstDate(
                             permissions: commanController.datePickerResponse,
                             fieldName: "SubContractor Attendance",
                             userType: loginController.user.value.userType!,

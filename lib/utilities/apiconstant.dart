@@ -91,6 +91,8 @@ class AppClient {
   static bool get isRKCPL => packageName == "com.veenus.rkcpl";
   static bool get isPrahkurti => packageName == "com.veenus.prahkurti";
   static bool get isNicon => packageName == "com.veenus.nicon";
+  static bool get isKc => packageName == "com.veenus.karthickcont";
+
 }
 
 class ApiConstant {
@@ -133,6 +135,7 @@ class ApiConstant {
   static String get GETPROJECTDROPDOWNLIST => BASE_URL_CORE + "api/GenericMaster/GetProjectBasedOnUserAllocation";
   static String get GETPROJECTREPORTLIST => BASE_URL_CORE + "api/GenericMaster/GetCompanyWiseProject";
   static String get GETSUPPLIERLIST => BASE_URL_CORE + "api/GenericMaster/GetSupplier";
+  static String get GET_CONSUMPTION_NO_LIST => BASE_URL_CORE + "api/RepairWorkOrder/LoadRepairConsumptionNo";
 
   static String get GETFROMPROAGAINSTMRNLIST => BASE_URL_CORE + "api/MaterialTransfer/FromPrject";
   static String get GETFROMSITELIST => BASE_URL_CORE + "api/StoreTransferPending/GetSiteDRP";
@@ -202,6 +205,7 @@ class ApiConstant {
   static String get GET_MANPOWER_ENTRY_LIST => BASE_URL_CORE + "api/ManPower/GetAllManPower";
   static String get GET_MANPOWER_LEVEL3_LIST => BASE_URL_CORE + "api/ManPower/GetLevel3ItemManPower";
   static String get GETMAC_INDENT_ENTRY_LIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryMaterialMRN";
+  static String get GET_REPAIR_WORKORDER_LIST => BASE_URL_CORE + "api/RepairWorkOrder/GetAllRepairWorkOrders";
 
   static String get GET_WORKORDDIR_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderMasData";
   static String get GET_WORKORDBOQ_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";
@@ -503,6 +507,7 @@ class ApiConstant {
   static String get DELETE_WORKORDERDIRECT_API => BASE_URL_CORE + "api/SubcontractWorkOrderMas/DeleteWorkOrder";
   static String get DELETE_WORKORDER_BOQ_API => BASE_URL_CORE + "api/SubcontractWorkOrderMas/DeleteWorkOrder";
 
+  static String get DELETE_REPAIR_WORKORDER_API => BASE_URL_CORE + "api/RepairWorkOrder/DeleteWorkOrderRepair";
 
   static String get DELETE_BOQBILL_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/DeleteSubContractorWorkQty";
   static String get DELETE_MANPOWERLIST_API => BASE_URL_CORE + "api/ManPower/DeleteManPower";

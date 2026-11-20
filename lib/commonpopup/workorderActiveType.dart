@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nicon/controller/workOrderBoq_Controller.dart';
+import '../controller/repairWorkOrder_controller.dart';
 import '../controller/workorderDirect_Controller.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
@@ -99,6 +100,7 @@ class WorkOrderStsType_Alert extends StatefulWidget {
 class _WorkOrderStsType_AlertState extends State<WorkOrderStsType_Alert> {
 
   WorkOrderDirectController workOrderDirectController=Get.put(WorkOrderDirectController());
+  RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
 
   List<String> list = ["Pending","Completed"];
 
@@ -131,10 +133,14 @@ class _WorkOrderStsType_AlertState extends State<WorkOrderStsType_Alert> {
                           if(index==0){
                             workOrderDirectController.WorkStatusTypeText.text="Pending";
                             workOrderDirectController.workOrdStsTypeId.value="P";
+                            repairWorkOrderController.WorkStatusTypeText.text = "Pending";
+                            repairWorkOrderController.workOrdStsTypeId.value="P";
                           }
                           else{
                             workOrderDirectController.WorkStatusTypeText.text="Completed";
                             workOrderDirectController.workOrdStsTypeId.value="C";
+                            repairWorkOrderController.WorkStatusTypeText.text="Completed";
+                            repairWorkOrderController.workOrdStsTypeId.value="C";
                           }
                           Navigator.pop(context);
                         },
