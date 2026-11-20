@@ -57,10 +57,10 @@ class MachineryIndentProvider {
     }
   }
 
-  static Future<bool> machineryListDeleteAPI(int reqId) async {
+  static Future<bool> machineryListDeleteAPI(int reqId,type) async {
     try {
       final response = await ApiManager.deleteAPICall(
-          "${ApiConstant.DELETE_MACHINERY_ENTRYLIST_API}/$reqId");
+          type=="macDPR"?"${ApiConstant.DELETE_MACHINERY_DPRLIST_API}?id=$reqId": "${ApiConstant.DELETE_MACHINERY_ENTRYLIST_API}/$reqId");
 
       final Map<String, dynamic> decoded = jsonDecode(response);
 
@@ -81,5 +81,19 @@ class MachineryIndentProvider {
       return false;
     }
   }
+}
 
+class MachineryDPRProvider {
+
+  static Future getMachineryDPREntryList(String frdate,
+      String todate) async {
+    try {
+      var value = await ApiManager.getAPICall("${ApiConstant
+          .GETMAC_DPR_ENTRY_LIST}?Frdate=$frdate&Todate=$todate");
+      return jsonDecode(value);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
 }

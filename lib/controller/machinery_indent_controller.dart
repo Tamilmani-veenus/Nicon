@@ -67,7 +67,7 @@ class MachineryIndentController extends GetxController {
   }
 
   Future<bool> machineryEntryListDeleteApi(int reqId) async {
-    return MachineryIndentProvider.machineryListDeleteAPI(reqId);
+    return MachineryIndentProvider.machineryListDeleteAPI(reqId,"indent");
   }
 
   Future DeleteAlert(BuildContext context, int index) async {
@@ -128,7 +128,6 @@ class MachineryIndentController extends GetxController {
       ),
     );
   }
-
 
   Future SaveMachineryIntentScreen(BuildContext context, int id) async {
     getRequestDetList.value.clear();
@@ -269,6 +268,5 @@ class MachineryIndentController extends GetxController {
       }
     });
   }
-
 
 }

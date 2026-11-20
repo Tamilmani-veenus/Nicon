@@ -8,7 +8,7 @@ class ApiConfig {
 
   static const String LIVE_ENDPOINT_2 = "http://122.173.84.247:8080/";
 
-  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "VishaalAPI/";
+  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "ERPNEW/";
 
   static String APIURL = "";
   static String WebURL = "";
@@ -20,14 +20,14 @@ class ApiConfig {
 
     if (liveEndpoint != null) {
 
-      APIURL = "${liveEndpoint}VishaalAPI/";
+      APIURL = "${liveEndpoint}ERPNEW/";
       WebURL = "${liveEndpoint}erpnewUi2/";
 
     } else {
 
       APIURL = DEFAULT_BASE_URL;
       WebURL = DEFAULT_BASE_URL.replaceAll(
-        "VishaalAPI/",
+        "ERPNEW/",
         "erpnewUi2/",
       );
     }
@@ -202,6 +202,7 @@ class ApiConstant {
   static String get GET_MANPOWER_ENTRY_LIST => BASE_URL_CORE + "api/ManPower/GetAllManPower";
   static String get GET_MANPOWER_LEVEL3_LIST => BASE_URL_CORE + "api/ManPower/GetLevel3ItemManPower";
   static String get GETMAC_INDENT_ENTRY_LIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryMaterialMRN";
+  static String get GETMAC_DPR_ENTRY_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetAllMachineryDailyWorkMas";
 
   static String get GET_WORKORDDIR_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderMasData";
   static String get GET_WORKORDBOQ_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";
@@ -507,6 +508,7 @@ class ApiConstant {
   static String get DELETE_BOQBILL_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/DeleteSubContractorWorkQty";
   static String get DELETE_MANPOWERLIST_API => BASE_URL_CORE + "api/ManPower/DeleteManPower";
   static String get DELETE_MACHINERY_ENTRYLIST_API => BASE_URL_CORE + "api/Machinery/DeleteMachinery";
+  static String get DELETE_MACHINERY_DPRLIST_API => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/DeleteMachineryDailyWork";
   static String get DELETE_MATERIALRETURN_ENTRYLIST_API => BASE_URL_CORE + "api/MaterialReturn/DeleteMaterialReturn";
   static String get DELETE_REPAIR_CONSUMPTION_API => BASE_URL_CORE + "api/Repair/DeleteRepairDetails";
 

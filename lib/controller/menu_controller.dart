@@ -338,6 +338,11 @@ class Menu_Controller extends GetxController {
         await _go(context, MachineryIndentEntryList(heading: menuName));
         break;
 
+      case "Machinery DPR":
+        await _go(context, MachineryDPREntryList
+          (heading: menuName));
+        break;
+
       case "Repair Consumption":
         await _go(context, RepairConsumptionEntryList(heading: menuName));
         break;
