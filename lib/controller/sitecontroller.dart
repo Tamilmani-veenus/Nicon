@@ -198,10 +198,8 @@ class SiteController extends GetxController {
 
         } else {
 
-          if (value.abstractResult != null &&
-              value.abstractResult!.isNotEmpty) {
-            mrnReqTrackerAbstractListValue.value =
-            value.abstractResult!;
+          if (value.abstractResult != null && value.abstractResult!.isNotEmpty) {
+            mrnReqTrackerAbstractListValue.value = value.abstractResult!;
           } else {
             BaseUtitiles.showToast(value.message ?? "No Data Found");
           }

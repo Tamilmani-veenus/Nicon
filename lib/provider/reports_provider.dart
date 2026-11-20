@@ -181,15 +181,19 @@ class ReportsProvider{
     }
   }
 
-  static Future<MrnReqTrackerListModel?> getMrnReqTrackerRptList(int projectId,int siteId,int materialId,String frdate,String todate,String rptType) async {
+  static Future<MrnReqTrackerListModel?> getMrnReqTrackerRptList(
+      int projectId, int siteId, int materialId,
+      String frdate, String todate, String rptType,
+      ) async {
     try {
-      final response =
-      await ApiManager.getAPICall(ApiConstant.GETREQTRACKERLISTAPI + "?projectId=$projectId&siteId=$siteId&materialId=$materialId&fromDate=$frdate&toDate=$todate&ReportType=$rptType");
-      print("response...${response}");
-      return mrnReqTrackerListModelFromJson(response);
-    } catch (error,e) {
-      print("Error == $error");
-      print("ERROR....${e}");
+      final response = await ApiManager.getAPICall(
+        "${ApiConstant.GETREQTRACKERLISTAPI}"
+            "?projectId=$projectId&siteId=$siteId&materialId=$materialId"
+            "&fromDate=$frdate&toDate=$todate&ReportType=$rptType",
+      );
+      return mrnReqTrackerListModelFromJson(response, rptType: rptType);
+    } catch (error, stack) {
+      print("Error == $error\n$stack");
       return null;
     }
   }
