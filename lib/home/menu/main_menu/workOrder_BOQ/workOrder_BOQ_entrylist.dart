@@ -679,24 +679,26 @@ class _WorkOrderBoqEntrylistState extends State<WorkOrderBoqEntrylist> {
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              10),
-                                                                  child: Text(
-                                                                    workOrderBoqController
-                                                                        .workOrderBoq_entryList
-                                                                        .value[
-                                                                            index]
-                                                                        .workOrderNo
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Theme.of(context)
-                                                                            .primaryColor),
+                                                                Expanded(
+                                                                  child: Container(
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            right:
+                                                                                10),
+                                                                    child: Text(
+                                                                      workOrderBoqController
+                                                                          .workOrderBoq_entryList
+                                                                          .value[
+                                                                              index]
+                                                                          .workOrderNo
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .bold,
+                                                                          color: Theme.of(context)
+                                                                              .primaryColor),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 InkWell(
