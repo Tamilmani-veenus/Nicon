@@ -3,6 +3,7 @@ import 'package:nicon/controller/requisitionslip_controller_new.dart';
 import 'package:nicon/controller/site_location_controller.dart';
 import 'package:nicon/home/menu/main_menu/workOrder_BOQ/workOrder_BOQ_entrylist.dart';
 import 'package:nicon/home/menu/materials/material_return/material_return_entryList.dart';
+import 'package:nicon/home/menu/repair/repairWorkOrder/repair_WorkOrder_EntryList.dart';
 import '../controller/billgenerationdirect_controller.dart';
 import '../controller/cashbook_site_controller.dart';
 import '../controller/dailyentries_controller.dart';
@@ -42,7 +43,7 @@ import '../home/menu/materials/mrn_request(preIndent)/mrnreq_preindent_list.dart
 import '../home/menu/materials/transfer_between_projects/transferbetween_projects_list.dart';
 import '../home/menu/materials/transfer_between_sites/transferbetween_sites_list.dart';
 import '../home/menu/payroll/requisitionslip/list_requisitionslip.dart';
-import '../home/menu/repair/repair_Consumption_Entrylist.dart';
+import '../home/menu/repair/repairConsumption/repair_Consumption_Entrylist.dart';
 import '../models/home_menulistres_model.dart';
 import '../models/report_list_model.dart';
 import '../provider/menu_provider.dart';
@@ -345,6 +346,10 @@ class Menu_Controller extends GetxController {
 
       case "Repair Consumption":
         await _go(context, RepairConsumptionEntryList(heading: menuName));
+        break;
+
+      case "Repair Work Order":
+        await _go(context, RepairWorkOrderEntryList(heading: menuName));
         break;
 
     // ==========================================================

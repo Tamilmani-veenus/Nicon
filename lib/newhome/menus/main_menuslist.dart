@@ -201,6 +201,9 @@ class _MainManusListState extends State<MainManusList> {
       case "Repair Consumption":
         return Icons.build_circle_outlined;
 
+      case "Repair Work Order":
+        return Icons.home_repair_service;
+
       default:
         return Icons.apps_rounded;
     }

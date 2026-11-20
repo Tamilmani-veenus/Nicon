@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/consumption_controller.dart';
 import 'package:nicon/controller/repair_Consumption_controller.dart';
-import 'package:nicon/home/menu/repair/repair_Consumption_EntryScreen.dart';
+import 'package:nicon/home/menu/repair/repairConsumption/repair_Consumption_EntryScreen.dart';
 
-import '../../../app_theme/app_colors.dart';
-import '../../../constants/ui_constant/icons_const.dart';
-import '../../../controller/comman_controller.dart';
-import '../../../utilities/baseutitiles.dart';
-import '../../../utilities/requestconstant.dart';
+import '../../../../app_theme/app_colors.dart';
+import '../../../../constants/ui_constant/icons_const.dart';
+import '../../../../controller/comman_controller.dart';
+import '../../../../utilities/baseutitiles.dart';
+import '../../../../utilities/requestconstant.dart';
 
 class RepairConsumptionEntryList extends StatefulWidget {
   final String heading;

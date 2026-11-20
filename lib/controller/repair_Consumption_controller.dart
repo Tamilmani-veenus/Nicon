@@ -5,7 +5,7 @@ import 'package:nicon/controller/consumption_controller.dart';
 import 'package:nicon/controller/projectcontroller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
 import 'package:nicon/controller/subcontcontroller.dart';
-import 'package:nicon/home/menu/repair/repair_Consumption_EntryScreen.dart';
+import 'package:nicon/home/menu/repair/repairConsumption/repair_Consumption_EntryScreen.dart';
 import 'package:nicon/provider/repair_consumption_provider.dart';
 
 import '../models/repairConsumEditRes.dart';

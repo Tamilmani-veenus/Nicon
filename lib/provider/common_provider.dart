@@ -469,6 +469,10 @@ class CommonProvider {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=RepairNo&tableName=RepairMas&formName=Repair");
       }
+      else if (Url == "REPAIR WORK ORDER") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=WorkOrderNo&tableName=RepairWorkOrderMas&formName=RepairWorkOrderMas");
+      }
       final data = json.decode(response);
       return data;
     } catch (error) {

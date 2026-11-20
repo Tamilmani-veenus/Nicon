@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/workorderDirect_Controller.dart';
 import 'package:nicon/home/menu/main_menu/workOrder_Direct/workOrder_Direct_EntryScreen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
+import '../../../../controller/logincontroller.dart';
 import '../../../../controller/mrn_request_indent_controller.dart';
+import '../../../../utilities/apiconstant.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
 
@@ -23,6 +26,7 @@ class _WorkOrderDirect_EntryListState extends State<WorkOrderDirect_EntryList> {
   TextEditingController editingController = TextEditingController();
   WorkOrderDirectController workOrderDirectController=Get.put(WorkOrderDirectController());
   MRN_Request_Controller mrn_request_controller = Get.put(MRN_Request_Controller());
+  LoginController loginController = Get.put(LoginController());
 
 
   @override
@@ -600,6 +604,46 @@ class _WorkOrderDirect_EntryListState extends State<WorkOrderDirect_EntryList> {
                                                                             .primaryColor),
                                                                   ),
                                                                 ),
+                                                                InkWell(
+                                                                  borderRadius: BorderRadius.circular(20),
+                                                                  onTap: () async {
+                                                                    await download(
+                                                                      workOrderDirectController.workOrderDir_entryList.value[index].id,
+                                                                    );
+                                                                  },
+                                                                  child: Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      horizontal: 12,
+                                                                      vertical: 4,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color:Theme.of(context).primaryColor.withOpacity(0.1),
+                                                                      borderRadius: BorderRadius.circular(10),
+                                                                      border: Border.all(
+                                                                        color: Theme.of(context).primaryColor,
+                                                                      ),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisSize: MainAxisSize.min,
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons.print_outlined,
+                                                                          size: 18,
+                                                                          color:  Theme.of(context).primaryColor,
+                                                                        ),
+                                                                        const SizedBox(width: 4),
+                                                                        Text(
+                                                                          "Print",
+                                                                          style: TextStyle(
+                                                                            fontSize: 13,
+                                                                            fontWeight: FontWeight.w600,
+                                                                            color: Theme.of(context).primaryColor,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
                                                                 IconButton(
                                                                     onPressed: () {
                                                                       Navigator.pop(
@@ -711,5 +755,10 @@ class _WorkOrderDirect_EntryListState extends State<WorkOrderDirect_EntryList> {
         ],
       ),
     );
+  }
+
+  download(int nmrId) {
+    launch("${ApiConfig.WebURL}mobile-workorder-direct-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
+    print("${ApiConfig.WebURL}mobile-workorder-direct-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
   }
 }

@@ -63,6 +63,7 @@ class Result {
   String? verifyName;
   String? approveName;
   String? subContractorName;
+  String? supplierName;
   dynamic? headItemName;
   dynamic? subHeadItemName;
   dynamic? level3ItemName;
@@ -100,6 +101,7 @@ class Result {
     this.verifyName,
     this.approveName,
     this.subContractorName,
+    this.supplierName,
     this.headItemName,
     this.subHeadItemName,
     this.level3ItemName,
@@ -137,6 +139,7 @@ class Result {
     verifyName: json["verifyName"],
     approveName: json["approveName"],
     subContractorName: json["subContractorName"],
+    supplierName: json["supplierName"],
     headItemName: json["headItemName"],
     subHeadItemName: json["subHeadItemName"],
     level3ItemName: json["level3ItemName"],
@@ -174,6 +177,7 @@ class Result {
     "verifyName": verifyName,
     "approveName": approveName,
     "subContractorName": subContractorName,
+    "supplierName": supplierName,
     "headItemName": headItemName,
     "subHeadItemName": subHeadItemName,
     "level3ItemName": level3ItemName,
