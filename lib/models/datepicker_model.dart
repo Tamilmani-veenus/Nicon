@@ -10,25 +10,29 @@ String datePickerResponseToJson(DatePickerResponse data) => json.encode(data.toJ
 
 class DatePickerResponse {
   bool? success;
-  Response? response;
+  List<DatePermission>? response;
+  String? message;
 
   DatePickerResponse({
     this.success,
     this.response,
+    this.message
   });
 
   factory DatePickerResponse.fromJson(Map<String, dynamic> json) => DatePickerResponse(
     success: json["success"],
-    response: json["response"] == null ? null : Response.fromJson(json["response"]),
+    response: json["response"] == null ? [] : List<DatePermission>.from(json["response"]!.map((x) => DatePermission.fromJson(x))),
+    message: json["message"]
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
-    "response": response?.toJson(),
+    "response": response == null ? [] : List<dynamic>.from(response!.map((x) => x.toJson())),
+    "message": message
   };
 }
 
-class Response {
+class DatePermission {
   int? id;
   int? menuId;
   String? screenName;
@@ -37,7 +41,7 @@ class Response {
   int? officeUser;
   int? siteUser;
 
-  Response({
+  DatePermission({
     this.id,
     this.menuId,
     this.screenName,
@@ -47,7 +51,7 @@ class Response {
     this.siteUser,
   });
 
-  factory Response.fromJson(Map<String, dynamic> json) => Response(
+  factory DatePermission.fromJson(Map<String, dynamic> json) => DatePermission(
     id: json["id"],
     menuId: json["menuId"],
     screenName: json["screenName"],

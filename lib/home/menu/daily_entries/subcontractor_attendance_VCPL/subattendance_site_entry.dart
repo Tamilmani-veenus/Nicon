@@ -8,6 +8,7 @@ import '../../../../commonpopup/worktype_alert.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/auto_yrwise_no_controller.dart';
 import '../../../../controller/bottomsheet_Controllers.dart';
+import '../../../../controller/comman_controller.dart';
 import '../../../../controller/companycontroller.dart';
 import '../../../../controller/dailyentries_controller.dart';
 import '../../../../controller/logincontroller.dart';
@@ -46,6 +47,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
   BottomsheetControllers bottomsheetControllers =
       Get.put(BottomsheetControllers());
   LoginController loginController = Get.put(LoginController());
+  CommanController commanController = Get.put(CommanController());
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -109,6 +111,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
         });
         await dailyEntriesController.gettingImage();
       }
+      await commanController.getDateCount();
       if (!mounted) return;
 
       setState(() {});
@@ -217,13 +220,54 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                           value: dailyEntriesController.AttendDateController.text,
                           controller: dailyEntriesController.AttendDateController,
                           initialDate: DateTime.now(),
-                          firstDate: loginController.user.value.userType == "S"
-                              ? DateTime.now().subtract(Duration(days: AppClient.isNicon ? 1 : 2))
-                              : DateTime(2000),
+                          firstDate: CommonDatePermissionUtils.getFirstDate(
+                            permissions: commanController.datePickerResponse,
+                            fieldName: "SubContractor Attendance",
+                            userType: loginController.user.value.userType!,
+                          ),
+                          // firstDate: (() {
+                          //   final permission = commanController.datePickerResponse.isNotEmpty
+                          //       ? commanController.datePickerResponse.first
+                          //       : null;
+                          //
+                          //   final userType = loginController.user.value.userType;
+                          //
+                          //   final permissionValue = userType == "A"
+                          //       ? permission?.adminUser
+                          //       : userType == "O"
+                          //       ? permission?.officeUser
+                          //       : permission?.siteUser;
+                          //
+                          //   return (permissionValue ?? 0) > 0
+                          //       ? DateTime.now().subtract(Duration(days: permissionValue!))
+                          //       : DateTime(1900);
+                          // })(),
+
                           lastDate: DateTime.now(),
+
                           selectable: true,
+
+                          onChanged: (date) {
+                            setState(() {
+                              dailyEntriesController.AttendDateController.text =
+                                  CommonDateUtils.formatApiDate(date);
+                            });
+                          },
                         ),
                       ),
+                      // CommonDateFields(
+                      //   date1: CommonDateFieldConfig(
+                      //     title: "Date",
+                      //     value: dailyEntriesController.AttendDateController.text,
+                      //     controller: dailyEntriesController.AttendDateController,
+                      //     initialDate: DateTime.now(),
+                      //     firstDate: loginController.user.value.userType == "S"
+                      //         ? DateTime.now().subtract(Duration(days: AppClient.isNicon ? 1 : 2))
+                      //         : DateTime(2000),
+                      //     lastDate: DateTime.now(),
+                      //     selectable: true,
+                      //   ),
+                      // ),
                       Container(
                         margin:
                         const EdgeInsets.only(top: 2, left: 10, right: 10),

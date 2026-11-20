@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../models/boqrevised_itemlist_model.dart';
+import '../models/datepicker_model.dart';
 import '../models/labourDashboard_model.dart';
 import '../models/manpowerlevel3_model.dart';
 
@@ -1928,5 +1929,47 @@ class DashboardErrorWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class CommonDatePermissionUtils {
+  static int getDatePermission({
+    required List<DatePermission> permissions,
+    required String fieldName,
+    required String userType,
+  }) {
+    final permission = permissions.firstWhereOrNull(
+          (item) => item.fieldName == fieldName,
+    );
+
+    if (permission == null) return 0;
+
+    switch (userType) {
+      case "A":
+        return permission.adminUser ?? 0;
+
+      case "O":
+        return permission.officeUser ?? 0;
+
+      case "S":
+        return permission.siteUser ?? 0;
+
+      default:
+        return 0;
+    }
+  }
+
+  static DateTime getFirstDate({
+    required List<DatePermission> permissions,
+    required String fieldName,
+    required String userType,
+  }) {
+    final days = getDatePermission(
+      permissions: permissions,
+      fieldName: fieldName,
+      userType: userType,
+    );
+
+    return DateTime.now().subtract(Duration(days: days));
   }
 }
