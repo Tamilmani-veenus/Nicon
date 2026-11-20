@@ -462,7 +462,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5),
           itemCount: projects.length,
           itemBuilder: (context, index) => _projectCard(projects[index]),
         );
@@ -475,7 +475,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
     final List<SiteModel> sites = project.siteName ?? [];
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 0),
       child: Card(
         elevation: 2,
         color: Colors.white,
@@ -521,7 +521,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                 final List<TransferModel> requests = site.transfers ?? [];
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

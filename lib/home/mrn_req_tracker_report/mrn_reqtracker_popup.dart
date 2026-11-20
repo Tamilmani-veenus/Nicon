@@ -120,155 +120,195 @@ class mrnReqTrackerPopup extends StatelessWidget {
             ),
             child: Text("MRN - Request Tracker",
                 style: TextStyle(color: Colors.white))),
+
         Container(
           margin: const EdgeInsets.only(top: 30),
           width: BaseUtitiles.getWidthtofPercentage(context, 80),
-          height:
-          BaseUtitiles.getheightofPercentage(context, 58), // Fixed height
+          height: BaseUtitiles.getheightofPercentage(context, 58),
           child: Align(
             alignment: Alignment.topCenter,
             child: Card(
               elevation: 3,
               color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // Important
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            list.mrnNo.toString(),
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+
+                    // MRN Header
+                    Text(
+                      list.mrnNo.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    // Material Name + Unit
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: list.material.toString(),
+                          ),
+                          TextSpan(
+                            text: " (${list.unit})",
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
+
+                    const SizedBox(height: 14),
+
+                    Divider(
+                      height: 1,
+                      color: Colors.grey.shade200,
                     ),
+
+                    const SizedBox(height: 10),
+
+                    // Tracker Steps
                     Expanded(
                       child: SingleChildScrollView(
-                          child: Column(
-                            children: trackerSteps.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final step = entry.value;
-                              final isLast = index == trackerSteps.length - 1;
-                              final isCancelled = (step["title"] == "PO Made" ||
-                                  step["title"] == "Inward" ||
-                                  list.mrnVerifyStatus != "Y" ||
-                                  list.mrnPreApproveStatus != "Y" ||
-                                  list.mrnApproveStatus != "Y" ||
-                                  list.poVerifyStatus != "Y" ||
-                                  list.poApproveStatus != "Y" ||
-                                  list.quoteVerifyStatus != "Y" ||
-                                  list.quoteApproveStatus != "Y"
-                              ) &&
-                                  step["date"] == "-" &&
-                                  (step["time"] == "-" || step["time"] == "") &&
-                                  (step["by"] == "-" || step["by"] == "");
+                        child: Column(
+                          children: trackerSteps.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final step = entry.value;
+                            final isLast = index == trackerSteps.length - 1;
 
-                              return IntrinsicHeight(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // Timeline
-                                      Column(
-                                        children: [
-                                          Icon(
-                                            isCancelled
-                                                ? Icons.cancel
-                                                : Icons.check_circle,
-                                            color: isCancelled
-                                                ? Colors.red
-                                                : Colors.green,
-                                            size: 22,
+                            final isCancelled = (
+                                step["title"] == "PO Made" ||
+                                    step["title"] == "Inward" ||
+                                    list.mrnVerifyStatus != "Y" ||
+                                    list.mrnPreApproveStatus != "Y" ||
+                                    list.mrnApproveStatus != "Y" ||
+                                    list.poVerifyStatus != "Y" ||
+                                    list.poApproveStatus != "Y" ||
+                                    list.quoteVerifyStatus != "Y" ||
+                                    list.quoteApproveStatus != "Y"
+                            ) &&
+                                step["date"] == "-" &&
+                                (step["time"] == "-" || step["time"] == "") &&
+                                (step["by"] == "-" || step["by"] == "");
+
+                            return IntrinsicHeight(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 6),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Timeline
+                                    Column(
+                                      children: [
+                                        Icon(
+                                          isCancelled
+                                              ? Icons.cancel
+                                              : Icons.check_circle,
+                                          color: isCancelled
+                                              ? Colors.red
+                                              : Colors.green,
+                                          size: 22,
+                                        ),
+                                        if (!isLast)
+                                          Container(
+                                            width: 2,
+                                            height: 45,
+                                            color: Colors.grey.shade300,
                                           ),
-                                          if (!isLast)
-                                            Container(
-                                              width: 2,
-                                              height: 45,
-                                              color: Colors.grey.shade400,
+                                      ],
+                                    ),
+
+                                    const SizedBox(width: 12),
+
+                                    // Content
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              step["title"]!,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
                                             ),
-                                        ],
-                                      ),
 
-                                      const SizedBox(width: 12),
+                                            const SizedBox(height: 5),
 
-                                      // Content
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                step["title"]!,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 5),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Text(
-                                                      "${step["date"] ?? "-"}",
-                                                      style: const TextStyle(
-                                                          color: Colors.black54,
-                                                          fontSize: 13),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Text(
-                                                      "${step["time"] ?? "-"}",
-                                                      style: const TextStyle(
-                                                          color: Colors.black54,
-                                                          fontSize: 13),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              if (step["by"] != null &&
-                                                  step["by"]
-                                                      .toString()
-                                                      .isNotEmpty &&
-                                                  step["by"] != "-")
-                                                Text(
-                                                  "By : ${step["by"]}",
-                                                  style: const TextStyle(
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    "${step["date"] ?? "-"}",
+                                                    style: const TextStyle(
                                                       color: Colors.black54,
-                                                      fontSize: 13),
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
                                                 ),
-                                            ],
-                                          ),
+                                                Expanded(
+                                                  child: Text(
+                                                    "${step["time"] ?? "-"}",
+                                                    style: const TextStyle(
+                                                      color: Colors.black54,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+
+                                            if (step["by"] != null &&
+                                                step["by"]
+                                                    .toString()
+                                                    .isNotEmpty &&
+                                                step["by"] != "-")
+                                              Text(
+                                                "By : ${step["by"]}",
+                                                style: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            }).toList(),
-                          )),
-                    )
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         )
+
       ]),
     );
   }
