@@ -589,6 +589,30 @@ class BaseUtitiles {
     }
   }
 
+  static filterSearchResults_MachineryDPR(String value, list) {
+    dummyListData.value.clear();
+
+    if (value.trim().isNotEmpty) {
+      final searchValue = value.toLowerCase().trim();
+
+      list.forEach((item) {
+        if (item["workNo"].toString().toLowerCase().contains(searchValue) ||
+            item["workDate"].toString().toLowerCase().contains(searchValue) ||
+            item["projectName"].toString().toLowerCase().contains(searchValue) ||
+            item["siteName"].toString().toLowerCase().contains(searchValue) ||
+            item["subcontractorName"].toString().toLowerCase().contains(searchValue) ||
+            item["createdName"].toString().toLowerCase().contains(searchValue) ||
+            item["status"].toString().toLowerCase().contains(searchValue) ||
+            item["totalAmount"].toString().toLowerCase().contains(searchValue)) {
+          dummyListData.value.add(item);
+        }
+      });
+
+      return dummyListData.value;
+    } else {
+      return list;
+    }
+  }
   static filterSearchResults_Inward(String value, list) {
     dummyListData.value.clear();
 
@@ -597,8 +621,7 @@ class BaseUtitiles {
 
       list.value.forEach((item) {
 
-        String inwTypeText =
-        item.inwType.toString().trim() == "O"
+        String inwTypeText = item.inwType.toString().trim() == "O"
             ? "Against Rental WO"
             : "Against PO";
 

@@ -57,8 +57,8 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
       reportsController.selectedCompanyId.value = 0;
       reportsController.Subheadername.text = "--ALL--";
       reportsController.materialDropdowntId.value = 0;
-      reportsController.mrnTracker_Type_Controller.text = "Abstract Details";
-      reportsController.mrn_Track_type_DPR.value = "A";
+      reportsController.mrnTracker_Type_Controller.text = "Direct Details";
+      reportsController.mrn_Track_type_DPR.value = "D";
     });
     super.initState();
   }
@@ -410,18 +410,13 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                           ),
                           onTap: () async {
                             if(_formKey.currentState!.validate()){
-                              // download(loginController.user.value.userId!,
-                              //     loginController.user.value.userType!,
-                              //     reportsController.selectedProjectId.value,
-                              //     reportsController.selectedsiteId.value,
-                              //     reportsController.selectedSubcontId.value,
-                              //     dprController.FromdateController.text,
-                              //     dprController.TodateController.text,
-                              //     reportsController.projectname.text,
-                              //     reportsController.sitename.text,
-                              //     reportsController.subcontractorname.text,
-                              //     dailyWrkDone_DPR_Controller.wrktype_DPR.value,
-                              //     dailyWrkDone_DPR_Controller.reportType.value);
+                              download(
+                                  reportsController.selectedProjectId.value,
+                                  reportsController.selectedsiteId.value,
+                                  reportsController.materialDropdowntId.value,
+                                  reportsController.mrn_Track_type_DPR.value,
+                                  siteController.FromdateController.text,
+                                  siteController.TodateController.text);
                             }
                           },
                         ),
@@ -444,9 +439,9 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
     );
   }
 
-  download(int uid,String uType,int pId,int SId,int subId,String fdate,String todate,String pName,String sName,String subName,String wType,int repType){
-    // launch(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
-    // print(ApiConstant.Web_URL + 'MobileReports/Mobile_DPR_RPT.aspx?UID=$uid&UTYPE=$uType&PID=$pId&SID=$SId&SUBID=$subId&FDT=$fdate&TDT=$todate&PNAME=$pName&SNAME=$sName&SUBNAME=$subName&WORKTYPE=$wType&REPTYPE=$repType');
+  download(int pId, int sId, int matId, rptType, fdate, String todate) {
+    launch("${ApiConfig.WebURL}mobile-mrn-request-tracker-report?fromDate=$fdate&toDate=$todate&projectId=$pId&siteId=$sId&materialId=$matId&ReportType=$rptType&access_token=${loginController.user.value.accessToken}");
+    print("${ApiConfig.WebURL}mobile-mrn-request-tracker-report?fromDate=$fdate&toDate=$todate&projectId=$pId&siteId=$sId&materialId=$matId&ReportType=$rptType&access_token=${loginController.user.value.accessToken}");
   }
 
   Widget AbstractListDetails() {
@@ -462,7 +457,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5),
           itemCount: projects.length,
           itemBuilder: (context, index) => _projectCard(projects[index]),
         );
@@ -475,7 +470,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
     final List<SiteModel> sites = project.siteName ?? [];
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 0),
       child: Card(
         elevation: 2,
         color: Colors.white,
@@ -521,7 +516,7 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                 final List<TransferModel> requests = site.transfers ?? [];
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
