@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:nicon/controller/repairWorkOrder_controller.dart';
 import 'package:nicon/controller/reports_controller.dart';
 import 'package:nicon/controller/requisitionslip_controller_new.dart';
 import '../controller/companycontroller.dart';
@@ -88,6 +89,7 @@ class BottomsheetControllers {
   MRN_Request_Controller mrn_request_controller =
   Get.put(MRN_Request_Controller());
   LoginController loginController = Get.put(LoginController());
+  RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
 
   final searchcontroller = TextEditingController();
   var list;
@@ -1553,6 +1555,123 @@ class BottomsheetControllers {
       },
     );
   }
+
+  RepairConumptionNo (context, list,) {
+    searchcontroller.text = "";
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: BaseUtitiles.getWidthtofPercentage(context, 50),
+                  margin: EdgeInsets.only(top: 10, left: 15),
+                  child: TextField(
+                    controller: searchcontroller,
+                    decoration: InputDecoration(
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                      hintText: "search..",
+                      hintStyle: TextStyle(color: Colors.black),
+                      isDense: true,
+                      fillColor: Setmybackground,
+                    ),
+                    onEditingComplete: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    textInputAction: TextInputAction.search,
+                    onChanged: (value) {
+                      list = BaseUtitiles.supplierNamePopupAlert(
+                          value, repairWorkOrderController.consumptionNoList.value);
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+                Container(
+                  width: BaseUtitiles.getWidthtofPercentage(context, 25),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 2, color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(3),
+                    child: Text(
+                      "Supplier",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      searchcontroller.text = "";
+                    },
+                    child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.expand_circle_down,
+                            color: Theme.of(context).primaryColor))),
+              ],
+            ),
+            Divider(),
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                physics: BouncingScrollPhysics(),
+                itemCount: list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      InkWell(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          alignment: Alignment.center,
+                          child: Text(
+                            list[index]["consumptionNo"].toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: RequestConstant.Lable_Font_SIZE,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        onTap: () {
+                          repairWorkOrderController.ConsumptionNoController.text =
+                              list[index]["consumptionNo"].toString().trim();
+
+                          repairWorkOrderController.selectedConsumNoId.value =
+                          list[index]["id"];
+                          searchcontroller.text = "";
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Divider(),
+                    ],
+                  );
+                },
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
 
   LabourName(context, list) {
     searchcontroller.text = "";
