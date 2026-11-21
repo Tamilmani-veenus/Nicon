@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'dailywrk_done_dprnew_controller.dart';
+import 'machinery_dpr_controller.dart';
 
 int? WorkId;
 
@@ -39,6 +40,7 @@ class DailyWrkDone_DPR_Controller extends GetxController {
   SubcontractorController subcontractorController = Get.put(SubcontractorController());
   LoginController loginController = Get.put(LoginController());
   PendingListController pendingListController=Get.put(PendingListController());
+  MachineryDPRController machineryDPRController = Get.put(MachineryDPRController());
 
   final dpr_autoYearWiseNoController = TextEditingController();
   final dpr_dateController = TextEditingController();
@@ -227,7 +229,7 @@ class DailyWrkDone_DPR_Controller extends GetxController {
     }
   }
 
-  SubcontractorName(context, list){
+  SubcontractorName(context, list, {type}){
     showModalBottomSheet(context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),),
@@ -310,13 +312,17 @@ class DailyWrkDone_DPR_Controller extends GetxController {
                         onTap: ()async {
                           TypeSubcontractorname.text = list[index].subContName.toString();
                           TypeSubcontId.value = list[index].subContId;
-                          await subcontractorController.getInvoiceNoList(projectController.selectedProjectId.value,TypeSubcontId.value);
 
+                          if(type=="machineryDPR"){
+                            await machineryDPRController.getMacDPRDetList(projectController.selectedProjectId.value,siteController.selectedsiteId.value,TypeSubcontId.value);
+                          }
+                          else{
+                            await subcontractorController.getInvoiceNoList(projectController.selectedProjectId.value,TypeSubcontId.value);
+                            delete_dpr_itemlist_Table();
+                            dpr_itemview_DbList.value.clear();
+                            getDprTablesDatas();
 
-                          //----------DRR Det list------------
-                          delete_dpr_itemlist_Table();
-                          dpr_itemview_DbList.value.clear();
-                          getDprTablesDatas();
+                          }
                           searchcontroller.text = "";
                           Navigator.pop(context);
                         },

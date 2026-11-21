@@ -238,6 +238,16 @@ class DBManager {
     return await connection?.update(table, data, where: 'materialid=?', whereArgs: [data['materialid']]);
   }
 
+  Future Update_MachineryDPRTable(String table, Map<String, dynamic> data) async {
+    var connection =  _database;
+    return await connection?.update(
+      table,
+      data,
+      where: 'localId = ?',
+      whereArgs: [data['localId']],
+    );
+  }
+
   Update_MaterialTransReqTable(table, data) async {
     var connection =  _database;
     return await connection?.update(table, data, where: 'materialId=?', whereArgs: [data['materialId']]);

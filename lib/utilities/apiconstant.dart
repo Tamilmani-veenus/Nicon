@@ -208,6 +208,7 @@ class ApiConstant {
   static String get GETMAC_INDENT_ENTRY_LIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryMaterialMRN";
   static String get GETMAC_DPR_ENTRY_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetAllMachineryDailyWorkMas";
   static String get GET_REPAIR_WORKORDER_LIST => BASE_URL_CORE + "api/RepairWorkOrder/GetAllRepairWorkOrders";
+  static String get GET_MAC_DPR_DET_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetDPRDetLoadMachinery";
 
   static String get GET_WORKORDDIR_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderMasData";
   static String get GET_WORKORDBOQ_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";

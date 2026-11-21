@@ -128,5 +128,8 @@ class DatabaseConnection {
     String grnMaterialTable = "CREATE TABLE grnMaterialTable (id INTEGER PRIMARY KEY UNIQUE,stockinId INTEGER,transNo TEXT,materialId INTEGER,materialName TEXT,qty REAL,stockQty REAL,scale TEXT,projectId INTEGER,siteId INTEGER,supplierId INTEGER,returnQty TEXT,reqDetId INTEGER)";
     await database.execute(grnMaterialTable);
 
+    String machineryDPRDetLocalTable = "CREATE TABLE MachineryDPRDetLocal (localId INTEGER PRIMARY KEY AUTOINCREMENT,apiId INTEGER,projectId INTEGER,projectName TEXT,siteName TEXT,itemDescription TEXT,qty REAL,unit INTEGER,scaleName TEXT,rate REAL,amount REAL,workRemarks TEXT,machineryReqDetid INTEGER,subId INTEGER,startReading REAL,endReading REAL,totalReading REAL,enteredQty REAL,enteredAmount REAL,remarks TEXT,UNIQUE(apiId,subId))";
+    await database.execute(machineryDPRDetLocalTable);
+
   }
 }
