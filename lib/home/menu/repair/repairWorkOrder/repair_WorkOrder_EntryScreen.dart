@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:nicon/controller/workOrderBoq_Controller.dart';
+import 'package:nicon/controller/workorderDirect_Controller.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../commonpopup/workorderActiveType.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
@@ -34,6 +36,8 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
   RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
   LoginController loginController = Get.put(LoginController());
   SubcontractorController subcontractorController = Get.put(SubcontractorController());
+  WorkOrderDirectController workOrderDirectController = Get.put(WorkOrderDirectController());
+  WorkOrderBoqController workOrderBoqController = Get.put(WorkOrderBoqController());
 
   @override
   void initState() {
@@ -41,25 +45,27 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
     Future.delayed(duration, () async {
 
       if (repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT || repairWorkOrderController.saveButton.value == RequestConstant.VERIFY || repairWorkOrderController.saveButton.value == RequestConstant.APPROVAL) {
-        // repairWorkOrderController.workOrder_editListApiDatas.forEach((element) {
-        //   repairWorkOrderController.workid = element.id!;
-        //   repairWorkOrderController.autoYearWiseNoController.text = element.workOrderNo.toString();
-        //   repairWorkOrderController.workOrdentryDateController.text = element.entryDate.toString();
-        //   projectController.projectname.text = element.projectName.toString();
-        //   projectController.selectedProjectId.value = element.projectId;
-        //   siteController.Sitename.text = element.siteName.toString();
-        //   siteController.selectedsiteId.value = element.siteId;
-        //   subcontractorController.Subcontractorname.text = element.subContractorName.toString();
-        //   subcontractorController.selectedSubcontId.value = element.subContractorId;
-        //   repairWorkOrderController.WorkStatusTypeText.text = element.workStatus == "C" ? "Completed" : "Pending";
-        //   repairWorkOrderController.WorkOrdActiveTypeText.text = element.active == "Y" ? "Active" : "Inactive";
-        //   repairWorkOrderController.PreparedByController.text = element.createdName.toString();
-        //   repairWorkOrderController.createdById.value = element.createdBy;
-        //   repairWorkOrderController.RemarksController.text = element.remarks.toString();
-        // });
+        repairWorkOrderController.repair_workOrd_editListApi.forEach((element) {
+          repairWorkOrderController.workid = element.id!;
+          repairWorkOrderController.autoYearWiseNoController.text = element.workOrderNo.toString();
+          repairWorkOrderController.RepairworkOrdDateController.text = element.entryDate.toString();
+          repairWorkOrderController.RepairEntryTypeText.text = element.entryType.toString() == "R" ? "Repair" : "";
+          projectController.projectname.text = element.projectName.toString();
+          projectController.selectedProjectId.value = element.projectId;
+          siteController.Sitename.text = element.siteName.toString();
+          siteController.selectedsiteId.value = element.siteId;
+          subcontractorController.supplierName.text = element.supplierName.toString();
+          subcontractorController.selectedSupplierId.value = element.supplierId;
+          repairWorkOrderController.ConsumptionNoController.text = element.consumpNo.toString();
+          repairWorkOrderController.selectedConsumNoId.value = element.repairConsumptionId;
+          repairWorkOrderController.WorkStatusTypeText.text = element.workStatus == "C" ? "Completed" : "Pending";
+          repairWorkOrderController.PreparedByController.text = element.createdName.toString();
+          repairWorkOrderController.createdById.value = element.createdBy;
+          repairWorkOrderController.RemarksController.text = element.remarks.toString();
+        });
       }
 
-      // await repairWorkOrderController.WorkOrder_CalculationList();
+      await workOrderDirectController.WorkOrder_CalculationList();
 
       if (repairWorkOrderController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.AutoYearWiseNo("REPAIR WORK ORDER");
@@ -68,7 +74,7 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
         repairWorkOrderController.workid = 0;
         subcontractorController.selectedWorkOrderId.value = 0;
         repairWorkOrderController.RepairEntryTypeText.text = "Repair";
-        repairWorkOrderController.entryTypeId.value = "r";
+        repairWorkOrderController.entryTypeId.value = "R";
         projectController.projectname.text = "--SELECT--";
         projectController.selectedProjectId.value = 0;
         siteController.Sitename.text = "--SELECT--";
@@ -81,16 +87,16 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
         repairWorkOrderController.workOrdStsTypeId.value = "0";
         repairWorkOrderController.PreparedByController.text = loginController.EmpName();
         repairWorkOrderController.RemarksController.text = "";
-        // repairWorkOrderController.createdById.value=0;
-        // repairWorkOrderController.workOrder_itemlistTable_Delete();
-        // repairWorkOrderController.ItemGetTableListdata.value.clear();
-        // repairWorkOrderController.rebateAmount.text = "0.0";
-        // repairWorkOrderController.workOrdamount.text = "0.0";
-        // repairWorkOrderController.Roundoff.text = "0.0";
-        // repairWorkOrderController.netpayamt.text = "0.0";
-        // workOrderBoqController.termsAndCondition.clear();
-        // workOrderBoqController.filteredTermsAndCondition.clear();
-        // workOrderBoqController.selectedTerms.clear();
+        repairWorkOrderController.createdById.value=0;
+        workOrderDirectController.workOrder_itemlistTable_Delete();
+        workOrderDirectController.ItemGetTableListdata.value.clear();
+        workOrderDirectController.rebateAmount.text = "0.0";
+        workOrderDirectController.workOrdamount.text = "0.0";
+        workOrderDirectController.Roundoff.text = "0.0";
+        workOrderDirectController.netpayamt.text = "0.0";
+        workOrderBoqController.termsAndCondition.clear();
+        workOrderBoqController.filteredTermsAndCondition.clear();
+        workOrderBoqController.selectedTerms.clear();
       }
       if (!mounted) return;
 
@@ -131,7 +137,7 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
                             widget.heading,
                             style: TextStyle(
                                 fontSize: repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT
-                                    || repairWorkOrderController.saveButton.value == RequestConstant.SUBMIT? RequestConstant.Heading_Font_SIZE : 16,
+                                    || repairWorkOrderController.saveButton.value == RequestConstant.SUBMIT ? RequestConstant.Heading_Font_SIZE : 16,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -430,14 +436,14 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
                                     vertical: 8, horizontal: 8),
                                 child: Icon(Icons.task_alt,color: Theme.of(context).primaryColor,)),
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty ||
-                                value == "--Select--" ||
-                                value == "--SELECT--") {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.isEmpty ||
+                          //       value == "--Select--" ||
+                          //       value == "--SELECT--") {
+                          //     return '\u26A0 ${RequestConstant.VALIDATE}';
+                          //   }
+                          //   return null;
+                          // },
                           onTap: () async {
                             if(repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT
                                 || repairWorkOrderController.saveButton.value == RequestConstant.VERIFY
@@ -617,7 +623,7 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WorkOrderDirectItemList()));
+                                  builder: (context) => WorkOrderDirectItemList(heading: "Repair Work Order Direct Item Lists",)));
                         }
                       });
                     },

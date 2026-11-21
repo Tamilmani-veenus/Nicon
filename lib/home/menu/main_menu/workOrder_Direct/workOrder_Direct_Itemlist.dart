@@ -13,7 +13,8 @@ import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
 
 class WorkOrderDirectItemList extends StatefulWidget {
-  const WorkOrderDirectItemList({super.key});
+  final String heading;
+  const WorkOrderDirectItemList({super.key,required this.heading});
 
   @override
   State<WorkOrderDirectItemList> createState() => _WorkOrderDirectItemListState();
@@ -46,8 +47,8 @@ class _WorkOrderDirectItemListState extends State<WorkOrderDirectItemList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Work Order Direct Item Lists",
+                      Text(
+                        widget.heading,
                         style: TextStyle(
                             fontSize: RequestConstant.Heading_Font_SIZE,
                             fontWeight: FontWeight.bold),
@@ -356,7 +357,7 @@ class _WorkOrderDirectItemListState extends State<WorkOrderDirectItemList> {
                             context,
                             MaterialPageRoute(
                                 builder: (
-                                    context) => const WorkOrderDirectDeduction()));
+                                    context) => WorkOrderDirectDeduction(heading: widget.heading == "Work Order Direct Item Lists" ? "Work Order Direct Deduction" : "Repair Work Order Deduction",)));
                       }
                       else
                         {

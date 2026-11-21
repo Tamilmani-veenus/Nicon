@@ -406,31 +406,57 @@ class WorkOrderDirectController extends GetxController{
     });
   }
 
-  workOrder_EditTable_SaveTable(name) async {
+  workOrder_EditTable_SaveTable(name,{type,list}) async {
     ItemListTableModelList.clear();
-    workOrder_editListApiDatas.value.forEach((element) {
-      if (name == "ItemListDet") {
-        ItemListTableModel = new WorkOrderItemListTableModel();
-        ItemListTableModel.Name = element.itemDesc.toString();
-        ItemListTableModel.unit = element.unit.toString();
-        ItemListTableModel.qty = element.qty;
-        ItemListTableModel.rate = element.rate;
-        ItemListTableModel.amount = element.amount;
-        ItemListTableModelList.add(ItemListTableModel);
-      } else {
-        element.subcontractWorkOrderDetlink!.forEach((value) {
+    if(type=="Repair Work Order") {
+      list.value.forEach((element) {
+        if (name == "ItemListDet") {
           ItemListTableModel = new WorkOrderItemListTableModel();
-          ItemListTableModel.reqDetId = value.reqDetId;
-          ItemListTableModel.Name = value.itemDesc == null ? "-" : value.itemDesc.toString();
-          ItemListTableModel.unit = value.unit == null ? "-" : value.unit.toString();
-          ItemListTableModel.qty = value.qty;
-          ItemListTableModel.rate = value.rate;
-          ItemListTableModel.amount = value.amount;
+          ItemListTableModel.Name = element.itemDescription.toString();
+          ItemListTableModel.unit = element.unit.toString();
+          ItemListTableModel.qty = element.qty;
+          ItemListTableModel.rate = element.rate;
+          ItemListTableModel.amount = element.amount;
           ItemListTableModelList.add(ItemListTableModel);
-        });
-      }
-    });
-
+        } else {
+          element.repairWorkOrderDetlink!.forEach((value) {
+            ItemListTableModel = new WorkOrderItemListTableModel();
+            ItemListTableModel.reqDetId = value.reqDetId;
+            ItemListTableModel.Name =
+            value.itemDesc == null ? "-" : value.itemDesc.toString();
+            ItemListTableModel.unit =
+            value.unit == null ? "-" : value.unit.toString();
+            ItemListTableModel.qty = value.qty;
+            ItemListTableModel.rate = value.rate;
+            ItemListTableModel.amount = value.amount;
+            ItemListTableModelList.add(ItemListTableModel);
+          });
+        }
+      });
+    }else{
+      workOrder_editListApiDatas.value.forEach((element) {
+        if (name == "ItemListDet") {
+          ItemListTableModel = new WorkOrderItemListTableModel();
+          ItemListTableModel.Name = element.itemDesc.toString();
+          ItemListTableModel.unit = element.unit.toString();
+          ItemListTableModel.qty = element.qty;
+          ItemListTableModel.rate = element.rate;
+          ItemListTableModel.amount = element.amount;
+          ItemListTableModelList.add(ItemListTableModel);
+        } else {
+          element.subcontractWorkOrderDetlink!.forEach((value) {
+            ItemListTableModel = new WorkOrderItemListTableModel();
+            ItemListTableModel.reqDetId = value.reqDetId;
+            ItemListTableModel.Name = value.itemDesc == null ? "-" : value.itemDesc.toString();
+            ItemListTableModel.unit = value.unit == null ? "-" : value.unit.toString();
+            ItemListTableModel.qty = value.qty;
+            ItemListTableModel.rate = value.rate;
+            ItemListTableModel.amount = value.amount;
+            ItemListTableModelList.add(ItemListTableModel);
+          });
+        }
+      });
+    }
     var savedatas =
     await workOrder_ItemlistService.workOrder_ItemlistTable_Save(
         ItemListTableModelList);

@@ -895,7 +895,7 @@ class _WorkOrderBoqEntrylistState extends State<WorkOrderBoqEntrylist> {
   }
 
   download(int nmrId) {
-    launch("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
+    launch("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&entryType=B&access_token=${loginController.user.value.accessToken}");
     print("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
   }
 }

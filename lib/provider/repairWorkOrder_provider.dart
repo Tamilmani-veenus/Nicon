@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../apimanager/apimanager.dart';
+import '../models/repairWorkOrder_Edit_model.dart';
 import '../models/workOrderDirect_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
@@ -27,6 +28,37 @@ class RepairWorkOrderProvider{
       return jsonDecode(value);
     } catch (error) {
       print(error);
+      return null;
+    }
+  }
+
+  static SaveRepairWorkOrdScreenEntryAPI(String body, int id, context, status) async {
+    try {
+      var response;
+
+      if (id != 0) {
+        response = await ApiManager.putUpdateAPIButton("${ApiConstant.PUT_REPAIR_WORKORDER_UPDATE_API}?id=$id&isedit=$status", body);
+      } else {
+        response = await ApiManager.postAPICall(ApiConstant.REPAIR_WORKORDER_SAVE_API, body);
+      }
+      return jsonDecode(response);
+
+    }  catch (error,e) {
+      print("Error == $error");
+      print("ERROR....${e}");
+      return null;
+    }
+  }
+
+  static Future<RepairWorkOrdeEditModel?> repair_WorkOrderList_editAPI(int workId,checksts) async {
+    try{
+      final value = await ApiManager.getAPICall("${ApiConstant.EDIT_REPAIR_WORKORDER_API}?id=$workId&CheckEdit=$checksts");
+      print("AdvEntryList:" + value);
+      return repairWorkOrdeEditModelFromJson(value);
+    }
+    catch(e,F){
+      print("ERROR.....$e");
+      print("ERROR.....$F");
       return null;
     }
   }
