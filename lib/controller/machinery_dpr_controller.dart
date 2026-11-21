@@ -9,11 +9,18 @@ import '../utilities/requestconstant.dart';
 class MachineryDPRController extends GetxController {
   final macDPRListFrDate = TextEditingController();
   final macDPRListToDate = TextEditingController();
+  final autoYearWiseNoController = TextEditingController();
+  final requestDateController = TextEditingController();
+  final refNoController = TextEditingController();
+  final remarksController = TextEditingController();
+  final preparedByController = TextEditingController();
 
   RxList macReqEtyList = [].obs;
   RxList mainEtyList = [].obs;
 
   RxString saveButton = RequestConstant.SUBMIT.obs;
+
+  int reqId = 0;
 
   Future getMacDPREntryList() async {
     mainEtyList.value=[];

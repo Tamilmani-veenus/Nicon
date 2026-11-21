@@ -190,6 +190,7 @@ class ApiConstant {
   static String get EDIT_NMR_DEDUCTION => BASE_URL_CORE + "api/SubContractorNMRBill/GetNMRBillById";
   static String get GET_DPR_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorDailyWork/GetAllDailyWorkMas";
   static String get GET_DPR_SUBCONTRACTOR_LIST => BASE_URL_CORE + "api/SubContractorDailyWork/GetSubcontractorNameDailyWrk";
+  static String get GET_MAC_DPR_SUBCONTRACTOR_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetSubcontractorNameDailyWrk";
   static String get GET_DPR_ITEM_LIST => BASE_URL_CORE + "api/SubContractorDailyWork/GetDPRDetLoad";
   static String get GET_DPR_EDIT_API => BASE_URL_CORE + "api/SubContractorDailyWork/GetDPRDetById";
   static String get GET_DPRNEW_SUBCONTRACTOR_LIST => BASE_URL_CORE + "api/SubContractorDailyWorkNew/GetDPRNewSubcontractor";

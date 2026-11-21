@@ -11,7 +11,8 @@ import '../../../controller/mrn_request_indent_controller.dart';
 import '../../../controller/punch_in_controller.dart';
 import '../../../utilities/baseutitiles.dart';
 import '../../../utilities/requestconstant.dart';
-import 'machinery_entry.dart';
+import 'machinery_Indent_entry.dart';
+import 'machinery_dpr_entry.dart';
 
 class MachineryIndentEntryList extends StatefulWidget {
   final String heading;
@@ -809,8 +810,6 @@ class _MachineryIndentEntryListState extends State<MachineryIndentEntryList> {
     );
   }
 
-
-
 }
 
 class MachineryDPREntryList extends StatefulWidget {
@@ -864,8 +863,8 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MachineryIndentEntry(
-                        heading: widget.heading,
+                      builder: (context) => MachineryDPREntry(
+                        heading: widget.heading
                       ),
                     ),
                   );
