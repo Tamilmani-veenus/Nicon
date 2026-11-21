@@ -66,6 +66,7 @@ class Result {
   String? createdName;
   String? verifyName;
   String? approveName;
+  String? repairConsumptionNo;
   List<RepairWorkOrderDetlink>? repairWorkOrderDetlink;
   List<RepairWorkOrderAddLessSetuplink>? repairWorkOrderAddLessSetuplink;
 
@@ -103,6 +104,7 @@ class Result {
     this.createdName,
     this.verifyName,
     this.approveName,
+    this.repairConsumptionNo,
     this.repairWorkOrderDetlink,
     this.repairWorkOrderAddLessSetuplink,
   });
@@ -141,6 +143,7 @@ class Result {
     createdName: json["createdName"],
     verifyName: json["verifyName"],
     approveName: json["approveName"],
+      repairConsumptionNo: json["repairConsumptionNo"],
     repairWorkOrderDetlink: json["repairWorkOrderDetlink"] == null ? [] : List<RepairWorkOrderDetlink>.from(json["repairWorkOrderDetlink"]!.map((x) => RepairWorkOrderDetlink.fromJson(x))),
     repairWorkOrderAddLessSetuplink: json["repairWorkOrderAddLessSetuplink"] == null ? [] : List<RepairWorkOrderAddLessSetuplink>.from(json["repairWorkOrderAddLessSetuplink"]!.map((x) => RepairWorkOrderAddLessSetuplink.fromJson(x))),
   );
@@ -179,6 +182,7 @@ class Result {
     "createdName": createdName,
     "verifyName": verifyName,
     "approveName": approveName,
+    "repairConsumptionNo": repairConsumptionNo,
     "repairWorkOrderDetlink": repairWorkOrderDetlink == null ? [] : List<dynamic>.from(repairWorkOrderDetlink!.map((x) => x.toJson())),
     "repairWorkOrderAddLessSetuplink": repairWorkOrderAddLessSetuplink == null ? [] : List<dynamic>.from(repairWorkOrderAddLessSetuplink!.map((x) => x.toJson())),
   };
@@ -221,7 +225,7 @@ class RepairWorkOrderAddLessSetuplink {
 }
 
 class RepairWorkOrderDetlink {
-  int? id;
+  int? reqDetId;
   int? repairWorkOrderMasId;
   String? itemDescription;
   double? qty;
@@ -231,7 +235,7 @@ class RepairWorkOrderDetlink {
   String? workRemarks;
 
   RepairWorkOrderDetlink({
-    this.id,
+    this.reqDetId,
     this.repairWorkOrderMasId,
     this.itemDescription,
     this.qty,
@@ -242,7 +246,7 @@ class RepairWorkOrderDetlink {
   });
 
   factory RepairWorkOrderDetlink.fromJson(Map<String, dynamic> json) => RepairWorkOrderDetlink(
-    id: json["id"],
+    reqDetId: json["id"],
     repairWorkOrderMasId: json["repairWorkOrderMasId"],
     itemDescription: json["itemDescription"],
     qty: json["qty"],
@@ -253,7 +257,7 @@ class RepairWorkOrderDetlink {
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "id": reqDetId,
     "repairWorkOrderMasId": repairWorkOrderMasId,
     "itemDescription": itemDescription,
     "qty": qty,

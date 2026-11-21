@@ -387,7 +387,14 @@ class WorkOrderDirectController extends GetxController{
       if (response.success == true) {
         workOrder_editListApiDatas.value = [response.result];
         if (workOrder_editListApiDatas.isNotEmpty) {
-          saveButton.value = type == "Approve"? RequestConstant.APPROVAL: type == "Verify" ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          saveButton.value = type == "Approve"
+              ? RequestConstant.APPROVAL
+              : type == "Verify"
+              ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          if (workOrderBoqController.termsAndCondition.isEmpty) {
+            await workOrderBoqController.WorkOrdBoq_TermsCondition();
+          }
+          bindEditTermsAndConditions();
           workOrder_EditTable_SaveTable("");
           getItemlistTablesDatas();
           await Navigator.pushReplacement(
@@ -404,6 +411,36 @@ class WorkOrderDirectController extends GetxController{
       BaseUtitiles.showToast("Something Went Wrong...");
     }
     });
+  }
+
+  void bindEditTermsAndConditions() {
+    workOrderBoqController.selectedTerms.clear();
+    if (workOrder_editListApiDatas.isEmpty) {
+      return;
+    }
+
+    final editData = workOrder_editListApiDatas.first;
+
+    if (editData == null) {
+      return;
+    }
+
+    final String rawTermIds =
+        workOrder_editListApiDatas.first.termsCondition ?? "";
+
+    final List<int> editTermIds = rawTermIds
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+
+    for (final id in editTermIds) {
+      final match = workOrderBoqController.termsAndCondition.firstWhereOrNull((t) => t.id == id);
+      if (match != null) {
+        workOrderBoqController.selectedTerms.add(match);
+      }
+    }
   }
 
   workOrder_EditTable_SaveTable(name,{type,list}) async {
@@ -423,7 +460,7 @@ class WorkOrderDirectController extends GetxController{
             ItemListTableModel = new WorkOrderItemListTableModel();
             ItemListTableModel.reqDetId = value.reqDetId;
             ItemListTableModel.Name =
-            value.itemDesc == null ? "-" : value.itemDesc.toString();
+            value.itemDescription == null ? "-" : value.itemDescription.toString();
             ItemListTableModel.unit =
             value.unit == null ? "-" : value.unit.toString();
             ItemListTableModel.qty = value.qty;

@@ -11,6 +11,7 @@ import 'package:nicon/controller/workorderDirect_Controller.dart';
 import 'package:nicon/provider/repairWorkOrder_provider.dart';
 import '../home/menu/repair/repairWorkOrder/repair_WorkOrder_EntryScreen.dart';
 import '../models/repairWorkOrder_save_model.dart';
+import '../provider/workOrderDirectProvider.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
 import 'logincontroller.dart';
@@ -219,6 +220,35 @@ class RepairWorkOrderController extends GetxController{
     return getDetAddLessList.value;
   }
 
+  Future WorkOrder_CalculationList() async {
+    workOrderDirectController.workOrderDet_Calculation.value.clear();
+    final value =
+    await WorkOrderDirectProvider.getWorkOrderCalculation_List();
+    if (value != null) {
+      if (value.success == true) {
+        if (value.result!.isNotEmpty) {
+          workOrderDirectController.workOrderDet_Calculation.value = value.result!;
+          await workOrderDirectController.workOrderCal_itemlistTable_Delete();
+          await workOrderDirectController.workOrderCalculationSave();
+          await workOrderDirectController.getWorkorderCalDatas();
+          if (saveButton.value == RequestConstant.RESUBMIT ||
+              saveButton.value == RequestConstant.VERIFY ||
+              saveButton.value == RequestConstant.APPROVAL) {
+            workOrderDirectController.setBaseNetPay(workOrderDirectController.workOrdamount.text);
+            await workOrderDirectController.preloadEditAddLessData(
+                repair_workOrd_editListApi[0].repairWorkOrderAddLessSetuplink);
+          }
+        } else {
+          BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
+        }
+      } else {
+        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+      }
+    } else {
+      BaseUtitiles.showToast("Something Went Wrong...");
+    }
+  }
+
   Future repair_workOrderList_EditApi(int workId, status,String MenuName, BuildContext context,{String? type}) async {
     await ClickUtils.run(() async {
       var response = await RepairWorkOrderProvider.repair_WorkOrderList_editAPI(workId,status);
@@ -226,7 +256,14 @@ class RepairWorkOrderController extends GetxController{
         if (response.success == true) {
           repair_workOrd_editListApi.value = [response.result];
           if (repair_workOrd_editListApi.isNotEmpty) {
-            saveButton.value = type == "Approve"? RequestConstant.APPROVAL: type == "Verify" ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+            saveButton.value = type == "Approve"
+                ? RequestConstant.APPROVAL
+                : type == "Verify"
+                ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+            if (workOrderBoqController.termsAndCondition.isEmpty) {
+              await workOrderBoqController.WorkOrdBoq_TermsCondition();
+            }
+            bindEditTermsAndConditions();
             workOrderDirectController.workOrder_EditTable_SaveTable("",type: "Repair Work Order",list: repair_workOrd_editListApi);
             workOrderDirectController.getItemlistTablesDatas();
             await Navigator.pushReplacement(
@@ -243,6 +280,36 @@ class RepairWorkOrderController extends GetxController{
         BaseUtitiles.showToast("Something Went Wrong...");
       }
     });
+  }
+
+  void bindEditTermsAndConditions() {
+    workOrderBoqController.selectedTerms.clear();
+    if (repair_workOrd_editListApi.isEmpty) {
+      return;
+    }
+
+    final editData = repair_workOrd_editListApi.first;
+
+    if (editData == null) {
+      return;
+    }
+
+    final String rawTermIds =
+        repair_workOrd_editListApi.first.termsCondition ?? "";
+
+    final List<int> editTermIds = rawTermIds
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+
+    for (final id in editTermIds) {
+      final match = workOrderBoqController.termsAndCondition.firstWhereOrNull((t) => t.id == id);
+      if (match != null) {
+        workOrderBoqController.selectedTerms.add(match);
+      }
+    }
   }
 
   Future DeleteAlert(BuildContext context, int index) async {

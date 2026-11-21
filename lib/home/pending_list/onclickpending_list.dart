@@ -31,6 +31,7 @@ import '../../controller/mrn_preapproval_controller.dart';
 import '../../controller/mrn_request_indent_controller.dart';
 import '../../controller/mrnrequest_preIndent_controller.dart';
 import '../../controller/preapproval_controller.dart';
+import '../../controller/repairWorkOrder_controller.dart';
 import '../../controller/reports_controller.dart';
 import '../../controller/requisitionslip_controller.dart';
 import '../../controller/requisitionslip_controller_new.dart';
@@ -9127,6 +9128,7 @@ class _WorkOrderState extends State<WorkOrder> {
   Get.put(PendingListController());
   WorkOrderDirectController workOrderDirectController =
   Get.put(WorkOrderDirectController());
+  RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
   WorkOrderBoqController workOrderBoqController =
   Get.put(WorkOrderBoqController());
   late List<bool> _isChecked;
@@ -9246,38 +9248,130 @@ class _WorkOrderState extends State<WorkOrder> {
                           itemCount: pendingListController.mainlist.length,
                           itemBuilder: (context, index) {
                             return InkWell(
+
                               onTap: () async {
-                                if (widget.checkheading ==
-                                    "WORK ORDER VERIFICATION PENDING - DIRECT") {
-                                  workOrderDirectController
-                                      .workOrder_itemlistTable_Delete();
-                                  await workOrderDirectController
-                                      .workOrderEntryList_EditApi(
-                                      pendingListController
-                                          .mainlist.value[index].id,
-                                      false,
-                                      widget.heading,
-                                      context,
-                                      type: widget.checkheading ==
-                                          "WORK ORDER VERIFICATION PENDING - DIRECT"
-                                          ? "Verify"
-                                          : "Approve");
+                                final id = pendingListController.mainlist.value[index].id;
+                                final entryType =
+                                    pendingListController.mainlist.value[index].entryType;
+
+                                final isDirectVerification = widget.checkheading ==
+                                    "WORK ORDER VERIFICATION PENDING - DIRECT";
+
+                                final isDirectApproval = widget.checkheading ==
+                                    "WORK ORDER APPROVAL PENDING" &&
+                                    entryType == "D";
+
+                                final isRepairVerification = widget.checkheading ==
+                                    "REPAIR WORK ORDER VERIFICATION PENDING";
+
+                                final isRepairApproval = widget.checkheading ==
+                                    "REPAIR WORK ORDER APPROVAL PENDING";
+
+                                final isBoqVerification = widget.checkheading ==
+                                    "WORK ORDER VERIFICATION PENDING - BOQ";
+
+                                final type = isDirectVerification || isRepairVerification ||
+                                    isBoqVerification
+                                    ? "Verify"
+                                    : "Approve";
+
+                                if (isDirectVerification || isDirectApproval) {
+                                  workOrderDirectController.workOrder_itemlistTable_Delete();
+
+                                  await workOrderDirectController.workOrderEntryList_EditApi(
+                                    id,
+                                    false,
+                                    widget.heading,
+                                    context,
+                                    type: type,
+                                  );
+                                } else if (isRepairVerification || isRepairApproval) {
+                                  workOrderDirectController.workOrder_itemlistTable_Delete();
+
+                                  await repairWorkOrderController.repair_workOrderList_EditApi(
+                                    id,
+                                    false,
+                                    widget.heading,
+                                    context,
+                                    type: type,
+                                  );
                                 } else {
-                                  workOrderBoqController
-                                      .delete_WorkOrderBoq_itemlist_Table();
-                                  await workOrderBoqController
-                                      .workOrderEntryList_EditApi(
-                                      pendingListController
-                                          .mainlist.value[index].id,
-                                      false,
-                                      widget.heading,
-                                      context,
-                                      type: widget.checkheading ==
-                                          "WORK ORDER VERIFICATION PENDING - BOQ"
-                                          ? "Verify"
-                                          : "Approve");
+                                  workOrderBoqController.delete_WorkOrderBoq_itemlist_Table();
+
+                                  await workOrderBoqController.workOrderEntryList_EditApi(
+                                    id,
+                                    false,
+                                    widget.heading,
+                                    context,
+                                    type: type,
+                                  );
                                 }
                               },
+
+                              // onTap: () async {
+                              //   if (widget.checkheading ==
+                              //       "WORK ORDER VERIFICATION PENDING - DIRECT") {
+                              //     workOrderDirectController
+                              //         .workOrder_itemlistTable_Delete();
+                              //     await workOrderDirectController
+                              //         .workOrderEntryList_EditApi(
+                              //         pendingListController
+                              //             .mainlist.value[index].id,
+                              //         false,
+                              //         widget.heading,
+                              //         context,
+                              //         type: widget.checkheading ==
+                              //             "WORK ORDER VERIFICATION PENDING - DIRECT"
+                              //             ? "Verify"
+                              //             : "Approve");
+                              //   } else if(widget.checkheading ==
+                              //       "WORK ORDER APPROVAL PENDING" && pendingListController.mainlist.value[index].entryType == "D"){
+                              //     workOrderDirectController
+                              //         .workOrder_itemlistTable_Delete();
+                              //     await workOrderDirectController
+                              //         .workOrderEntryList_EditApi(
+                              //         pendingListController
+                              //             .mainlist.value[index].id,
+                              //         false,
+                              //         widget.heading,
+                              //         context,
+                              //         type: widget.checkheading ==
+                              //             "WORK ORDER VERIFICATION PENDING - DIRECT"
+                              //             ? "Verify"
+                              //             : "Approve");
+                              //   }
+                              //   else if(widget.checkheading == "REPAIR WORK ORDER VERIFICATION PENDING"
+                              //       || widget.checkheading == "REPAIR WORK ORDER APPROVAL PENDING"){
+                              //     workOrderDirectController
+                              //         .workOrder_itemlistTable_Delete();
+                              //     await repairWorkOrderController
+                              //         .repair_workOrderList_EditApi(
+                              //         pendingListController
+                              //             .mainlist.value[index].id,
+                              //         false,
+                              //         widget.heading,
+                              //         context,
+                              //         type: widget.checkheading ==
+                              //             "REPAIR WORK ORDER VERIFICATION PENDING"
+                              //             ? "Verify"
+                              //             : "Approve");
+                              //   }
+                              //   else {
+                              //     workOrderBoqController
+                              //         .delete_WorkOrderBoq_itemlist_Table();
+                              //     await workOrderBoqController
+                              //         .workOrderEntryList_EditApi(
+                              //         pendingListController
+                              //             .mainlist.value[index].id,
+                              //         false,
+                              //         widget.heading,
+                              //         context,
+                              //         type: widget.checkheading ==
+                              //             "WORK ORDER VERIFICATION PENDING - BOQ"
+                              //             ? "Verify"
+                              //             : "Approve");
+                              //   }
+                              // },
                               child: Container(
                                 margin: EdgeInsets.only(left: 3, right: 3),
                                 child: Card(
@@ -9400,7 +9494,9 @@ class _WorkOrderState extends State<WorkOrder> {
                                             Expanded(
                                                 flex: 3,
                                                 child: Text(
-                                                  "Subcontractor",
+                                                  widget.checkheading == "REPAIR WORK ORDER VERIFICATION PENDING"
+                                                      || widget.checkheading == "REPAIR WORK ORDER APPROVAL PENDING"
+                                                      ? "Supplier" : "Subcontractor",
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
@@ -9408,7 +9504,12 @@ class _WorkOrderState extends State<WorkOrder> {
                                                 )),
                                             Expanded(
                                                 flex: 8,
-                                                child: Text(
+                                                child: Text(widget.checkheading == "REPAIR WORK ORDER VERIFICATION PENDING"
+                                                    || widget.checkheading == "REPAIR WORK ORDER APPROVAL PENDING"
+                                                    ? pendingListController
+                                                    .mainlist[index]
+                                                    .suppliername
+                                                    .toString() :
                                                   pendingListController
                                                       .mainlist[index]
                                                       .subContractor

@@ -348,6 +348,8 @@ class ApiConstant {
   static String get GET_WORKORDERBOQ_VERIFYLIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetWorkOrderVerificationPendingBOQ";
   static String get GET_SUPPLIER_BILL_APPROVAL_LIST => BASE_URL_CORE + "api/MaterialPurOrdBill/GetBillToBeApprovedNotifctn";
   static String get DIRECT_TRANSFERBETPROJECTS_PENDING => BASE_URL_CORE + "api/MaterialTransfer/GetMaterialDirectTransferApprovalPending";
+  static String get REPAIR_WORKORDER_PENDING => BASE_URL_CORE + "api/RepairWorkOrder/GetAllWorkOrderRepairVerifyPending";
+  static String get REPAIR_WORKORDER_APPROVAL_PENDING => BASE_URL_CORE + "api/RepairWorkOrder/GetAllWorkOrderRepairApprovalPending";
 
   static String get GET_WORKORDERAPPROVALLIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderVerifyData";
   static String get GET_MANPOWERAPPROVALLIST => BASE_URL_CORE + "api/ManPower/GetManPowerApprovalPending";

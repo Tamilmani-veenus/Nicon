@@ -56,7 +56,7 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
           siteController.selectedsiteId.value = element.siteId;
           subcontractorController.supplierName.text = element.supplierName.toString();
           subcontractorController.selectedSupplierId.value = element.supplierId;
-          repairWorkOrderController.ConsumptionNoController.text = element.consumpNo.toString();
+          repairWorkOrderController.ConsumptionNoController.text = element.repairConsumptionNo.toString();
           repairWorkOrderController.selectedConsumNoId.value = element.repairConsumptionId;
           repairWorkOrderController.WorkStatusTypeText.text = element.workStatus == "C" ? "Completed" : "Pending";
           repairWorkOrderController.PreparedByController.text = element.createdName.toString();
@@ -65,7 +65,7 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
         });
       }
 
-      await workOrderDirectController.WorkOrder_CalculationList();
+      await repairWorkOrderController.WorkOrder_CalculationList();
 
       if (repairWorkOrderController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.AutoYearWiseNo("REPAIR WORK ORDER");

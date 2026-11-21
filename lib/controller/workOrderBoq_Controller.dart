@@ -567,7 +567,13 @@ class WorkOrderBoqController extends GetxController{
       if (response.success == true) {
         workOrderBoq_editListApiDatas.value = [response.result];
         if (workOrderBoq_editListApiDatas.isNotEmpty) {
-          saveButton.value = type == "Approve"? RequestConstant.APPROVAL: type == "Verify" ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          saveButton.value = type == "Approve"
+              ? RequestConstant.APPROVAL: type == "Verify"
+              ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          if (termsAndCondition.isEmpty) {
+            await WorkOrdBoq_TermsCondition();
+          }
+          bindEditTermsAndConditions();
           workOrder_EditTable_SaveTable("");
           getItemTablesDatas();
           await Navigator.pushReplacement(
@@ -585,6 +591,28 @@ class WorkOrderBoqController extends GetxController{
     }
     });
   }
+
+  void bindEditTermsAndConditions() {
+    selectedTerms.clear();
+
+    final String rawTermIds =
+        workOrderBoq_editListApiDatas.first.termsCondition ?? "";
+
+    final List<int> editTermIds = rawTermIds
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+
+    for (final id in editTermIds) {
+      final match = termsAndCondition.firstWhereOrNull((t) => t.id == id);
+      if (match != null) {
+        selectedTerms.add(match);
+      }
+    }
+  }
+
 
   workOrder_EditTable_SaveTable(name) async {
     workOrdboqitemTableList.clear();

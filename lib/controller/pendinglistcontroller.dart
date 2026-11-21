@@ -1180,7 +1180,7 @@ class PendingListController extends GetxController {
                                                                                     context,
                                                                                     MaterialPageRoute(builder: (context) => PoApprovalDesign(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                   )
-                                                                                : name == "WORK ORDER VERIFICATION PENDING - DIRECT" || name == "WORK ORDER VERIFICATION PENDING - BOQ"
+                                                                                : name == "WORK ORDER VERIFICATION PENDING - DIRECT" || name == "WORK ORDER VERIFICATION PENDING - BOQ" || name == "REPAIR WORK ORDER VERIFICATION PENDING" || name == "REPAIR WORK ORDER APPROVAL PENDING"
                                                                                     ? Navigator.push(
                                                                                         context,
                                                                                         MaterialPageRoute(builder: (context) => WorkOrder(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
@@ -1340,6 +1340,11 @@ class PendingListController extends GetxController {
                                                                                                                                                                                                         context,
                                                                                                                                                                                                         MaterialPageRoute(builder: (context) => SupplierBillApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
                                                                                                                                                                                                       )
+                // : name == "REPAIR WORK ORDER VERIFICATION PENDING"
+                //                                                                                                                                                                                               ? Navigator.push(
+                //                                                                                                                                                                                             context,
+                //                                                                                                                                                                                             MaterialPageRoute(builder: (context) => SupplierBillApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                //                                                                                                                                                                                           )
                                                                                                                                                                                                     : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)));
           }
         } else {

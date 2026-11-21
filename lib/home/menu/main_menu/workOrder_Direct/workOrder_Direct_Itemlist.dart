@@ -50,7 +50,7 @@ class _WorkOrderDirectItemListState extends State<WorkOrderDirectItemList> {
                       Text(
                         widget.heading,
                         style: TextStyle(
-                            fontSize: RequestConstant.Heading_Font_SIZE,
+                            fontSize: widget.heading == "Work Order Direct Item Lists" ? RequestConstant.Heading_Font_SIZE : 18 ,
                             fontWeight: FontWeight.bold),
                       ),
                       TextButton(

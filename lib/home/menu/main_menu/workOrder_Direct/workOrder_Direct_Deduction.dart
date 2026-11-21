@@ -34,34 +34,59 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
   WorkOrderBoqController workOrderBoqController = Get.put(WorkOrderBoqController());
   RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
 
+
   @override
   void initState() {
-    var duration = const Duration(seconds: 0);
-    Future.delayed(duration, () async {
+    super.initState();
 
-      if (workOrderDirectController.saveButton.value == RequestConstant.RESUBMIT || workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL) {
-        workOrderDirectController.workOrder_editListApiDatas.forEach((element) {
-          workOrderDirectController.workid = element.id;
-          workOrderDirectController.workOrdamount.text = element.workOrderAmount.toString();
-          workOrderDirectController.Roundoff.text = element.roundOff.toString();
-          workOrderDirectController.netpayamt.text = element.netAmount.toString();
-          // workOrderDirectController.deductionPaymentCalculation();
-        });
+    Future.delayed(Duration.zero, () async {
+
+      final isRepairDeduction =
+          widget.heading == "Repair Work Order Deduction";
+
+      final saveStatus = isRepairDeduction
+          ? repairWorkOrderController.saveButton.value
+          : workOrderDirectController.saveButton.value;
+
+      if (saveStatus == RequestConstant.RESUBMIT ||
+          saveStatus == RequestConstant.VERIFY ||
+          saveStatus == RequestConstant.APPROVAL) {
+
+        if (isRepairDeduction) {
+          repairWorkOrderController.repair_workOrd_editListApi.forEach((element) {
+            workOrderDirectController.workid = element.id;
+            workOrderDirectController.workOrdamount.text =
+                element.workOrderAmount.toString();
+            workOrderDirectController.Roundoff.text =
+                element.roundOff.toString();
+            workOrderDirectController.netpayamt.text =
+                element.netAmount.toString();
+          });
+        } else {
+          workOrderDirectController.workOrder_editListApiDatas.forEach((element) {
+            workOrderDirectController.workid = element.id;
+            workOrderDirectController.workOrdamount.text =
+                element.workOrderAmount.toString();
+            workOrderDirectController.Roundoff.text =
+                element.roundOff.toString();
+            workOrderDirectController.netpayamt.text =
+                element.netAmount.toString();
+          });
+        }
+
         await workOrderDirectController.deductionPaymentCalculation();
+
         workOrderDirectController.setBaseNetPay(
             workOrderDirectController.workOrdamount.text);
       }
 
-      if (workOrderDirectController.saveButton.value == RequestConstant.SUBMIT) {
-        // workOrderDirectController.workid = 0;
-        // workOrderDirectController.workOrdamount.text = "0.0";
-        // workOrderDirectController.rebateAmount.text = "0.0";
-        // workOrderDirectController.Roundoff.text = "0.0";
+      if (workOrderDirectController.saveButton.value ==
+          RequestConstant.SUBMIT) {
         workOrderDirectController.deductionPaymentCalculation();
       }
     });
-    super.initState();
   }
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -870,7 +895,7 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            workOrderDirectController.saveButton.value,
+                            widget.heading == "Repair Work Order Deduction" ? repairWorkOrderController.saveButton.value : workOrderDirectController.saveButton.value,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: RequestConstant.Lable_Font_SIZE,
@@ -941,7 +966,7 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
       builder: (context) => AlertDialog(
         title: const Text('Alert!'),
         content: Text(
-         'Are you sure to ${workOrderDirectController.saveButton.value}?'
+         'Are you sure to ${widget.heading == "Repair Work Order Deduction" ? repairWorkOrderController.saveButton.value :workOrderDirectController.saveButton.value}?'
         ),
         actions: [
           Container(
@@ -1006,7 +1031,7 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                           }
                         },
                         child: Text(
-                          workOrderDirectController.saveButton.value,
+                          widget.heading == "Repair Work Order Deduction" ? repairWorkOrderController.saveButton.value : workOrderDirectController.saveButton.value,
                           style: TextStyle(
                             color:
                             Theme.of(context).primaryColor,
