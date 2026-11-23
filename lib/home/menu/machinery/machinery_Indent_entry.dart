@@ -374,6 +374,7 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                           },
                         ),
                       ),
+
                       Container(
                         margin:
                         const EdgeInsets.only(top: 2, left: 10, right: 10),
@@ -752,124 +753,6 @@ class _MachineryIndentEntryState extends State<MachineryIndentEntry> {
                       ),
                     )
                 )),
-                // Obx(
-                //       () => MaterialsBottomSheetNew(
-                //     isVisible: mrn_request_controller
-                //         .Material_itemview_GetDbList
-                //         .value
-                //         .isNotEmpty,
-                //
-                //     childBuilder: (
-                //         context,
-                //         scrollController,
-                //         ) {
-                //       final list = mrn_request_controller.Material_itemview_GetDbList.value;
-                //
-                //       return ListView.builder(
-                //         controller: scrollController,
-                //         shrinkWrap: true,
-                //         physics: const NeverScrollableScrollPhysics(),
-                //         padding: const EdgeInsets.all(10),
-                //         itemCount: list.length,
-                //
-                //         itemBuilder: (context, index) {
-                //           final item = list[index];
-                //           mrn_request_controller
-                //               .Material_itemlist_textControllersInitiate();
-                //           return MaterialCard(
-                //             title:
-                //             "${item.material}",
-                //             mrnshowBalQty: false,
-                //             showDelete: machineryIndentController.saveButton.value != RequestConstant.VERIFY
-                //                 ? true:false,
-                //             onDelete: () async {
-                //               final confirmed = await AppAlertDialog.showAction(context, AlertAction.remove);
-                //
-                //               if (confirmed == true) {
-                //                 mrn_request_controller.deleteParticularList(mrn_request_controller.Material_itemview_GetDbList[index]);
-                //                 mrn_request_controller.Material_itemview_GetDbList.remove(mrn_request_controller.Material_itemview_GetDbList[index]);
-                //                 mrn_request_controller.getMaterialTablesDatas();
-                //               }
-                //             },
-                //
-                //             children: [
-                //               MaterialFieldRow(
-                //                 bottomSpacing: 8,
-                //                 left: CommonMaterialField(
-                //                   label: "Unit",
-                //                   type: MaterialFieldType.staticValue,
-                //                   value: item.scale.toString(),
-                //                   horizontal: true,
-                //                 ),
-                //                 right: CommonMaterialField(
-                //                   label: "Quantity",
-                //                   controller: mrn_request_controller.Addwork_qtyControllers[index],
-                //                   type: MaterialFieldType.editable,
-                //                   horizontal: true,
-                //                   keyboardType: Platform.isAndroid
-                //                       ? const TextInputType.numberWithOptions(decimal: true)
-                //                       : TextInputType.text,
-                //                   inputFormatters: [
-                //                     TextInputFormatter.withFunction(
-                //                           (oldValue, newValue) {
-                //                         return RegExp(r'^\d*\.?\d{0,2}$')
-                //                             .hasMatch(newValue.text)
-                //                             ? newValue
-                //                             : oldValue;
-                //                       },
-                //                     ),
-                //                   ],
-                //                   onTap: () {
-                //                     if (mrn_request_controller.Addwork_qtyControllers[index].text != "" && mrn_request_controller.Addwork_qtyControllers[index].text != "0" && mrn_request_controller.Addwork_qtyControllers[index].text != "0.0") {
-                //                       return;
-                //                     } else {
-                //                       mrn_request_controller.Addwork_qtyControllers[index].text = "";
-                //                     }
-                //                   },
-                //                   onChanged: (value) {
-                //                     if(mrn_request_controller.activeType.value){
-                //                       mrn_request_controller.MaterialItemlistBal_clickEdit(index);
-                //                     }
-                //                     else{
-                //                       mrn_request_controller.updateConsumTables();
-                //                     }
-                //                   },
-                //                 ),
-                //               ),
-                //               MaterialFieldRow(
-                //                 bottomSpacing: 8,
-                //                 left: CommonMaterialField(
-                //                   label: "Desc",
-                //                   type: MaterialFieldType.editable,
-                //                   value: mrn_request_controller
-                //                       .Addwork_descControllers[index].toString(),
-                //                   controller: mrn_request_controller
-                //                       .Addwork_descControllers[index],
-                //                   horizontal: true,
-                //                   onChanged: (val) {
-                //                     mrn_request_controller
-                //                         .MaterialItemlist_clickEdit();
-                //                   },
-                //                 ),
-                //               ),
-                //               CommonMaterialField(
-                //                 label: "Remarks",
-                //                 controller: mrn_request_controller
-                //                     .Addwork_remarksControllers[index],
-                //                 type: MaterialFieldType.editable,
-                //                 horizontal: true,
-                //                 onChanged: (val) {
-                //                   mrn_request_controller
-                //                       .MaterialItemlist_clickEdit();
-                //                 },
-                //               ),
-                //             ],
-                //           );
-                //         },
-                //       );
-                //     },
-                //   ),
-                // ),
               ])),
         ),
       ),

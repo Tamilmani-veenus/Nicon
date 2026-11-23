@@ -258,7 +258,7 @@ class _MaterialReturn_EntryState extends State<MaterialReturn_Entry> {
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 border: InputBorder.none,
-                                labelText:"Project Name *",
+                                labelText:"Project Name",
                                 labelStyle: TextStyle(
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE),

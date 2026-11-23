@@ -10,7 +10,7 @@ import 'package:nicon/controller/pendinglistcontroller.dart';
 import 'package:nicon/controller/projectcontroller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
 
-import '../home/menu/machinery/machinery_entry.dart';
+import '../home/menu/machinery/machinery_Indent_entry.dart';
 import '../models/machinery_indent_save_model.dart';
 import '../provider/machinery_indent_provider.dart';
 import '../utilities/baseutitiles.dart';

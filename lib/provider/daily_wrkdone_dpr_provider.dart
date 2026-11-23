@@ -85,7 +85,7 @@ class DPRProvider{
     try {
       var value = await ApiManager.getAPICall(
           type=="Dprnew"?"${ApiConstant.GET_DPRNEW_SUBCONTRACTOR_LIST}?projectId=$Projectid&siteId=$SiteId&entryType=$entryType" :
-          "${ApiConstant.GET_DPR_SUBCONTRACTOR_LIST}?projectId=$Projectid&siteId=$SiteId"
+          "${type=="machineryDPR"?ApiConstant.GET_MAC_DPR_SUBCONTRACTOR_LIST:ApiConstant.GET_DPR_SUBCONTRACTOR_LIST}?projectId=$Projectid&siteId=$SiteId"
       );
       DprTypeSucontResponse data = dprTypeSucontResponseFromJson(value);
       return data;

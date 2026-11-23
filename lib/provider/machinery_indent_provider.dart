@@ -85,8 +85,7 @@ class MachineryIndentProvider {
 
 class MachineryDPRProvider {
 
-  static Future getMachineryDPREntryList(String frdate,
-      String todate) async {
+  static Future getMachineryDPREntryList(String frdate, String todate) async {
     try {
       var value = await ApiManager.getAPICall("${ApiConstant
           .GETMAC_DPR_ENTRY_LIST}?Frdate=$frdate&Todate=$todate");
@@ -96,4 +95,15 @@ class MachineryDPRProvider {
       return null;
     }
   }
+
+  static Future getMachineryDPRDetList(pId,sId,subId) async {
+    try {
+      var value = await ApiManager.getAPICall("${ApiConstant.GET_MAC_DPR_DET_LIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId");
+      return jsonDecode(value);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
 }
