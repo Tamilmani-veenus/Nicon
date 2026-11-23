@@ -6,9 +6,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:nicon/controller/pendinglistcontroller.dart';
 import 'package:nicon/controller/projectcontroller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
 import '../db_services/materiallist_service.dart';
+import '../home/menu/machinery/machinery_dpr_entry.dart';
 import '../models/machinary_dpr_save_model.dart';
 import '../models/machinery_dpr_det_model.dart';
 import '../models/machinerydpr_model.dart';
@@ -28,22 +30,24 @@ class MachineryDPRController extends GetxController {
   final preparedByController = TextEditingController();
 
   RxList macReqEtyList = [].obs;
+  RxList macReqEditList = [].obs;
   RxList mainEtyList = [].obs;
   RxList<MachineryDPRDetLocal> macReqEtyDetList = <MachineryDPRDetLocal>[].obs;
   RxList<SubContractMachineryDailyWorkDetSaveModel> machineryDetailsDto = <SubContractMachineryDailyWorkDetSaveModel>[].obs;
   RxString saveButton = RequestConstant.SUBMIT.obs;
 
   int reqId = 0;
-  RxInt createdById = 0.obs;
 
   var machineryDPRDetLocalModel = MachineryDPRDetLocal();
   var machineryDPRDetLocalService = MachineryDPRDetLocalService();
 
+  PendingListController pendingListController = Get.put(PendingListController());
 
   Future getMacDPREntryList() async {
     mainEtyList.value=[];
     macReqEtyList.value=[];
-    var response = await MachineryDPRProvider.getMachineryDPREntryList(
+    await ClickUtils.run(() async {
+      var response = await MachineryDPRProvider.getMachineryDPREntryList(
         macDPRListFrDate.text, macDPRListToDate.text);
     if (response != null) {
       if (response["success"] == true) {
@@ -59,6 +63,39 @@ class MachineryDPRController extends GetxController {
     } else {
       BaseUtitiles.showToast("Something went wrong..");
     }
+  });
+        }
+
+  Future MaterialIntentList_EditApi(int reqId,String MenuName, type , context) async {
+    macReqEditList.value=[];
+    await ClickUtils.run(() async {
+      final value = await MachineryDPRProvider.getMachineryDPREditList(reqId);
+      if (value != null) {
+        if (value["success"] == true) {
+          deleteDetTableDatas();
+          macReqEditList.value = [value["result"]];
+          if (macReqEditList.value.isNotEmpty) {
+            MachineryDPRDetLocal_editSaveDetTable(list: macReqEditList.value[0]["subContractMachineryDailyWorkdetLink"]);
+            getMachineryDPRDetLocalDatas();
+            if(type=="Edit"){
+              saveButton.value = RequestConstant.RESUBMIT;
+            }else{
+              saveButton.value = RequestConstant.APPROVAL;
+            }
+            await Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>  MachineryDPREntry(heading: MenuName)));
+          } else {
+            BaseUtitiles.showToast("No Data Found");
+          }
+        } else {
+          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+        }
+      } else {
+        BaseUtitiles.showToast('Something went wrong..');
+      }
+    });
   }
 
   Future<bool> machineryDPRListDeleteApi(int reqId) async {
@@ -135,10 +172,10 @@ class MachineryDPRController extends GetxController {
 
           await MachineryDPRDetLocal_editSaveDetTable(
               list: response["result"],
-              subId: subId);
+              );
 
           // Load the local DB models
-          await getMachineryDPRDetLocalDatas(subId);
+          await getMachineryDPRDetLocalDatas();
 
         } else {
           BaseUtitiles.showToast("No Data Found");
@@ -152,32 +189,24 @@ class MachineryDPRController extends GetxController {
     }
   }
 
-  Future MachineryDPRDetLocal_editSaveDetTable({list, subId}) async {
+  Future MachineryDPRDetLocal_editSaveDetTable({list}) async {
     List<MachineryDPRDetLocal> machineryDPRDetLocalList = [];
 
     for (var element in list) {
       machineryDPRDetLocalModel = MachineryDPRDetLocal();
 
       machineryDPRDetLocalModel.apiId = element['id'];
-      machineryDPRDetLocalModel.projectId = element['projectId'];
-      machineryDPRDetLocalModel.projectName = element['projectName'];
-      machineryDPRDetLocalModel.siteName = element['siteName'];
-      machineryDPRDetLocalModel.itemDescription = element['itemDescription'];
-      machineryDPRDetLocalModel.qty = double.tryParse(element['qty'].toString()) ?? 0.0;
-      machineryDPRDetLocalModel.unit = element['unit'];
+      machineryDPRDetLocalModel.itemDescription = element['itemDescription'] ?? element["itemDesc"];
+      machineryDPRDetLocalModel.unit = element['unit'] ?? element["scaleId"];
       machineryDPRDetLocalModel.scaleName = element['scaleName'];
       machineryDPRDetLocalModel.rate = double.tryParse(element['rate'].toString()) ?? 0.0;
-      machineryDPRDetLocalModel.amount = double.tryParse(element['amount'].toString()) ?? 0.0;
       machineryDPRDetLocalModel.workRemarks = element['workRemarks'];
-      machineryDPRDetLocalModel.machineryReqDetid = element['machineryReqDetid'];
-      machineryDPRDetLocalModel.subId = subId;
-
-      machineryDPRDetLocalModel.startReading = 0;
-      machineryDPRDetLocalModel.endReading = 0;
-      machineryDPRDetLocalModel.totalReading = 0;
-      machineryDPRDetLocalModel.enteredQty = 0;
-      machineryDPRDetLocalModel.enteredAmount = 0;
-      machineryDPRDetLocalModel.remarks = '';
+      machineryDPRDetLocalModel.machineryReqDetid = element['subcontractMachineryWorkOrderDetId'] ?? 0;
+      machineryDPRDetLocalModel.startReading = element['startReading'] ?? 0.0;
+      machineryDPRDetLocalModel.endReading = element['endReading'] ?? 0.0;
+      machineryDPRDetLocalModel.totalReading = element['totalReading'] ?? 0.0;
+      machineryDPRDetLocalModel.enteredQty = element['qty'] ?? 0.0;
+      machineryDPRDetLocalModel.enteredAmount = element['amount'] ?? 0.0;
 
       machineryDPRDetLocalList.add(machineryDPRDetLocalModel);
     }
@@ -188,39 +217,29 @@ class MachineryDPRController extends GetxController {
     return savedatas;
   }
 
-  Future getMachineryDPRDetLocalDatas(int subId) async {
+  Future getMachineryDPRDetLocalDatas() async {
     macReqEtyDetList.value = [];
 
     var Machlist = await machineryDPRDetLocalService
         .MachineryDPRDetLocal_table_readAll();
 
     Machlist.forEach((user) {
-      if (user['subId'] == subId) {
         var machineryDPRDetLocal = MachineryDPRDetLocal();
 
         machineryDPRDetLocal.localId = user['localId'];
         machineryDPRDetLocal.apiId = user['apiId'];
-        machineryDPRDetLocal.projectId = user['projectId'];
-        machineryDPRDetLocal.projectName = user['projectName'];
-        machineryDPRDetLocal.siteName = user['siteName'];
         machineryDPRDetLocal.itemDescription = user['itemDescription'];
-        machineryDPRDetLocal.qty = double.tryParse(user['qty'].toString()) ?? 0.0;
         machineryDPRDetLocal.unit = user['unit'];
         machineryDPRDetLocal.scaleName = user['scaleName'];
         machineryDPRDetLocal.rate = double.tryParse(user['rate'].toString()) ?? 0.0;
-        machineryDPRDetLocal.amount = double.tryParse(user['amount'].toString()) ?? 0.0;
         machineryDPRDetLocal.workRemarks = user['workRemarks'];
         machineryDPRDetLocal.machineryReqDetid = user['machineryReqDetid'];
-        machineryDPRDetLocal.subId = user['subId'];
         machineryDPRDetLocal.startReading = double.tryParse(user['startReading'].toString()) ?? 0.0;
         machineryDPRDetLocal.endReading = double.tryParse(user['endReading'].toString()) ?? 0.0;
         machineryDPRDetLocal.totalReading = double.tryParse(user['totalReading'].toString()) ?? 0.0;
         machineryDPRDetLocal.enteredQty = double.tryParse(user['enteredQty'].toString()) ?? 0.0;
         machineryDPRDetLocal.enteredAmount = double.tryParse(user['enteredAmount'].toString()) ?? 0.0;
-        machineryDPRDetLocal.remarks = user['remarks'] ?? '';
-
         macReqEtyDetList.add(machineryDPRDetLocal);
-      }
     });
 
     return macReqEtyDetList;
@@ -249,8 +268,7 @@ class MachineryDPRController extends GetxController {
   Future SaveEntryScreen(BuildContext context, int id,projectId,siteId,subcontId,empId) async {
     await Future.delayed(const Duration(seconds: 0));
 
-    SubContractMachineryDailyWorkSaveModel formdata =
-    SubContractMachineryDailyWorkSaveModel(
+    SubContractMachineryDailyWorkSaveModel formdata = SubContractMachineryDailyWorkSaveModel(
       id: id,
       workNo: autoYearWiseNoController.text,
       workDate: requestDateController.text,
@@ -259,11 +277,11 @@ class MachineryDPRController extends GetxController {
       subContractorId: subcontId,
       billStatus: "N",
       totalAmount: totalAmount,
-      refNo: refNoController.text,
-      remarks: remarksController.text,
+      refNo: refNoController.text==""?"-":refNoController.text,
+      remarks: remarksController.text==""?"-":remarksController.text,
       createdBy: saveButton.value == RequestConstant.SUBMIT
           ? int.tryParse(empId)
-          : createdById.value,
+          : macReqEditList[0]["createdBy"],
       verifyBy: saveButton.value == RequestConstant.APPROVAL
           ? int.tryParse(empId)
           : 0,
@@ -277,30 +295,28 @@ class MachineryDPRController extends GetxController {
 
     debugPrint(jsonEncode(formdata.toJson()), wrapWidth: 1024);
 
-    final list = await MachineryDPRProvider
-        .saveSubContractMachineryDailyWorkAPI(formdata);
+    final list = await MachineryDPRProvider.saveSubContractMachineryDailyWorkAPI(formdata,id);
 
-    // if (list != null) {
-    //   if (list["success"] == true) {
-    //     if (saveButton.value == RequestConstant.SUBMIT ||
-    //         saveButton.value == RequestConstant.RESUBMIT) {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await getEntryList();
-    //       BaseUtitiles.popMultiple(context, count: 3);
-    //     } else if (saveButton.value == RequestConstant.APPROVAL) {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await pendingListController.getPendingList();
-    //       BaseUtitiles.popMultiple(context, count: 3);
-    //     }
-    //   } else {
-    //     BaseUtitiles.showToast(
-    //         list["message"] ?? 'Something went wrong..');
-    //     BaseUtitiles.popMultiple(context, count: 2);
-    //   }
-    // } else {
-    //   BaseUtitiles.showToast("Something went wrong..");
-    //   BaseUtitiles.popMultiple(context, count: 3);
-    // }
+    if (list != null) {
+      if (list["success"] == true) {
+        if (saveButton.value == RequestConstant.SUBMIT || saveButton.value == RequestConstant.RESUBMIT) {
+          BaseUtitiles.showToast(list["message"]);
+          await getMacDPREntryList();
+          BaseUtitiles.popMultiple(context, count: 3);
+        } else if (saveButton.value == RequestConstant.APPROVAL) {
+          BaseUtitiles.showToast(list["message"]);
+          await pendingListController.getPendingList();
+          BaseUtitiles.popMultiple(context, count: 3);
+        }
+      } else {
+        BaseUtitiles.showToast(
+            list["message"] ?? 'Something went wrong..');
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    } else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 3);
+    }
   }
 
   List<SubContractMachineryDailyWorkDetSaveModel> getMachineryDetails(int id) {
@@ -309,20 +325,20 @@ class MachineryDPRController extends GetxController {
     for (int index = 0; index < macReqEtyDetList.length; index++) {
       var item = macReqEtyDetList[index];
 
-      if ((item.amount ?? 0) > 0) {
+      if ((item.enteredAmount ?? 0) > 0) {
         var list = SubContractMachineryDailyWorkDetSaveModel(
-          id: 0,
+          id: item.apiId,
           subContractDailyWorkMasId: id,
-          subcontractMachineryWorkOrderDetId: item.apiId,
+          subcontractMachineryWorkOrderDetId: item.machineryReqDetid,
           scaleId: item.unit,
           itemDesc: item.itemDescription,
           rate: item.rate,
           startReading: item.startReading,
           endReading: item.endReading,
           totalReading: item.totalReading,
-          qty: item.qty,
-          amount: item.amount,
-          workRemarks: item.remarks,
+          qty: item.enteredQty,
+          amount: item.enteredAmount,
+          workRemarks: item.workRemarks==""?"-":item.workRemarks,
           billStatus: "N",
         );
 

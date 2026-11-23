@@ -98,6 +98,17 @@ class MachineryDPRProvider {
     }
   }
 
+  static Future getMachineryDPREditList(reqId) async {
+    try {
+      var value = await ApiManager.getAPICall("${ApiConstant
+          .GETMAC_DPR_EDIT_LIST}?id=$reqId");
+      return jsonDecode(value);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   static Future getMachineryDPRDetList(pId,sId,subId) async {
     try {
       var value = await ApiManager.getAPICall("${ApiConstant.GET_MAC_DPR_DET_LIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId");
@@ -109,14 +120,18 @@ class MachineryDPRProvider {
   }
 
   static Future<dynamic> saveSubContractMachineryDailyWorkAPI(
-      SubContractMachineryDailyWorkSaveModel data) async {
+      SubContractMachineryDailyWorkSaveModel data,reqId) async {
     try {
-      final url = ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API;
+      final bool isUpdate = reqId != 0;
 
-      print("Machinery Daily Work Save API: $url");
+      final String url = isUpdate
+          ? ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_UPDATE_API
+          : ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API;
+
+      debugPrint("Machinery Daily Work ${isUpdate ? 'UPDATE' : 'SAVE'} API: $url");
 
       final request = http.MultipartRequest(
-        'POST',
+        isUpdate ? 'PUT' : 'POST',
         Uri.parse(url),
       );
 
@@ -197,7 +212,7 @@ class MachineryDPRProvider {
       }
 
       if (kDebugMode) {
-        print("Machinery Daily Work Fields: ${request.fields}");
+        request.fields.forEach((k, v) => debugPrint("$k : $v"));
       }
 
       final response = await request.send();

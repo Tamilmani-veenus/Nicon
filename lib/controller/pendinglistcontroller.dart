@@ -488,7 +488,7 @@ class PendingListController extends GetxController {
       if (response.success == true) {
         onclickPendingListDet  = Url == "PENDING QUOTE" || Url == "QUOTE VERIFICATION PENDING" ||
           Url == "QUOTE APPROVAL PENDING" ? response.result! :
-          Url == "MACHINERY INDENT" ?response.result!.machineryReqOrdDetLink!:response
+          Url == "MACHINERY INDENT" ?response.result!.machineryReqOrdDetLink!:Url == "MACHINERY DPR" ?response.result!.subContractMachineryDailyWorkdetLink!:response
           .result!.mMatReqMasLink!;
         print(onclickPendingListDet.toString());
         return Url == "MRN VERIFICATION"
@@ -544,7 +544,7 @@ class PendingListController extends GetxController {
                                           ProjectName: Projectname,
                                           heading: Url,
                                         ))):
-        Url == "MACHINERY INDENT" ?
+        Url == "MACHINERY INDENT" ||  Url == "MACHINERY DPR"?
         await Navigator.push(
             context,
             MaterialPageRoute(
@@ -1327,7 +1327,7 @@ class PendingListController extends GetxController {
                                                                                                                                                                                                 ? Navigator.push(
                                                                                                                                                                                                     context,
                                                                                                                                                                                                     MaterialPageRoute(builder: (context) => ManPowerApproval(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
-                                                                                                                                                                                                  ): name == "MACHINERY VERIFICATION PENDING" || name == "MACHINERY PRE APPROVAL PENDING" || name =="MACHINERY APPROVAL PENDING"
+                                                                                                                                                                                                  ): name == "MACHINERY VERIFICATION PENDING" || name == "MACHINERY PRE APPROVAL PENDING" || name =="MACHINERY APPROVAL PENDING" || name =="MACHINERY DPR APPROVAL PENDING"
                                                                                                                                                                                                           ? await Navigator.push(
                                                                                                                                                                                                         context,
                                                                                                                                                                                                         MaterialPageRoute(builder: (context) => MachineryVerifyApproval(

@@ -260,6 +260,9 @@ class PendingListProvider {
       else if (formName =="MACHINERY APPROVAL PENDING") {
         response = await ApiManager.getAPICall(ApiConstant.GET_MACHINERY_APPROVELIST);
       }
+      else if (formName =="MACHINERY DPR APPROVAL PENDING") {
+        response = await ApiManager.getAPICall(ApiConstant.GET_MACHINERY_DPR_APPROVELIST);
+      }
       else if (formName == "PENDING PO [AGENCY]" || formName == "PENDING PO [TRADER]" || formName == "PENDING PO [SUPPLIER]") {
         String supplierCategory = formName == "PENDING PO [SUPPLIER]"
             ? "S"
@@ -620,6 +623,10 @@ class PendingListProvider {
       } else if (Url == "MACHINERY INDENT") {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GET_MACHINERY_VERIFY_API}?id=$Rid");
+      }
+      else if (Url == "MACHINERY DPR") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETMAC_DPR_EDIT_LIST}?id=$Rid");
       }
       else if (Url == "PENDING PO [AGENCY]" || Url == "PENDING PO [TRADER]" || Url == "PENDING PO [SUPPLIER]") {
         String supplierCategory = Url == "PENDING PO [SUPPLIER]"

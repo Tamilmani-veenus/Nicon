@@ -23,6 +23,7 @@ import '../../controller/company_nmr_controller.dart';
 import '../../controller/dailywrk_done_dprlabour_controller.dart';
 import '../../controller/dailywrk_done_dprnew_controller.dart';
 import '../../controller/logincontroller.dart';
+import '../../controller/machinery_dpr_controller.dart';
 import '../../controller/machinery_indent_controller.dart';
 import '../../controller/man_power_controller.dart';
 import '../../controller/material_transreq_controller.dart';
@@ -21422,6 +21423,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
   PendingListController pendingListController = Get.put(PendingListController());
   MachineryIndentController machineryIndentController = Get.put(MachineryIndentController());
   MRN_Request_Controller mrn_request_controller = Get.put(MRN_Request_Controller());
+  MachineryDPRController machineryDPRController = Get.put(MachineryDPRController());
 
   @override
   Widget build(BuildContext context) {
@@ -21518,40 +21520,6 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                       )
                     ],
                   ),
-                  // CommonPendingReqHeader(
-                  //   heading: widget.heading,
-                  //   searchController: editingController,
-                  //   onSearchChanged: (value) {
-                  //
-                  //     setState(() {
-                  //       pendingListController.mainlist.value =
-                  //           BaseUtitiles
-                  //               .filterSearchResults(
-                  //               value,
-                  //               pendingListController
-                  //                   .pendingmainlist,
-                  //                   (item) {
-                  //                 final String typeText =
-                  //                 item.requestType.toString().trim() == "M"
-                  //                     ? "Machinery Items"
-                  //                     : "-";
-                  //
-                  //                 return [
-                  //                   typeText,
-                  //                   item.projectName.toString(),
-                  //                   item.siteName.toString(),
-                  //                   item.reqOrdNo.toString(),
-                  //                   item.createdByNamebill.toString(),
-                  //                   CommonDateUtils.formatDateForDisplay(
-                  //                       item.reqOrdDate.toString()),
-                  //                   CommonDateUtils.formatDateForDisplay(
-                  //                       item.reqDueDate.toString()),
-                  //                 ];
-                  //               }
-                  //           );
-                  //     });
-                  //   },
-                  // ),
                   Container(
                     margin: EdgeInsets.only(left: 6, right: 6),
                     height: BaseUtitiles.getheightofPercentage(context, 80),
@@ -21564,18 +21532,36 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () async {
-                              mrn_request_controller.delete_MaterialIntent_itemlist_Table();
-                              mrn_request_controller.Material_itemview_GetDbList.clear();
-                              await machineryIndentController
-                                  .machineryIndentEdit(
-                                pendingListController
-                                    .mainlist
-                                    .value[index]
-                                    .id!,
-                                widget.heading,
-                                context,
-                                widget.heading=="MACHINERY VERIFICATION PENDING"?"Verify":widget.heading=="MACHINERY PRE APPROVAL PENDING"?"Preapprove":"approve",
-                              );
+                              if(widget.heading!="MACHINERY DPR APPROVAL PENDING") {
+                                mrn_request_controller
+                                    .delete_MaterialIntent_itemlist_Table();
+                                mrn_request_controller
+                                    .Material_itemview_GetDbList.clear();
+                                await machineryIndentController
+                                    .machineryIndentEdit(
+                                  pendingListController
+                                      .mainlist
+                                      .value[index]
+                                      .id!,
+                                  widget.heading,
+                                  context,
+                                  widget.heading ==
+                                      "MACHINERY VERIFICATION PENDING"
+                                      ? "Verify"
+                                      : widget.heading ==
+                                      "MACHINERY PRE APPROVAL PENDING"
+                                      ? "Preapprove"
+                                      : "approve",
+                                );
+                              }else{
+                                await machineryDPRController.MaterialIntentList_EditApi(
+                                    pendingListController
+                                        .mainlist
+                                        .value[index]
+                                        .id,
+                                    widget.heading,"Approve",
+                                    context);
+                              }
                             },
                             child: Container(
                               margin: EdgeInsets.only(left: 3, right: 3),
@@ -21604,7 +21590,8 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                                 Text(
                                                   pendingListController.mainlist
                                                       .value[index].reqOrdDate
-                                                      .toString(),
+                                                       ?? pendingListController.mainlist
+                                                      .value[index].workDate,
                                                   style: TextStyle(
                                                       color: Theme.of(context)
                                                           .primaryColor,
@@ -21618,41 +21605,45 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                             margin: EdgeInsets.only(right: 10),
                                             child: Text(
                                               pendingListController.mainlist
-                                                  .value[index].reqOrdNo
-                                                  .toString().trim(),
+                                                  .value[index].reqOrdNo ?? pendingListController.mainlist
+                                                  .value[index].workNo,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: <Widget>[
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                top: 5, left: 10),
-                                            child: Text(""),
+                                      if(widget.heading!="MACHINERY DPR APPROVAL PENDING")Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: 10),
+                                          Row(
+                                            children: <Widget>[
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                    top: 5, left: 10),
+                                                child: Text(""),
+                                              ),
+                                              Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                    "Req Due Date",
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                              Expanded(
+                                                  flex: 7,
+                                                  child: Text(
+                                                    pendingListController.mainlist
+                                                        .value[index].reqDueDate
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  )),
+                                            ],
                                           ),
-                                          Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                "Req Due Date",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              )),
-                                          Expanded(
-                                              flex: 7,
-                                              child: Text(
-                                                pendingListController.mainlist
-                                                    .value[index].reqDueDate
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              )),
                                         ],
                                       ),
                                       SizedBox(height: 10),
@@ -21714,7 +21705,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                         ],
                                       ),
                                       SizedBox(height: 10),
-                                      Row(
+                                      (widget.heading!="MACHINERY DPR APPROVAL PENDING")?Row(
                                         children: <Widget>[
                                           Container(
                                             margin: EdgeInsets.only(
@@ -21744,6 +21735,34 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                                 ),
                                               )),
                                         ],
+                                      ):Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                top: 5, left: 10),
+                                            child: Text(""),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Subcontractor",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 7,
+                                              child: Text(
+                                                pendingListController
+                                                    .mainlist
+                                                    .value[index]
+                                                    .SubcontractName,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              )),
+                                        ],
                                       ),
                                       SizedBox(height: 10),
                                       // Divider(thickness: 1),
@@ -21767,9 +21786,11 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                           Expanded(
                                               flex: 7,
                                               child: Text(
-                                                pendingListController.mainlist
+                                                  widget.heading!="MACHINERY DPR APPROVAL PENDING"?pendingListController.mainlist
                                                     .value[index].createdByNamebill
-                                                    .toString(),
+                                                    .toString():pendingListController.mainlist
+                                                      .value[index].prepareby
+                                                      .toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -21808,15 +21829,19 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                                 onTap: () {
                                                   pendingListController
                                                       .GetDetDetails(
-                                                      "MACHINERY INDENT",
+                                                      widget.heading!="MACHINERY DPR APPROVAL PENDING"?"MACHINERY INDENT":"MACHINERY DPR",
                                                       pendingListController
                                                           .mainlist
                                                           .value[index]
                                                           .id!,
-                                                      pendingListController
+                                                      widget.heading!="MACHINERY DPR APPROVAL PENDING"?pendingListController
                                                           .mainlist
                                                           .value[index]
                                                           .reqOrdNo
+                                                          .toString():pendingListController
+                                                          .mainlist
+                                                          .value[index]
+                                                          .workNo
                                                           .toString(),
                                                       pendingListController
                                                           .mainlist

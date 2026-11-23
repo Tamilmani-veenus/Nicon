@@ -58,40 +58,40 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
         siteController.Sitename.text = "--SELECT--";
         dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
         dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
-
-        // machineryIndentController.preparedByController.text =
-        //     loginController.EmpName();
-        // machineryIndentController.reqTypeController.text = "Machinery Items";
-        // machineryIndentController.reqType.value = "M";
-        // bottomsheetControllers.searchcontroller.text = "";
       }
 
-      // else {
-      //   for (var element in machineryIndentController
-      //       .machineryEditListApiValue) {
-      //     machineryIndentController.reqId = element.id;
-      //     machineryIndentController.createdById = element.id;
+      else {
+        for (var result in machineryDPRController.macReqEditList) {
+          machineryDPRController.reqId = result['id'] ?? 0;
+          machineryDPRController.autoYearWiseNoController.text =
+              (result['workNo'] ?? "").toString();
 
-      //     machineryIndentController.autoYearWiseNoController.text =
-      //         element.reqOrdNo;
-      //     machineryIndentController.requestDateController.text =
-      //         element.reqOrdDate;
-      //     machineryIndentController.dueDateController.text = element.reqDueDate;
-      //     projectController.selectedProjectId.value = element.projectId;
-      //     siteController.selectedsiteId.value = element.siteId;
-      //     projectController.projectname.text = element.projectName;
-      //     siteController.Sitename.text = element.siteName;
-      //     machineryIndentController.preparedByController.text =
-      //         element.createdByName;
-      //     machineryIndentController.reqTypeController.text =
-      //     element.requestType.toString().trim() == "M"
-      //         ? "Machinery Items"
-      //         : "-";
-      //     machineryIndentController.reqType.value =
-      //         element.requestType.toString();
-      //     machineryIndentController.remarksController.text = element.reqRemarks;
-      //   }
-      // }
+          machineryDPRController.requestDateController.text =
+              (result['workDate'] ?? "").toString();
+
+          machineryDPRController.refNoController.text =
+              (result['refNo'] ?? "").toString();
+
+          machineryDPRController.remarksController.text =
+              (result['remarks'] ?? "").toString();
+
+          machineryDPRController.preparedByController.text =
+              (result['createdName'] ?? loginController.EmpName()).toString();
+
+          projectController.projectname.text =
+              (result['projectName'] ?? "--SELECT--").toString();
+          projectController.selectedProjectId.value = result['projectId'] ?? 0;
+
+          siteController.Sitename.text =
+              (result['siteName'] ?? "--SELECT--").toString();
+          siteController.selectedsiteId.value = result['siteId'] ?? 0;
+
+          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text =
+              (result['subcontractorName'] ?? "--SELECT--").toString();
+          dailyWrkDone_DPR_Controller.TypeSubcontId.value =
+              result['subContractorId'] ?? 0;
+        }
+      }
 
       if (!mounted) return;
 
@@ -133,7 +133,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Expanded(
+                    if(machineryDPRController.saveButton.value == RequestConstant.SUBMIT) Expanded(
                       child: InkWell(
                         child: Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
@@ -157,9 +157,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                           ),
                         ),
                         onTap: () {
-                          setState(() {
-                            // ResetAlert(context);
-                          });
+                            ResetAlert(context);
                         },
                       ),
                     ),
@@ -305,7 +303,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                               .text,
                           controller: machineryDPRController
                               .requestDateController,
-                          selectable: true,
+                          selectable:  machineryDPRController.saveButton.value == RequestConstant.SUBMIT,
                           initialDate: DateTime.tryParse(
                             machineryDPRController.requestDateController
                                 .text,
@@ -747,39 +745,24 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          // mrn_request_controller.reqId = 0;
-                          // mrn_request_controller.saveButton.value =
-                          //     RequestConstant.SUBMIT;
-                          // mrn_request_controller
-                          //     .delete_MaterialIntent_itemlist_Table();
-                          // mrn_request_controller.Material_itemview_GetDbList
-                          //     .clear();
-                          // projectController.projectname.text = "--SELECT--";
-                          // projectController.selectedProjectId.value = 0;
-                          // subcontractorController.Subcontractorname.text =
-                          // "--SELECT--";
-                          // subcontractorController.selectedSubcontId.value = 0;
-                          // mrn_request_controller.RemarksController.text = '';
-                          // mrn_request_controller.RequestDateController.text =
-                          //     BaseUtitiles.initiateCurrentDateFormat();
-                          // mrn_request_controller.DuedateController.text =
-                          //     BaseUtitiles.initiateCurrentDateFormat();
-                          // mrn_request_controller.preparedbyController.text =
-                          //     loginController.EmpName();
-                          // mrn_request_controller.autoYearWiseNoController.text =
-                          //     autoYearWiseNoController
-                          //         .MRNIndent_autoYrsWise.value;
-                          // mrn_request_controller.ReqTypeController.text =
-                          // "--SELECT--";
-                          // mrn_request_controller.ReqType.value = "0";
-                          // siteController.selectedsiteId = 0.obs;
-                          // siteController.selectedsitedropdownName =
-                          //     "--SELECT--".obs;
-                          // siteController.getSiteDropdownvalue.value.clear();
-                          // siteController.Sitename.text = RequestConstant.SELECT;
-                          // siteController.siteDropdownName.clear();
-                          // bottomsheetControllers.searchcontroller.text = "";
-                          // Navigator.pop(context);
+                          machineryDPRController.deleteDetTableDatas();
+                          machineryDPRController.macReqEditList.value=[];
+                          await autoYearWiseNoController.AutoYearWiseNo("MACHINERY DPR");
+                          machineryDPRController.autoYearWiseNoController.text = autoYearWiseNoController.MachineryDPR_autoYrWise.value;
+                          machineryDPRController.requestDateController.text =
+                              CommonDateUtils.formatApiDate(DateTime.now());
+                          machineryDPRController.reqId = 0;
+                          machineryDPRController.refNoController.text = "";
+                          machineryDPRController.remarksController.text = "";
+                          machineryDPRController.preparedByController.text = loginController.EmpName();
+                          projectController.projectname.text = "--SELECT--";
+                          projectController.selectedProjectId.value = 0;
+                          siteController.selectedsiteId.value = 0;
+                          siteController.Sitename.text = "--SELECT--";
+                          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
+                          dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
+                          bottomsheetControllers.searchcontroller.text = "";
+                          Navigator.pop(context);
                         },
                         child: Text("Reset",
                             style: TextStyle(
@@ -835,11 +818,9 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                     child: StatefulBuilder(
                       builder: (context, setState) => TextButton(
                         onPressed: () async {
-                          // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
-                            await machineryDPRController
-                                .getMachineryDPRDetLocalDatas(dailyWrkDone_DPR_Controller.TypeSubcontId.value);
-                            await machineryDPRController
-                                .SaveEntryScreen(
+                          if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            await machineryDPRController.getMachineryDPRDetLocalDatas();
+                            await machineryDPRController.SaveEntryScreen(
                               context,
                               machineryDPRController.reqId,
                                 projectController.selectedProjectId.value,
@@ -847,7 +828,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                                 dailyWrkDone_DPR_Controller.TypeSubcontId.value,
                                 loginController.EmpId()
                             );
-                          // }
+                          }
                         },
                         child: Text(
                           machineryDPRController.saveButton.value,
@@ -1162,9 +1143,9 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                       margin: const EdgeInsets.only(left: 8),
                       height: BaseUtitiles.getheightofPercentage(context, 4),
                       child: DprInputField.text(
-                        value: item.remarks ?? '',
+                        value: item.workRemarks ?? '',
                         onChanged: (v) {
-                          item.remarks = v;
+                          item.workRemarks = v;
                           onChanged();
                         },
                         onSave: () => machineryDPRController.saveItem(item),

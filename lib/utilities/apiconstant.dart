@@ -207,6 +207,7 @@ class ApiConstant {
   static String get GET_MANPOWER_LEVEL3_LIST => BASE_URL_CORE + "api/ManPower/GetLevel3ItemManPower";
   static String get GETMAC_INDENT_ENTRY_LIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryMaterialMRN";
   static String get GETMAC_DPR_ENTRY_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetAllMachineryDailyWorkMas";
+  static String get GETMAC_DPR_EDIT_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetMachineryDPRById";
   static String get GET_REPAIR_WORKORDER_LIST => BASE_URL_CORE + "api/RepairWorkOrder/GetAllRepairWorkOrders";
   static String get GET_MAC_DPR_DET_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetDPRDetLoadMachinery";
 
@@ -214,9 +215,10 @@ class ApiConstant {
   static String get GET_WORKORDBOQ_ENTRY_LIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllWorkOrderCreationBoQ";
   static String get GET_WORKORDBOQ_TERMSANDCONDITION => BASE_URL_CORE + "api/TermsAndCondition/GetAllTermsAndConditionSubcontractorWo";
 
-  static String GET_MACHINERY_VERIFYLIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryReqordVerifyPending";
-  static String GET_MACHINERY_PREAPPROVELIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryTobePreApproval";
-  static String GET_MACHINERY_APPROVELIST = BASE_URL_CORE + "api/Machinery/GetAllMachineryFinalApprovePending";
+  static String get GET_MACHINERY_VERIFYLIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryReqordVerifyPending";
+  static String get GET_MACHINERY_PREAPPROVELIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryTobePreApproval";
+  static String get GET_MACHINERY_APPROVELIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryFinalApprovePending";
+  static String get GET_MACHINERY_DPR_APPROVELIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetToBeApprovedMachineryDPR";
 
   static String get GET_DIRECTBILL_CALCULATION_LIST => BASE_URL_CORE + "api/GenericMaster/GetAddLess";
   static String get GET_WORKORDER_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorWorkQty/GetWorkOrderDet";
@@ -500,6 +502,7 @@ class ApiConstant {
   static String get SET_SITE_LOCATION => BASE_URL_CORE + "api/PunchInandOut/AddPinLocation";
   static String get MATERIALREQUEST_PREINDENT_SAVE => BASE_URL_CORE + "api/SiteRequest/AddPreIndentDetails";
   static String get SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/AddMachineryDailyWorkMas";
+  static String get SUBCONTRACT_MACHINERY_DAILYWORK_UPDATE_API => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/UpdateMachineryDailyWork";
 
 
   /// ----- Delete API's -----
