@@ -315,17 +315,6 @@ class _RepairWorkOrderEntryListState extends State<RepairWorkOrderEntryList> {
                     itemCount: repairWorkOrderController.repairWorkOrder_List.value.length,
 
                     itemBuilder: (context, index) {
-                      // final approvalConfig = mrn_request_controller
-                      //     .checkApprovalLevelData
-                      //     .firstWhere(
-                      //       (e) => e["screenName"] == "WorkOrderDirect",
-                      //   orElse: () => <String, dynamic>{},
-                      // );
-                      //
-                      // final bool isVerification =
-                      //     approvalConfig["isVerification"] ?? false;
-                      // final bool isApproval =
-                      //     approvalConfig["isApproval"] ?? false;
                       return Container(
                         margin: EdgeInsets.only(left: 10, right: 10),
                         child: Card(
@@ -526,33 +515,13 @@ class _RepairWorkOrderEntryListState extends State<RepairWorkOrderEntryList> {
                                         child: Text(
                                           repairWorkOrderController
                                               .repairWorkOrder_List
-                                              .value[index]
-                                              .approveStatus ==
-                                              "Y"
-                                              ? "Approved"
-                                              // : isApproval
-                                              // ? (isVerification
-                                              // ? (repairWorkOrderController
-                                              // .repairWorkOrder_List
-                                              // .value[index]
-                                              // .verifyStatus ==
-                                              // "Y"
-                                              // ? "Verified"
-                                              // : "In-Progress")
-                                              // : "In-Progress")
-                                              // : (isVerification
-                                              // ? (repairWorkOrderController
-                                              // .repairWorkOrder_List
-                                              // .value[index]
-                                              // .verifyStatus ==
-                                              // "Y"
-                                              // ? "Verified"
-                                              // : "In-Progress")
-                                              : "In-Progress",
-                                        // ),
-                                          // workOrderDirectController.workOrderDir_entryList.value[index].verifyStatus == "Y" &&
-                                          //     workOrderDirectController.workOrderDir_entryList.value[index].approveStatus == "Y" ? "Approved" :
-                                          // workOrderDirectController.workOrderDir_entryList.value[index].verifyStatus == "Y" ? "Verified" : "In-Progress".toString() ,
+                                              .value[index].verifyStatus == "Y" &&
+                                              repairWorkOrderController
+                                                  .repairWorkOrder_List
+                                                  .value[index].approveStatus == "Y" ? "Approved" :
+                                          repairWorkOrderController
+                                              .repairWorkOrder_List
+                                              .value[index].verifyStatus == "Y" ? "Verified" : "In-Progress".toString() ,
                                           style: TextStyle(color: repairWorkOrderController.repairWorkOrder_List.value[index].approveStatus== "Y" ? Colors.green:Colors.black),
                                         )),
                                     Expanded(

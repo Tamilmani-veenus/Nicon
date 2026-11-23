@@ -979,7 +979,7 @@ class PendingListController extends GetxController {
   }
 
   Future getSubcontractor_ExpensesList(String name, BuildContext context,
-      {String? entryTypeName, bool? isRoute}) async {
+      {String? entryTypeName, bool? isRoute, int? menuId}) async {
     onclickPendingListData.clear();
     mainlist.value = [];
     var response =
@@ -999,10 +999,8 @@ class PendingListController extends GetxController {
                             heading: entryTypeName!,
                             checkheading: name)),
                   )
-                : name == "MRN PRE APPROVAL" ||
-                        name == "MRN PRE APPROVAL PENDING - GM" ||
-                        name == "MRN PRE APPROVAL PENDING - AM"
-                    ? await Navigator.push(
+                : name == "MRN PRE APPROVAL" || name == "MRN PRE APPROVAL PENDING - GM" || name == "MRN PRE APPROVAL PENDING - AM"
+                ? await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => MrnPreApproval(
@@ -1010,7 +1008,7 @@ class PendingListController extends GetxController {
                                 heading: entryTypeName!,
                                 checkheading: name)),
                       )
-                    : name == "MRN PRE APPROVAL-AM"
+                : name == "MRN PRE APPROVAL-AM"
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -1029,7 +1027,7 @@ class PendingListController extends GetxController {
                         //           onclickPendingListData,
                         //           heading: name)),
                         // )
-                        : name == "MRN PRE APPROVAL"
+                : name == "MRN PRE APPROVAL"
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -1039,7 +1037,7 @@ class PendingListController extends GetxController {
                                         heading: entryTypeName!,
                                         checkheading: name)),
                               )
-                            : name == "PENDING PO"
+                : name == "PENDING PO"
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -1049,7 +1047,7 @@ class PendingListController extends GetxController {
                                             heading: entryTypeName!,
                                             checkheading: name)),
                                   )
-                                : name == "PENDING PO [SUPPLIER]" ||
+                : name == "PENDING PO [SUPPLIER]" ||
                                         name == "PENDING PO [AGENCY]" ||
                                         name == "PENDING PO [TRADER]"
                                     ? Navigator.push(
@@ -1193,7 +1191,9 @@ class PendingListController extends GetxController {
                                                                                         : name == "INWARD PENDING" || name == "INWARD PENDING - WO"
                                                                                             ? Navigator.push(
                                                                                                 context,
-                                                                                                MaterialPageRoute(builder: (context) => InwardPending(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                MaterialPageRoute(builder: (context) => InwardPending(
+                                                                                                    onclickPendingListData: onclickPendingListData,
+                                                                                                    heading: entryTypeName!, checkheading: name,menuId: menuId!,)),
                                                                                               )
                                                                                             : name == "TRANSFER PENDING"
                                                                                                 ? Navigator.push(
@@ -1223,7 +1223,9 @@ class PendingListController extends GetxController {
                                                                                                                 : name == "SUBCONTRACTOR ATTENDANCE APPROVAL"
                                                                                                                     ? Navigator.push(
                                                                                                                         context,
-                                                                                                                        MaterialPageRoute(builder: (context) => SubContractorAttandance(onclickPendingListData: onclickPendingListData, heading: entryTypeName!, checkheading: name)),
+                                                                                                                        MaterialPageRoute(builder: (context) => SubContractorAttandance(
+                                                                                                                            onclickPendingListData: onclickPendingListData,
+                                                                                                                            heading: entryTypeName!, checkheading: name,menuId: menuId!,)),
                                                                                                                       )
                                                                                                                     : name == "COMPANY LABOUR ATTENDANCE APPROVAL PENDING"
                                                                                                                         ? Navigator.push(

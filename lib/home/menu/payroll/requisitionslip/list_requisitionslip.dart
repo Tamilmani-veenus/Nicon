@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import '../../../../../app_theme/app_colors.dart';
 import '../../../../../constants/ui_constant/icons_const.dart';
@@ -7,7 +6,6 @@ import '../../../../../controller/comman_controller.dart';
 import '../../../../../utilities/baseutitiles.dart';
 import '../../../../../utilities/requestconstant.dart';
 import '../../../../controller/logincontroller.dart';
-import '../../../../controller/requisitionslip_controller.dart';
 import '../../../../controller/requisitionslip_controller_new.dart';
 import 'entry_requisitionslip.dart';
 
@@ -16,7 +14,8 @@ import 'entry_requisitionslip.dart';
 
 class Requisitionslip_EntryList extends StatefulWidget {
   final String heading;
-  const Requisitionslip_EntryList({super.key,required this.heading});
+  final int menuId;
+  const Requisitionslip_EntryList({super.key,required this.heading,required this.menuId});
 
   @override
   State<Requisitionslip_EntryList> createState() => _Requisitionslip_EntryListState();
@@ -61,7 +60,7 @@ class _Requisitionslip_EntryListState extends State<Requisitionslip_EntryList> {
             child: FloatingActionButton.extended(
               onPressed: (){
                 requisitionSlipController.saveButton.value=RequestConstant.SUBMIT;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RequisitionSlip_Entry(heading: widget.heading,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RequisitionSlip_Entry(heading: widget.heading,menuId: widget.menuId,)));
               },
               label: Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,),),
               icon: Icon(Icons.add, color: Colors.white, size: RequestConstant.Heading_Font_SIZE, ),
@@ -665,7 +664,7 @@ class _Requisitionslip_EntryListState extends State<Requisitionslip_EntryList> {
                                                                           await requisitionSlipController.Requisitionslip_EditApi(
                                                                               requisitionSlipController.ReqSlipEtyList[index].id,
                                                                               widget.heading,
-                                                                              context, true);
+                                                                              context, true,widget.menuId);
                                                                           }),
                                                                 ),
                                                                 Container(

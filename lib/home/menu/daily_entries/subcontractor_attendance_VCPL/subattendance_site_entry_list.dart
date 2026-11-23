@@ -12,7 +12,8 @@ import 'package:get/get.dart';
 
 class SubAttendanceSiteEntryList extends StatefulWidget {
   final String heading;
-  const SubAttendanceSiteEntryList({Key? key, required this.heading}) : super(key: key);
+  final int menuId;
+  const SubAttendanceSiteEntryList({Key? key, required this.heading,required this.menuId}) : super(key: key);
 
   @override
   State<SubAttendanceSiteEntryList> createState() =>
@@ -63,7 +64,7 @@ class _SubAttendanceSiteEntryListState
                 dailyEntryController.imageFiles.value=[];
                 dailyEntryController.deleteSubcontDetTableDatas();
                 dailyEntryController.saveButton.value = RequestConstant.SUBMIT;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SubattendanceSiteEntry(heading: widget.heading,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SubattendanceSiteEntry(heading: widget.heading,menuId: widget.menuId,)));
               });
             },
             label: const Text("Add",
@@ -751,7 +752,7 @@ class _SubAttendanceSiteEntryListState
                                                                   FocusScope.of(context).unfocus();
                                                                   await dailyEntryController.subContEntryList_EditApi(
                                                                       dailyEntryController.Entrylist.value[index].id,true, widget.heading,
-                                                                      context);
+                                                                      context,widget.menuId);
                                                                 }),
                                                           ),
                                                           Container(

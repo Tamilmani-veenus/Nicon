@@ -27,7 +27,8 @@ import '../../../punch_in_out/camera_screen.dart';
 
 class SubattendanceSiteEntry extends StatefulWidget {
   final String heading;
-  const SubattendanceSiteEntry({Key? key, required this.heading})
+  final int menuId;
+  const SubattendanceSiteEntry({Key? key, required this.heading,required this.menuId})
       : super(key: key);
 
   @override
@@ -111,7 +112,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
         });
         await dailyEntriesController.gettingImage();
       }
-      await commanController.getDateCount();
+      await commanController.getDateCount(widget.menuId);
       if (!mounted) return;
 
       setState(() {});
@@ -220,9 +221,15 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                           value: dailyEntriesController.AttendDateController.text,
                           controller: dailyEntriesController.AttendDateController,
                           initialDate: DateTime.now(),
-                          firstDate: AppClient.isKc ? loginController.user.value.userType == "S"
+                          firstDate: AppClient.isKc
+                              ? (loginController.user.value.userType == "S"
                               ? DateTime.now().subtract(const Duration(days: 8))
-                              : DateTime(2000) : CommonDatePermissionUtils.getFirstDate(
+                              : DateTime(2000))
+                              : AppClient.isNicon
+                              ? (loginController.user.value.userType == "S"
+                              ? DateTime.now().subtract(const Duration(days: 1))
+                              : DateTime(2000))
+                              : CommonDatePermissionUtils.getFirstDate(
                             permissions: commanController.datePickerResponse,
                             fieldName: "SubContractor Attendance",
                             userType: loginController.user.value.userType!,

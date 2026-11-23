@@ -10,7 +10,8 @@ import '../../../../utilities/requestconstant.dart';
 
 class Inward_ListScreen extends StatefulWidget {
   final String heading;
-  const Inward_ListScreen({Key? key,required this.heading}) : super(key: key);
+  final int menuId;
+  const Inward_ListScreen({Key? key,required this.heading,required this.menuId}) : super(key: key);
 
   @override
   State<Inward_ListScreen> createState() => _Inward_ListScreenState();
@@ -603,7 +604,7 @@ class _Inward_ListScreenState extends State<Inward_ListScreen> {
                                                                           inward_controller.inwardEtyList[index].id,
                                                                           inward_controller.inwardEtyList[index].inwType.trim(),
                                                                           inward_controller.inwardEtyList[index].inwType.toString().trim()=="O"?"Inward Pending - WO":"Inward Pending",
-                                                                          context);
+                                                                          context,widget.menuId);
                                                                     }),
                                                               ),
                                                               Container(

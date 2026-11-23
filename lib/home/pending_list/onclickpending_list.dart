@@ -5830,11 +5830,12 @@ class InwardPending extends StatefulWidget {
       {Key? key,
         required this.onclickPendingListData,
         required this.heading,
-        required this.checkheading})
+        required this.checkheading,required this.menuId})
       : super(key: key);
   List<OnClickListResult> onclickPendingListData;
   String heading;
   String checkheading;
+  int menuId;
 
   @override
   State<InwardPending> createState() => _InwardPendingState();
@@ -5974,14 +5975,14 @@ class _InwardPendingState extends State<InwardPending> {
                                     pendingListController.mainlist
                                         .value[index].workOrdMasId!,
                                     widget.heading,
-                                    context);
+                                    context,widget.menuId);
                               } else {
                                 await inwardPending_Controller
                                     .getInward_Alldatas(
                                     pendingListController
                                         .mainlist.value[index].id!,
                                     widget.heading,
-                                    context);
+                                    context,widget.menuId);
                               }
                               await inwardPending_Controller
                                   .inwardpending_itemlist_SaveTable(
@@ -6402,11 +6403,12 @@ class SubContractorAttandance extends StatefulWidget {
       {Key? key,
         required this.onclickPendingListData,
         required this.heading,
-        required this.checkheading})
+        required this.checkheading,required this.menuId})
       : super(key: key);
   List<OnClickListResult> onclickPendingListData;
   String heading;
   String checkheading;
+  int menuId;
 
   @override
   State<SubContractorAttandance> createState() =>
@@ -6550,7 +6552,7 @@ class _SubContractorAttandanceState extends State<SubContractorAttandance> {
                                   pendingListController.mainlist[index].id!,
                                   false,
                                   widget.heading,
-                                  context,
+                                  context,widget.menuId,
                                   type: "approve");
                               FocusScope.of(context).unfocus();
                             },

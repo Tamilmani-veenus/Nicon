@@ -16,7 +16,8 @@ import 'inward_itemlist.dart';
 
 class Inward_entry extends StatefulWidget {
   final String heading;
-  const Inward_entry({Key? key, required this.heading}) : super(key: key);
+  final int menuId;
+  const Inward_entry({Key? key, required this.heading,required this.menuId}) : super(key: key);
 
   @override
   State<Inward_entry> createState() => _InwardState();
@@ -105,7 +106,7 @@ class _InwardState extends State<Inward_entry> {
           inward_controller.InwardRemarksText.text = element.remarks == null ? "" : element.remarks.toString();
         });
       }
-      await commanController.getDateCount();
+      await commanController.getDateCount(widget.menuId);
       if (!mounted) return;
 
       setState(() {});
@@ -405,7 +406,11 @@ class _InwardState extends State<Inward_entry> {
                         value: inward_controller.InwardInvoiceDateText.text,
                         controller: inward_controller.InwardInvoiceDateText,
                       initialDate: DateTime.now(),
-                      firstDate: CommonDatePermissionUtils.getFirstDate(
+                      firstDate:  AppClient.isNicon
+                          ? (loginController.user.value.userType == "S"
+                          ? DateTime.now().subtract(const Duration(days: 2))
+                          : DateTime(2000))
+                          : CommonDatePermissionUtils.getFirstDate(
                         permissions: commanController.datePickerResponse,
                         fieldName: "InvoiceDate",
                         userType: loginController.user.value.userType!,
@@ -463,7 +468,11 @@ class _InwardState extends State<Inward_entry> {
                         value: inward_controller.InwardDCDateText.text,
                         controller: inward_controller.InwardDCDateText,
                       initialDate: DateTime.now(),
-                      firstDate: CommonDatePermissionUtils.getFirstDate(
+                      firstDate:  AppClient.isNicon
+                          ? (loginController.user.value.userType == "S"
+                          ? DateTime.now().subtract(const Duration(days: 2))
+                          : DateTime(2000))
+                          : CommonDatePermissionUtils.getFirstDate(
                         permissions: commanController.datePickerResponse,
                         fieldName: "DcDate",
                         userType: loginController.user.value.userType!,

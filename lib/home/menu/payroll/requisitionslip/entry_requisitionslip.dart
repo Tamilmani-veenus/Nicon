@@ -17,7 +17,8 @@ import '../../../../utilities/requestconstant.dart';
 
 class RequisitionSlip_Entry extends StatefulWidget {
   final String heading;
-  const RequisitionSlip_Entry({super.key,required this.heading});
+  final int menuId;
+  const RequisitionSlip_Entry({super.key,required this.heading,required this.menuId});
 
   @override
   State<RequisitionSlip_Entry> createState() => _RequisitionSlip_EntryState();
@@ -115,7 +116,7 @@ class _RequisitionSlip_EntryState extends State<RequisitionSlip_Entry> {
         await requisitionSlipController.getStaffLandPLeaveTaken(staffController.selectedstaffId.value,requisitionSlipController.Reqdate.text);
       }
 
-      await commonController.getDateCount();
+      await commonController.getDateCount(widget.menuId);
       if (!mounted) return;
 
       setState(() {});

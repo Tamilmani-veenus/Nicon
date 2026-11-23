@@ -202,7 +202,7 @@ class _MainManusListState extends State<MainManusList> {
         return Icons.build_circle_outlined;
 
       case "Repair Work Order":
-        return Icons.home_repair_service;
+        return FontAwesomeIcons.screwdriverWrench;
 
       default:
         return Icons.apps_rounded;
@@ -228,6 +228,7 @@ class _MainManusListState extends State<MainManusList> {
       "Labour Creation",
       "Staff Voucher",
       "Cash Book/Staff",
+      "Repair Work Order"
     };
     return fontAwesomeMenus.contains(name) ? 20 : 25;
   }

@@ -13,6 +13,7 @@ import '../provider/inward_pending_provider.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
 import 'logincontroller.dart';
+import 'menu_controller.dart';
 import 'pendinglistcontroller.dart';
 
 int? inwardId;
@@ -60,6 +61,7 @@ class InwardPending_Controller extends GetxController
   LoginController loginController = Get.put(LoginController());
   PendingListController pendingListController =
       Get.put(PendingListController());
+
 
   late List<InwardPendingItemListTableModel> ItemListTableModelList =
       <InwardPendingItemListTableModel>[];
@@ -170,7 +172,7 @@ class InwardPending_Controller extends GetxController
   }
 
   Future getInward_Alldatas(
-      int poId, String MenuName, BuildContext context) async {
+      int poId, String MenuName, BuildContext context,int menuId) async {
     inwardItemListdatas.value = [];
     final response = await Inward_Pending_provider.getInward_ALLDatas(poId);
     if (response != null) {
@@ -182,7 +184,7 @@ class InwardPending_Controller extends GetxController
               context,
               MaterialPageRoute(
                   builder: (context) => Inward_entry(
-                        heading: MenuName,
+                        heading: MenuName,menuId: menuId,
                       )));
           FocusScope.of(context).unfocus();
         } else {
@@ -197,7 +199,7 @@ class InwardPending_Controller extends GetxController
   }
 
   Future getInwardWO_Alldatas(
-      int id, String menuName, BuildContext context) async {
+      int id, String menuName, BuildContext context,int menuId) async {
     inwardItemListdatas.clear();
 
     final response1 = await Inward_Pending_provider.getInward_WOMasData(id);
@@ -235,7 +237,7 @@ class InwardPending_Controller extends GetxController
           context,
           MaterialPageRoute(
             builder: (context) => Inward_entry(
-              heading: menuName,
+              heading: menuName,menuId: menuId,
             ),
           ),
         );
@@ -589,7 +591,7 @@ class InwardPending_Controller extends GetxController
   }
 
   Future EntryList_EditApi(
-      int workid, String type, String MenuName, BuildContext context) async {
+      int workid, String type, String MenuName, BuildContext context,int menuId) async {
     editListApiDatas.value = [];
     await ClickUtils.run(() async {
     await Inward_Pending_provider.entryList_editAPI(workid, type)
@@ -606,7 +608,7 @@ class InwardPending_Controller extends GetxController
                 MaterialPageRoute(
                     builder: (context) =>
                         Inward_entry(
-                          heading: MenuName,
+                          heading: MenuName,menuId: menuId,
                         )));
           }
           else {
