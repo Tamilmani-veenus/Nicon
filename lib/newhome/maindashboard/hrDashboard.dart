@@ -221,38 +221,40 @@ class _HrDashboardState extends State<HrDashboard> with SingleTickerProviderStat
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    _compactDateField(
+                                    CommonCompactDateField(
                                       title: "From",
                                       controller: hrDashboardController.entryFromDate,
                                       onTap: () async {
                                         final date = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2010),
-                                            lastDate: DateTime.now(),
-                                            builder: (context, child) {
-                                              return Theme(
-                                                data: Theme.of(context).copyWith(
-                                                  colorScheme: ColorScheme.light(
-                                                    primary: Theme.of(context).primaryColor,
-                                                    onPrimary: Colors.white,
-                                                    onSurface: Colors.black, // body text color
-                                                  ),
-                                                  textButtonTheme: TextButtonThemeData(
-                                                    style: TextButton.styleFrom(
-                                                      primary: Colors
-                                                          .black, // button text color
-                                                    ),
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2010),
+                                          lastDate: DateTime.now(),
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: Theme.of(context).copyWith(
+                                                colorScheme: ColorScheme.light(
+                                                  primary: Theme.of(context).primaryColor,
+                                                  onPrimary: Colors.white,
+                                                  onSurface: Colors.black,
+                                                ),
+                                                textButtonTheme: TextButtonThemeData(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor: Colors.black,
                                                   ),
                                                 ),
-                                                child: child!,
-                                              );
-                                            });
+                                              ),
+                                              child: child!,
+                                            );
+                                          },
+                                        );
+
                                         if (date != null) {
                                           setState(() {
                                             hrDashboardController.entryFromDate.text =
                                                 date.toString().substring(0, 10);
                                           });
+
                                           _refreshIndicatorKey.currentState?.show();
                                         }
                                       },
@@ -266,8 +268,7 @@ class _HrDashboardState extends State<HrDashboard> with SingleTickerProviderStat
                                         color: Color(0xff667085),
                                       ),
                                     ),
-
-                                    _compactDateField(
+                                    CommonCompactDateField(
                                       title: "To",
                                       controller: hrDashboardController.entryToDate,
                                       onTap: () async {
@@ -302,6 +303,7 @@ class _HrDashboardState extends State<HrDashboard> with SingleTickerProviderStat
                                         }
                                       },
                                     ),
+
                                   ],
                                 ),
                               ),
@@ -5515,5 +5517,77 @@ class _DashedLinePainter extends CustomPainter {
       covariant _DashedLinePainter oldDelegate,
       ) {
     return false;
+  }
+}
+
+
+
+
+class CommonCompactDateField extends StatelessWidget {
+  final String title;
+  final TextEditingController controller;
+  final VoidCallback onTap;
+
+  const CommonCompactDateField({
+    super.key,
+    required this.title,
+    required this.controller,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 130,
+        height: 42,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xffF8FAFC),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: const Color(0xffE4E7EC),
+          ),
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.calendar_today_outlined,
+              size: 18,
+              color: Color(0xff667085),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xff667085),
+                    ),
+                  ),
+                  Text(
+                    controller.text.isEmpty
+                        ? "Select date"
+                        : controller.text,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff101828),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

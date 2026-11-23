@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:nicon/home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_deduction_site.dart';
 import '../../../../app_theme/app_colors.dart';
@@ -282,7 +281,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     child: ConstIcons.siteName),
                               ),
                               onTap: () async {
-                                if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT|| nmrWklyController.NmritemList.value.length>0){
+                                if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT || nmrWklyController.NmritemList.value.length>0){
 
                                 }
                                 else{
@@ -496,9 +495,21 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                 if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){
                                 }
                                 else{
-                                  if(projectController.selectedProjectId.value!=0 && siteController.selectedsiteId.value !=0 &&  subcontractorController.selectedSubcontId.value!=0){
-                                    await nmrWklyController.getNmrcheckstatusCount(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text);
-                                    await nmrWklyController.getNmrcheckstatus(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text,context);
+                                  if(projectController.selectedProjectId.value!=0
+                                      && siteController.selectedsiteId.value !=0
+                                      &&  subcontractorController.selectedSubcontId.value!=0){
+                                    await nmrWklyController.getNmrcheckstatusCount(
+                                        projectController.selectedProjectId.value,
+                                        subcontractorController.selectedSubcontId.value.toString(),
+                                        siteController.selectedsiteId.value,
+                                        nmrWklyController.FromdateController.text,
+                                        nmrWklyController.TodateController.text);
+                                    await nmrWklyController.getNmrcheckstatus(
+                                        projectController.selectedProjectId.value,
+                                        subcontractorController.selectedSubcontId.value.toString(),
+                                        siteController.selectedsiteId.value,
+                                        nmrWklyController.FromdateController.text,
+                                        nmrWklyController.TodateController.text,context);
                                   }
                                 }
                               }

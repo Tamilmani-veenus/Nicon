@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:nicon/newhome/maindashboard/hrDashboard.dart';
 import 'package:nicon/newhome/maindashboard/labourDashboard.dart';
+import 'package:nicon/newhome/maindashboard/siteuser_Dashboard.dart';
 import '../../constants/storage_constant.dart';
 import '../../constants/ui_constant/textfont_style.dart';
 import '../../controller/dashboard_controller.dart';
@@ -52,6 +53,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
   bool isAdmin = false;
   bool isMaterial = false;
   bool isHr = false;
+  bool isSite = false;
   bool _showPunchPage = false;
   int _currentPage = 0;
   final _pageController = PageController();
@@ -107,7 +109,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                   Row(
                     children: [
                       const SizedBox(width: 15),
-                      if (!Platform.isAndroid &&_currentPage == 0 && (isLabour || isMaterial || isHr))
+                      if (!Platform.isAndroid &&_currentPage == 0 && (isLabour || isMaterial || isHr || isSite))
                         Row(
                           children: [
                             IconButton(
@@ -157,6 +159,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                               isAdmin = value == "Admin";
                               isMaterial = value == "Material";
                               isHr = value == "Hr";
+                              isSite = value == "Site";
                               _currentPage = 0;
                             });
                           },
@@ -230,15 +233,42 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                                 children: [
                                   SizedBox(
                                     width: 30,
-                                    child: FaIcon(
-                                      FontAwesomeIcons.users,
-                                      size: 20,
-                                      color: Theme.of(context).primaryColor,
+                                    height: 24,
+                                    child: Center(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.userTie,
+                                        size: 18,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
                                   const Text(
                                     "HR Dashboard",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            PopupMenuItem(
+                              value: "Site",
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 30,
+                                    height: 24,
+                                    child: Center(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.helmetSafety,
+                                        size: 18,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "SiteUser Dashboard",
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ],
@@ -302,7 +332,7 @@ class _Dashboard_screenState extends State<Dashboard_screen> {
                               _showPunchPage = true;
                             });
                           },)
-                              : isMaterial ? const MaterialHomeScreen() :isHr ? const HrDashboard() : AdminHomeScreen(onPunchTap: () {
+                              : isMaterial ? const MaterialHomeScreen() :isHr ? const HrDashboard() : isSite ? const SiteHomeScreen() : AdminHomeScreen(onPunchTap: () {
                             setState(() {
                               _showPunchPage = true;
                             });

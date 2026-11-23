@@ -104,12 +104,14 @@ class _MainManusListState extends State<MainManusList> {
                   menuController.navigateToMenu(
                     item.menuName!,
                     item.dynamicMenuName!,
+                    item.menuId,
                     context,
                   );
 
                   menuController.formName.value = item.menuName!;
                   menuController.formMenuId.value = item.menuId!;
 
+                  print("XXXXXXXXXXXX...${item.menuId}");
                   await commanController.getControllEntryListRights();
                 };
               },

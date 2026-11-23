@@ -595,6 +595,7 @@ class _Inward_ListScreenState extends State<Inward_ListScreen> {
                                                                       ],
                                                                     ),
                                                                     onTap: () async {
+                                                                      print("SSSSSSSSSSS...${widget.menuId}");
                                                                       inward_controller.itemlistTable_Delete();
                                                                       inward_controller.ItemGetTableListdata.clear();
                                                                       inward_controller.getInwardDetList.clear();
