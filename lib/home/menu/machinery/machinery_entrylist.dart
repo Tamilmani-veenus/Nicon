@@ -858,8 +858,9 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
               visible: commonController.addMode.value == 1 ? true : false,
               child: FloatingActionButton.extended(
                 onPressed: () async {
-                  machineryDPRController.saveButton.value =
-                      RequestConstant.SUBMIT;
+                  machineryDPRController.saveButton.value = RequestConstant.SUBMIT;
+                  await machineryDPRController.deleteDetTableDatas();
+                  machineryDPRController.macReqEtyDetList.value=[];
                   Navigator.push(
                     context,
                     MaterialPageRoute(

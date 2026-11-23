@@ -1,6 +1,8 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../apimanager/apimanager.dart';
+import '../models/machinary_dpr_save_model.dart';
 import '../models/machinery_edit_model.dart';
 import '../models/machinery_indent_list_model.dart';
 import '../utilities/apiconstant.dart';
@@ -102,6 +104,110 @@ class MachineryDPRProvider {
       return jsonDecode(value);
     } catch (error) {
       print(error);
+      return null;
+    }
+  }
+
+  static Future<dynamic> saveSubContractMachineryDailyWorkAPI(
+      SubContractMachineryDailyWorkSaveModel data) async {
+    try {
+      final url = ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API;
+
+      print("Machinery Daily Work Save API: $url");
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse(url),
+      );
+
+      request.headers.addAll(RequestConstant.postHeaders());
+
+      final bodyData = data.toJson();
+
+      // Remove detail list from header fields
+      bodyData.remove('SubContractMachineryDailyWorkdetLink');
+
+      // Add header fields
+      bodyData.forEach((key, value) {
+        if (value != null) {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      // Add detail fields
+      if (data.subContractMachineryDailyWorkdetLink != null &&
+          data.subContractMachineryDailyWorkdetLink!.isNotEmpty) {
+        for (int i = 0;
+        i < data.subContractMachineryDailyWorkdetLink!.length;
+        i++) {
+          final det = data.subContractMachineryDailyWorkdetLink![i];
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].Id'] =
+              (det.id ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].SubContractDailyWorkMasId'] =
+              (det.subContractDailyWorkMasId ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].SubcontractMachineryWorkOrderDetId'] =
+              (det.subcontractMachineryWorkOrderDetId ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].ScaleId'] =
+              (det.scaleId ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].ItemDesc'] =
+              (det.itemDesc ?? "").toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].Rate'] =
+              (det.rate ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].StartReading'] =
+              (det.startReading ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].EndReading'] =
+              (det.endReading ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].TotalReading'] =
+              (det.totalReading ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].Qty'] =
+              (det.qty ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].Amount'] =
+              (det.amount ?? 0).toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].WorkRemarks'] =
+              (det.workRemarks ?? "-").toString();
+
+          request.fields[
+          'SubContractMachineryDailyWorkdetLink[$i].BillStatus'] =
+              (det.billStatus ?? "N").toString();
+        }
+      }
+
+      if (kDebugMode) {
+        print("Machinery Daily Work Fields: ${request.fields}");
+      }
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
+      print("Machinery Daily Work Response: $responseBody");
+
+      return jsonDecode(responseBody);
+    } catch (error) {
+      print("Machinery Daily Work Save Error == $error");
       return null;
     }
   }

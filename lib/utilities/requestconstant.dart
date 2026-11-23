@@ -8,14 +8,16 @@ class RequestConstant{
 
   static Map<String, String> postHeaders() {
     final loginController = Get.find<LoginController>();
+
     final menuController = Get.isRegistered<Menu_Controller>()
         ? Get.find<Menu_Controller>()
-        : Get.put(Menu_Controller());
+        : null;
 
     return {
       'Content-Type': 'application/json',
-      'MenuID': menuController.formMenuId.value.toString(),
-      'Authorization': 'Bearer ${loginController.user.value.accessToken ?? ''}',
+      'MenuID': menuController?.formMenuId.value.toString() ?? '0',
+      'Authorization':
+      'Bearer ${loginController.user.value.accessToken ?? ''}',
       'DeviceId': BaseUtitiles.deviceName,
     };
   }

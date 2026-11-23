@@ -499,6 +499,7 @@ class ApiConstant {
 
   static String get SET_SITE_LOCATION => BASE_URL_CORE + "api/PunchInandOut/AddPinLocation";
   static String get MATERIALREQUEST_PREINDENT_SAVE => BASE_URL_CORE + "api/SiteRequest/AddPreIndentDetails";
+  static String get SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/AddMachineryDailyWorkMas";
 
 
   /// ----- Delete API's -----

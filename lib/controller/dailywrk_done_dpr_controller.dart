@@ -36,7 +36,7 @@ int? WorkId;
 
 class DailyWrkDone_DPR_Controller extends GetxController {
   ProjectController projectController = Get.put(ProjectController());
-  SiteController siteController = Get.put(SiteController());
+  SiteController siteController = Get.find<SiteController>();
   SubcontractorController subcontractorController = Get.put(SubcontractorController());
   LoginController loginController = Get.put(LoginController());
   PendingListController pendingListController=Get.put(PendingListController());
@@ -314,6 +314,7 @@ class DailyWrkDone_DPR_Controller extends GetxController {
                           TypeSubcontId.value = list[index].subContId;
 
                           if(type=="machineryDPR"){
+                            await machineryDPRController.deleteDetTableDatas();
                             await machineryDPRController.getMacDPRDetList(projectController.selectedProjectId.value,siteController.selectedsiteId.value,TypeSubcontId.value);
                           }
                           else{
