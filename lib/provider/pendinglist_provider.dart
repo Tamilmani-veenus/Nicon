@@ -271,6 +271,12 @@ class PendingListProvider {
       else if (formName == "DIRECT TRANSFER APPROVAL PENDING") {
         response = await ApiManager.getAPICall(ApiConstant.DIRECT_TRANSFERBETPROJECTS_PENDING);
       }
+      else if (formName == "REPAIR WORK ORDER VERIFICATION PENDING") {
+        response = await ApiManager.getAPICall(ApiConstant.REPAIR_WORKORDER_PENDING);
+      }
+      else if (formName == "REPAIR WORK ORDER APPROVAL PENDING") {
+        response = await ApiManager.getAPICall(ApiConstant.REPAIR_WORKORDER_APPROVAL_PENDING);
+      }
       return onclickPendingListResponseFromJson(response);
     } catch (error, stackTrace) {
       print("ERROR...${error}");

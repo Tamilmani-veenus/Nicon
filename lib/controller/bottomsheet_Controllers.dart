@@ -1611,7 +1611,7 @@ class BottomsheetControllers {
                   child: Padding(
                     padding: EdgeInsets.all(3),
                     child: Text(
-                      "Supplier",
+                      "Consumption No",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold),

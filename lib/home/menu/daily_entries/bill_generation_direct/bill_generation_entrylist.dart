@@ -632,18 +632,20 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                  margin: EdgeInsets.only(
-                                                                      right: 10),
-                                                                  child: Text(
-                                                                    billGenerationDirectController.bill_entryList.value[index].workNo.toString(),
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        color: Theme.of(
-                                                                            context)
-                                                                            .primaryColor),
+                                                                Expanded(
+                                                                  child: Container(
+                                                                    margin: EdgeInsets.only(
+                                                                        right: 10),
+                                                                    child: Text(
+                                                                      billGenerationDirectController.bill_entryList.value[index].workNo.toString(),
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          color: Theme.of(
+                                                                              context)
+                                                                              .primaryColor),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 InkWell(

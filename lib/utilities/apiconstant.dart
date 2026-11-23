@@ -223,6 +223,7 @@ class ApiConstant {
   static String get GET_WORKORDERBOQ_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetBillBOQDetLoad";
   static String get EDIT_DIRECTBILL_API => BASE_URL_CORE + "api/SubContractorWorkQty/GetSubContractorWorkQtyById";
   static String get EDIT_WORKORDERDIRECT_API => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetlSubcontractWorkOrderById";
+  static String get EDIT_REPAIR_WORKORDER_API => BASE_URL_CORE + "api/RepairWorkOrder/GetRepairWorkOrderById";
 
 
   static String get EDIT_BILLBOQ_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetSubContractorWorkQtyById";
@@ -349,6 +350,8 @@ class ApiConstant {
   static String get GET_WORKORDERBOQ_VERIFYLIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetWorkOrderVerificationPendingBOQ";
   static String get GET_SUPPLIER_BILL_APPROVAL_LIST => BASE_URL_CORE + "api/MaterialPurOrdBill/GetBillToBeApprovedNotifctn";
   static String get DIRECT_TRANSFERBETPROJECTS_PENDING => BASE_URL_CORE + "api/MaterialTransfer/GetMaterialDirectTransferApprovalPending";
+  static String get REPAIR_WORKORDER_PENDING => BASE_URL_CORE + "api/RepairWorkOrder/GetAllWorkOrderRepairVerifyPending";
+  static String get REPAIR_WORKORDER_APPROVAL_PENDING => BASE_URL_CORE + "api/RepairWorkOrder/GetAllWorkOrderRepairApprovalPending";
 
   static String get GET_WORKORDERAPPROVALLIST => BASE_URL_CORE + "api/SubcontractWorkOrderMas/GetAllSubcontractWorkOrderVerifyData";
   static String get GET_MANPOWERAPPROVALLIST => BASE_URL_CORE + "api/ManPower/GetManPowerApprovalPending";
@@ -418,6 +421,7 @@ class ApiConstant {
   static String get PUT_DPR_NEW_UPDATE_API => BASE_URL_CORE + "api/SubContractorDailyWorkNew/UpdateDailyWorkNew";
   static String get PUT_DIRECTBILL_UPDATE_API => BASE_URL_CORE + "api/SubContractorWorkQty/UpdateSubContractorWorkQty";
   static String get PUT_WORKORDER_UPDATE_API => BASE_URL_CORE + "api/SubcontractWorkOrderMas/UpdateWorkOrder";
+  static String get PUT_REPAIR_WORKORDER_UPDATE_API => BASE_URL_CORE + "api/RepairWorkOrder/UpdateWorkOrderRepair";
 
   static String get PUT_DIRECTBOQ_UPDATE_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/UpdateSubContractorWorkQty";
   static String get PUT_POAPPROVAL_API => BASE_URL_CORE + "api/MaterialPurOrdMas/ApproveSelectedRowById";
@@ -460,6 +464,7 @@ class ApiConstant {
   static String get DPR_NEW_SAVE_API => BASE_URL_CORE + "api/SubContractorDailyWorkNew/AddDailyWorkMasNew";
   static String get DIRECTBILL_SAVE_API => BASE_URL_CORE + "api/SubContractorWorkQty/AddSubContractorWorkQty";
   static String get WORKORDERDIRECT_SAVE_API => BASE_URL_CORE + "api/SubcontractWorkOrderMas/AddWorkOrder";
+  static String get REPAIR_WORKORDER_SAVE_API => BASE_URL_CORE + "api/RepairWorkOrder/AddWorkOrderRepair";
 
   static String get BOQBILL_SAVE_API => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/AddSubContractorWorkQty";
   static String get INWARDPENDING_SAVE_API => BASE_URL_CORE + "api/MaterialInward/AddMaterialInward";

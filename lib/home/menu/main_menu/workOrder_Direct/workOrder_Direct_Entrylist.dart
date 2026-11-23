@@ -590,18 +590,20 @@ class _WorkOrderDirect_EntryListState extends State<WorkOrderDirect_EntryList> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                  margin: EdgeInsets.only(
-                                                                      right: 10),
-                                                                  child: Text(
-                                                                    workOrderDirectController.workOrderDir_entryList.value[index].workOrderNo.toString(),
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        color: Theme.of(
-                                                                            context)
-                                                                            .primaryColor),
+                                                                Expanded(
+                                                                  child: Container(
+                                                                    margin: EdgeInsets.only(
+                                                                        right: 10),
+                                                                    child: Text(
+                                                                      workOrderDirectController.workOrderDir_entryList.value[index].workOrderNo.toString(),
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          color: Theme.of(
+                                                                              context)
+                                                                              .primaryColor),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 InkWell(

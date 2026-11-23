@@ -1,12 +1,20 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nicon/controller/pendinglistcontroller.dart';
 import 'package:nicon/controller/projectcontroller.dart';
 import 'package:nicon/controller/sitecontroller.dart';
+import 'package:nicon/controller/subcontcontroller.dart';
+import 'package:nicon/controller/workOrderBoq_Controller.dart';
+import 'package:nicon/controller/workorderDirect_Controller.dart';
 import 'package:nicon/provider/repairWorkOrder_provider.dart';
-
+import '../home/menu/repair/repairWorkOrder/repair_WorkOrder_EntryScreen.dart';
+import '../models/repairWorkOrder_save_model.dart';
+import '../provider/workOrderDirectProvider.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
+import 'logincontroller.dart';
 
 class RepairWorkOrderController extends GetxController{
 
@@ -26,12 +34,22 @@ class RepairWorkOrderController extends GetxController{
   RxInt selectedConsumNoId = 0.obs;
   RxString workOrdStsTypeId = "".obs;
   RxString entryTypeId = "".obs;
+  RxInt createdById = 0.obs;
+
+  RxList repair_workOrd_editListApi = [].obs;
 
   int workid = 0;
   RxString saveButton = RequestConstant.SUBMIT.obs;
+  RxList<RepairWorkOrderDetlink> getDetList = <RepairWorkOrderDetlink>[].obs;
+  RxList<RepairWorkOrderAddLessSetuplink> getDetAddLessList = <RepairWorkOrderAddLessSetuplink>[].obs;
 
   ProjectController projectController = Get.put(ProjectController());
   SiteController siteController = Get.put(SiteController());
+  WorkOrderDirectController workOrderDirectController = Get.put(WorkOrderDirectController());
+  LoginController loginController = Get.put(LoginController());
+  SubcontractorController subcontractorController = Get.put(SubcontractorController());
+  WorkOrderBoqController workOrderBoqController = Get.put(WorkOrderBoqController());
+  PendingListController pendingListController = Get.put(PendingListController());
 
   Future getRepairWorkOrder_EntryList() async {
     repairWorkOrder_List.value = [];
@@ -67,6 +85,230 @@ class RepairWorkOrderController extends GetxController{
       }
     }else {
         BaseUtitiles.showToast("Something Went Wrong...");
+    }
+  }
+
+  clearDatas() {
+    saveButton.value = RequestConstant.SUBMIT;
+    workid = 0;
+    projectController.projectname.text = "--SELECT--";
+    projectController.selectedProjectId.value = 0;
+    subcontractorController.supplierName.text = "--SELECT--";
+    subcontractorController.selectedSupplierId.value = 0;
+    RepairworkOrdDateController.text = BaseUtitiles.initiateCurrentDateFormat();
+    siteController.selectedsiteId = 0.obs;
+    siteController.selectedsitedropdownName = "--SELECT--".obs;
+    siteController.getSiteDropdownvalue.value.clear();
+    siteController.Sitename.text = RequestConstant.SELECT;
+    siteController.siteDropdownName.clear();
+    WorkStatusTypeText.text = "";
+    workOrdStsTypeId.value = "";
+    ConsumptionNoController.text = "";
+    selectedConsumNoId.value = 0;
+    workOrderDirectController.workOrder_itemlistTable_Delete();
+    workOrderDirectController.ItemGetTableListdata.value.clear();
+    workOrderDirectController.workOrdamount.text = "0.0";
+    workOrderDirectController.Roundoff.text = "0";
+    workOrderDirectController.netpayamt.text = "0.0";
+    workOrderDirectController.rebateAmount.text = "0.0";
+  }
+
+  Future SaveButton_DeductionScreen(
+      BuildContext context, int id, int workOrderId, status) async {
+    workOrderDirectController.getDetList.value.clear();
+    await Future.delayed(const Duration(seconds: 0));
+    await Future.delayed(const Duration(seconds: 0));
+    String termsConditionIds = workOrderBoqController.selectedTerms
+        .map((e) => e.id.toString())
+        .join(",");
+    String body = repairWorkOrderSaveModelToJson(RepairWorkOrderSaveModel(
+      id:id != 0 ? id : 0,
+      workOrderNo: autoYearWiseNoController.text,
+      entryDate: RepairworkOrdDateController.text,
+      entryType: "R",
+      projectId: projectController.selectedProjectId.value,
+      siteId: siteController.selectedsiteId.value,
+      supplierId: subcontractorController.selectedSupplierId.value,
+      workStatus: workOrdStsTypeId.value,
+      repairConsumptionId: selectedConsumNoId.value,
+      roundOff: double.tryParse(workOrderDirectController.Roundoff.text) ?? 0.0,
+      workOrderAmount: double.tryParse(workOrderDirectController.workOrdamount.text)?? 0.0,
+      netAmount: double.tryParse(workOrderDirectController.netpayamt.text)?? 0.0,
+      termsCondition:termsConditionIds,
+      mailStatus: "N",
+      downloadStatus: "N",
+      verifyBy: 0,
+      approvedBy: 0,
+      active: "Y",
+      remarks: RemarksController.text,
+      createdBy: saveButton.value == RequestConstant.SUBMIT?int.parse(loginController.EmpId()):createdById.value,
+      // createdDt: BaseUtitiles().convertToUtcIso(workOrdentryDateController.text),
+      verifyStatus: saveButton.value == RequestConstant.VERIFY ||
+          saveButton.value == RequestConstant.APPROVAL
+          ? "Y"
+          : "N",
+      approveStatus: saveButton.value == RequestConstant.APPROVAL ? "Y" : "N",
+      repairWorkOrderDetlink: getWorkOrderDet(id),
+      repairWorkOrderAddLessSetuplink:
+      getWorkOrderDetAddLess(id, autoYearWiseNoController.text),
+    ));
+    final decodedJson = jsonDecode(body);
+
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(decodedJson);
+
+    debugPrint(prettyJson, wrapWidth: 1024);
+
+    final list = await RepairWorkOrderProvider.SaveRepairWorkOrdScreenEntryAPI(
+        body, id, context,status);
+
+    if (list != null) {
+      if (list["success"] == true) {
+        clearDatas();
+        BaseUtitiles.showToast(list["message"]);
+        if (saveButton.value == RequestConstant.VERIFY ||
+            saveButton.value == RequestConstant.APPROVAL) {
+          await pendingListController.getPendingList();
+        } else {
+          await getRepairWorkOrder_EntryList();
+          workOrderDirectController.workOrder_itemlistTable_Delete();
+        }
+        BaseUtitiles.popMultiple(context, count: 5);
+      } else {
+        BaseUtitiles.showToast(list["message"] ?? 'Something went wrong..');
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    } else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 2);
+    }
+  }
+
+  List<RepairWorkOrderDetlink>? getWorkOrderDet(id) {
+    getDetList.value.clear();
+    workOrderDirectController.ItemGetTableListdata.value.forEach((element) {
+      var list = RepairWorkOrderDetlink(
+          id: saveButton.value == RequestConstant.RESUBMIT ? element.reqDetId : 0,
+          repairWorkOrderMasId: id != 0 ? id : 0,
+          itemDescription: element.Name.toString(),
+          unit: element.unit.toString(),
+          qty: element.qty,
+          rate: element.rate,
+          amount: element.amount,
+          workRemarks: ""
+      );
+      getDetList.value.add(list);
+    });
+    return getDetList.value;
+  }
+
+  List<RepairWorkOrderAddLessSetuplink>? getWorkOrderDetAddLess(int id, workNo) {
+    getDetAddLessList.value.clear();
+    workOrderDirectController.workOrder_ItemReadList.value.forEach((element) {
+      if (element.percentValue! > 0) {
+        var list = RepairWorkOrderAddLessSetuplink(
+          id: element.reqDetId,
+          repairWorkOrderMasId: id,
+          workOrderNo: autoYearWiseNoController.text,
+          addLessId: element.addLessId,
+          percentValue: element.percentValue,
+          amount: element.amount,
+        );
+        getDetAddLessList.value.add(list);
+      }
+    });
+    return getDetAddLessList.value;
+  }
+
+  Future WorkOrder_CalculationList() async {
+    workOrderDirectController.workOrderDet_Calculation.value.clear();
+    final value =
+    await WorkOrderDirectProvider.getWorkOrderCalculation_List();
+    if (value != null) {
+      if (value.success == true) {
+        if (value.result!.isNotEmpty) {
+          workOrderDirectController.workOrderDet_Calculation.value = value.result!;
+          await workOrderDirectController.workOrderCal_itemlistTable_Delete();
+          await workOrderDirectController.workOrderCalculationSave();
+          await workOrderDirectController.getWorkorderCalDatas();
+          if (saveButton.value == RequestConstant.RESUBMIT ||
+              saveButton.value == RequestConstant.VERIFY ||
+              saveButton.value == RequestConstant.APPROVAL) {
+            workOrderDirectController.setBaseNetPay(workOrderDirectController.workOrdamount.text);
+            await workOrderDirectController.preloadEditAddLessData(
+                repair_workOrd_editListApi[0].repairWorkOrderAddLessSetuplink);
+          }
+        } else {
+          BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
+        }
+      } else {
+        BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+      }
+    } else {
+      BaseUtitiles.showToast("Something Went Wrong...");
+    }
+  }
+
+  Future repair_workOrderList_EditApi(int workId, status,String MenuName, BuildContext context,{String? type}) async {
+    await ClickUtils.run(() async {
+      var response = await RepairWorkOrderProvider.repair_WorkOrderList_editAPI(workId,status);
+      if (response != null) {
+        if (response.success == true) {
+          repair_workOrd_editListApi.value = [response.result];
+          if (repair_workOrd_editListApi.isNotEmpty) {
+            saveButton.value = type == "Approve"
+                ? RequestConstant.APPROVAL
+                : type == "Verify"
+                ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+            if (workOrderBoqController.termsAndCondition.isEmpty) {
+              await workOrderBoqController.WorkOrdBoq_TermsCondition();
+            }
+            bindEditTermsAndConditions();
+            workOrderDirectController.workOrder_EditTable_SaveTable("",type: "Repair Work Order",list: repair_workOrd_editListApi);
+            workOrderDirectController.getItemlistTablesDatas();
+            await Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RepairWorkOrderEntryScreen(heading: MenuName,)));
+          } else {
+            BaseUtitiles.showToast("No Data Found");
+          }
+        } else {
+          BaseUtitiles.showToast(response.message ?? 'Something went wrong..');
+        }
+      } else {
+        BaseUtitiles.showToast("Something Went Wrong...");
+      }
+    });
+  }
+
+  void bindEditTermsAndConditions() {
+    workOrderBoqController.selectedTerms.clear();
+    if (repair_workOrd_editListApi.isEmpty) {
+      return;
+    }
+
+    final editData = repair_workOrd_editListApi.first;
+
+    if (editData == null) {
+      return;
+    }
+
+    final String rawTermIds =
+        repair_workOrd_editListApi.first.termsCondition ?? "";
+
+    final List<int> editTermIds = rawTermIds
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+
+    for (final id in editTermIds) {
+      final match = workOrderBoqController.termsAndCondition.firstWhereOrNull((t) => t.id == id);
+      if (match != null) {
+        workOrderBoqController.selectedTerms.add(match);
+      }
     }
   }
 

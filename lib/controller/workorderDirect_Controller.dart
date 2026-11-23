@@ -387,7 +387,14 @@ class WorkOrderDirectController extends GetxController{
       if (response.success == true) {
         workOrder_editListApiDatas.value = [response.result];
         if (workOrder_editListApiDatas.isNotEmpty) {
-          saveButton.value = type == "Approve"? RequestConstant.APPROVAL: type == "Verify" ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          saveButton.value = type == "Approve"
+              ? RequestConstant.APPROVAL
+              : type == "Verify"
+              ? RequestConstant.VERIFY : RequestConstant.RESUBMIT;
+          if (workOrderBoqController.termsAndCondition.isEmpty) {
+            await workOrderBoqController.WorkOrdBoq_TermsCondition();
+          }
+          bindEditTermsAndConditions();
           workOrder_EditTable_SaveTable("");
           getItemlistTablesDatas();
           await Navigator.pushReplacement(
@@ -406,31 +413,87 @@ class WorkOrderDirectController extends GetxController{
     });
   }
 
-  workOrder_EditTable_SaveTable(name) async {
-    ItemListTableModelList.clear();
-    workOrder_editListApiDatas.value.forEach((element) {
-      if (name == "ItemListDet") {
-        ItemListTableModel = new WorkOrderItemListTableModel();
-        ItemListTableModel.Name = element.itemDesc.toString();
-        ItemListTableModel.unit = element.unit.toString();
-        ItemListTableModel.qty = element.qty;
-        ItemListTableModel.rate = element.rate;
-        ItemListTableModel.amount = element.amount;
-        ItemListTableModelList.add(ItemListTableModel);
-      } else {
-        element.subcontractWorkOrderDetlink!.forEach((value) {
-          ItemListTableModel = new WorkOrderItemListTableModel();
-          ItemListTableModel.reqDetId = value.reqDetId;
-          ItemListTableModel.Name = value.itemDesc == null ? "-" : value.itemDesc.toString();
-          ItemListTableModel.unit = value.unit == null ? "-" : value.unit.toString();
-          ItemListTableModel.qty = value.qty;
-          ItemListTableModel.rate = value.rate;
-          ItemListTableModel.amount = value.amount;
-          ItemListTableModelList.add(ItemListTableModel);
-        });
-      }
-    });
+  void bindEditTermsAndConditions() {
+    workOrderBoqController.selectedTerms.clear();
+    if (workOrder_editListApiDatas.isEmpty) {
+      return;
+    }
 
+    final editData = workOrder_editListApiDatas.first;
+
+    if (editData == null) {
+      return;
+    }
+
+    final String rawTermIds =
+        workOrder_editListApiDatas.first.termsCondition ?? "";
+
+    final List<int> editTermIds = rawTermIds
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+
+    for (final id in editTermIds) {
+      final match = workOrderBoqController.termsAndCondition.firstWhereOrNull((t) => t.id == id);
+      if (match != null) {
+        workOrderBoqController.selectedTerms.add(match);
+      }
+    }
+  }
+
+  workOrder_EditTable_SaveTable(name,{type,list}) async {
+    ItemListTableModelList.clear();
+    if(type=="Repair Work Order") {
+      list.value.forEach((element) {
+        if (name == "ItemListDet") {
+          ItemListTableModel = new WorkOrderItemListTableModel();
+          ItemListTableModel.Name = element.itemDescription.toString();
+          ItemListTableModel.unit = element.unit.toString();
+          ItemListTableModel.qty = element.qty;
+          ItemListTableModel.rate = element.rate;
+          ItemListTableModel.amount = element.amount;
+          ItemListTableModelList.add(ItemListTableModel);
+        } else {
+          element.repairWorkOrderDetlink!.forEach((value) {
+            ItemListTableModel = new WorkOrderItemListTableModel();
+            ItemListTableModel.reqDetId = value.reqDetId;
+            ItemListTableModel.Name =
+            value.itemDescription == null ? "-" : value.itemDescription.toString();
+            ItemListTableModel.unit =
+            value.unit == null ? "-" : value.unit.toString();
+            ItemListTableModel.qty = value.qty;
+            ItemListTableModel.rate = value.rate;
+            ItemListTableModel.amount = value.amount;
+            ItemListTableModelList.add(ItemListTableModel);
+          });
+        }
+      });
+    }else{
+      workOrder_editListApiDatas.value.forEach((element) {
+        if (name == "ItemListDet") {
+          ItemListTableModel = new WorkOrderItemListTableModel();
+          ItemListTableModel.Name = element.itemDesc.toString();
+          ItemListTableModel.unit = element.unit.toString();
+          ItemListTableModel.qty = element.qty;
+          ItemListTableModel.rate = element.rate;
+          ItemListTableModel.amount = element.amount;
+          ItemListTableModelList.add(ItemListTableModel);
+        } else {
+          element.subcontractWorkOrderDetlink!.forEach((value) {
+            ItemListTableModel = new WorkOrderItemListTableModel();
+            ItemListTableModel.reqDetId = value.reqDetId;
+            ItemListTableModel.Name = value.itemDesc == null ? "-" : value.itemDesc.toString();
+            ItemListTableModel.unit = value.unit == null ? "-" : value.unit.toString();
+            ItemListTableModel.qty = value.qty;
+            ItemListTableModel.rate = value.rate;
+            ItemListTableModel.amount = value.amount;
+            ItemListTableModelList.add(ItemListTableModel);
+          });
+        }
+      });
+    }
     var savedatas =
     await workOrder_ItemlistService.workOrder_ItemlistTable_Save(
         ItemListTableModelList);

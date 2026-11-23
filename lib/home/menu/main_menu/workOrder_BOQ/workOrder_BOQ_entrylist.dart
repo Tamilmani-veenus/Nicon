@@ -679,24 +679,26 @@ class _WorkOrderBoqEntrylistState extends State<WorkOrderBoqEntrylist> {
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Container(
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              10),
-                                                                  child: Text(
-                                                                    workOrderBoqController
-                                                                        .workOrderBoq_entryList
-                                                                        .value[
-                                                                            index]
-                                                                        .workOrderNo
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Theme.of(context)
-                                                                            .primaryColor),
+                                                                Expanded(
+                                                                  child: Container(
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            right:
+                                                                                10),
+                                                                    child: Text(
+                                                                      workOrderBoqController
+                                                                          .workOrderBoq_entryList
+                                                                          .value[
+                                                                              index]
+                                                                          .workOrderNo
+                                                                          .toString(),
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .bold,
+                                                                          color: Theme.of(context)
+                                                                              .primaryColor),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 InkWell(
@@ -893,7 +895,7 @@ class _WorkOrderBoqEntrylistState extends State<WorkOrderBoqEntrylist> {
   }
 
   download(int nmrId) {
-    launch("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
+    launch("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&entryType=B&access_token=${loginController.user.value.accessToken}");
     print("${ApiConfig.WebURL}mobile-workorder-print?id=$nmrId&access_token=${loginController.user.value.accessToken}");
   }
 }

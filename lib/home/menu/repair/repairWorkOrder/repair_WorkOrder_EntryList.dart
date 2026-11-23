@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:nicon/controller/repairWorkOrder_controller.dart';
+import 'package:nicon/controller/workorderDirect_Controller.dart';
 import 'package:nicon/home/menu/repair/repairWorkOrder/repair_WorkOrder_EntryScreen.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
@@ -20,6 +21,7 @@ class _RepairWorkOrderEntryListState extends State<RepairWorkOrderEntryList> {
 
   TextEditingController editingController = TextEditingController();
   RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
+  WorkOrderDirectController workOrderDirectController = Get.put(WorkOrderDirectController());
 
   @override
   void initState() {
@@ -635,14 +637,14 @@ class _RepairWorkOrderEntryListState extends State<RepairWorkOrderEntryList> {
                                                                   ],
                                                                 ),
                                                                 onTap: () async {
-                                                                  // workOrderDirectController.workOrder_itemlistTable_Delete();
-                                                                  // workOrderDirectController.ItemGetTableListdata.clear();
-                                                                  // workOrderDirectController.workOrder_editListApiDatas.value.clear();
-                                                                  // FocusScope.of(context).unfocus();
-                                                                  // await workOrderDirectController.workOrderEntryList_EditApi(
-                                                                  //     workOrderDirectController.workOrderDir_entryList.value[index].id,true,
-                                                                  //     widget.heading,
-                                                                  //     context,type:"ReSubmit");
+                                                                  workOrderDirectController.workOrder_itemlistTable_Delete();
+                                                                  workOrderDirectController.ItemGetTableListdata.clear();
+                                                                  repairWorkOrderController.repair_workOrd_editListApi.value.clear();
+                                                                  FocusScope.of(context).unfocus();
+                                                                  await repairWorkOrderController.repair_workOrderList_EditApi(
+                                                                      repairWorkOrderController.repairWorkOrder_List.value[index].id,true,
+                                                                      widget.heading,
+                                                                      context,type:"ReSubmit");
 
                                                                 }),
 

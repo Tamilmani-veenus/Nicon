@@ -567,7 +567,7 @@ class _WorkOrdDirectEntryScreenState extends State<WorkOrdDirectEntryScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WorkOrderDirectItemList()));
+                                  builder: (context) => WorkOrderDirectItemList(heading: "Work Order Direct Item Lists",)));
                         }
                       });
                     },
