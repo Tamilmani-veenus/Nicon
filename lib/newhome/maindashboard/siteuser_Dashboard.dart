@@ -270,6 +270,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
             const WorkWiseLabourCard(),
             SizedBox(height: 10,),
             const UpcomingSiteTasksCard(),
+            SizedBox(height: 10,),
+            const KeyInsightsCard(),
+            SizedBox(height: 10,),
+            PredefinedIndentCard(),
             SizedBox(height: 100,),
           ],
         ),
@@ -3176,8 +3180,9 @@ class UpcomingSiteTasksCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleTasks = tasks.take(4).toList();
     return Container(
-      margin: const EdgeInsets.all(8),
+      // margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -3231,7 +3236,13 @@ class UpcomingSiteTasksCard extends StatelessWidget {
 
               GestureDetector(
                 onTap: () {
-                  // Navigate to View All screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                      const UpcomingTasksViewAllScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -3265,53 +3276,25 @@ class UpcomingSiteTasksCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Task List
-          ...tasks.take(4).map(
-                (task) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _taskCard(task),
-            ),
-          ),
+          // Task Timeline
+          ...visibleTasks.asMap().entries.map((entry) {
+            final index = entry.key;
+            final task = entry.value;
 
-          // Bottom View All
-          GestureDetector(
-            onTap: () {
-              // Navigate to View All screen
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF7F9FD),
-                borderRadius: BorderRadius.circular(9),
-                border: Border.all(color: const Color(0xFFE8ECF3)),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "View all upcoming tasks",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: primaryColor,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 14,
-                    color: primaryColor,
-                  ),
-                ],
-              ),
-            ),
-          ),
+            return _taskCard(
+              task,
+              isLast: index == visibleTasks.length - 1,
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _taskCard(Map<String, dynamic> task) {
+  Widget _taskCard(
+      Map<String, dynamic> task, {
+        required bool isLast,
+      }) {
     final String status = task["status"];
 
     Color statusColor;
@@ -3333,159 +3316,874 @@ class UpcomingSiteTasksCard extends StatelessWidget {
         statusBg = const Color(0xFFEFF5FF);
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // Date Badge
-        Container(
-          width: 46,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: borderColor),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                task["month"],
-                style: const TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w800,
-                  color: primaryColor,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                task["day"],
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF172033),
-                ),
-              ),
-            ],
-          ),
-        ),
+    final String teamInitials = task["team"]
+        .toString()
+        .split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) => word[0])
+        .take(2)
+        .join()
+        .toUpperCase();
 
-        const SizedBox(width: 9),
-
-        // Task Details
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFAFBFD),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFDCE1E9)),
-            ),
+    return SizedBox(
+      height: isLast ? 62 : 72,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Date Timeline
+          SizedBox(
+            width: 46,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title and Status
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        task["title"],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                Container(
+                  width: 46,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: borderColor),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        task["month"],
                         style: const TextStyle(
-                          fontSize: 11,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          color: primaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        task["day"],
+                        style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.w800,
                           color: Color(0xFF172033),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 5),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 7,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: statusBg,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 5,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: statusColor,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            status,
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: statusColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 8),
+                // Connecting vertical timeline
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      color: const Color(0xFFDCE3EF),
+                    ),
+                  ),
+              ],
+            ),
+          ),
 
-                // Block and Team
+          const SizedBox(width: 9),
+
+          // Task Details
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(
+                bottom: isLast ? 0 : 10,
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 7,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFAFBFD),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: const Color(0xFFDCE1E9),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Title and Status
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          task["title"],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF172033),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: statusBg,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: statusColor.withOpacity(0.25),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 5,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                color: statusColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              status,
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: statusColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // Block and Team - Screenshot Style
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                            color: const Color(0xFFE0E5ED),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.apartment_outlined,
+                              size: 11,
+                              color: Color(0xFF8994A7),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              task["block"],
+                              style: const TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF536176),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 7),
+
+                      // Team Initial Circle (replaces group icon)
+                      Container(
+                        width: 16,
+                        height: 16,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFEAF0FF),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          teamInitials,
+                          style: const TextStyle(
+                            fontSize: 7,
+                            fontWeight: FontWeight.w800,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 4),
+
+                      Expanded(
+                        child: Text(
+                          task["team"],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Color(0xFF536176),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class KeyInsightsCard extends StatelessWidget {
+  const KeyInsightsCard({super.key});
+
+  static const Color borderColor = Color(0xFFDCE1E9);
+
+  final List<Map<String, dynamic>> insights = const [
+    {
+      "message":
+      "Block D electrical conduit laying is currently delayed by 2 days.",
+      "type": "danger",
+    },
+    {
+      "message":
+      "Cement stock (420 bags) is below minimum threshold for next slab pour.",
+      "type": "warning",
+    },
+    {
+      "message":
+      "2 MRN material requests are pending approval from Project Incharge.",
+      "type": "warning",
+    },
+    {
+      "message":
+      "Mason shortage is currently 4 workers, affecting daily brickwork target.",
+      "type": "warning",
+    },
+    {
+      "message":
+      "BOQ Foundation balance is 200 Cum with 60% DPR completion logged.",
+      "type": "info",
+    },
+    {
+      "message":
+      "5 material items require immediate purchase indent and allocation.",
+      "type": "danger",
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7E8),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: const Icon(
+                  Icons.bolt_rounded,
+                  size: 18,
+                  color: Color(0xFFE99A16),
+                ),
+              ),
+
+              const SizedBox(width: 9),
+
+              const Expanded(
+                child: Text(
+                  "Key Insights & Attention Points",
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF172033),
+                  ),
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 7,
+                  vertical: 3,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F2F5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  "6",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF536176),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 7),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 9,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFAED),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFFF1E3C5),
+                  ),
+                ),
+                child: const Text(
+                  "Site Highlights",
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFD97706),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          const Divider(
+            height: 1,
+            color: Color(0xFFEDF0F4),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Insight List
+          ...insights.map(
+                (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _insightItem(item),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _insightItem(Map<String, dynamic> item) {
+    final String type = item["type"];
+
+    Color dotColor;
+    Color backgroundColor;
+    Color textColor;
+
+    switch (type) {
+      case "danger":
+        dotColor = const Color(0xFFFF315B);
+        backgroundColor = const Color(0xFFFFF8F9);
+        textColor = const Color(0xFF7F1D32);
+        break;
+
+      case "warning":
+        dotColor = const Color(0xFFFF9800);
+        backgroundColor = const Color(0xFFFFFCF6);
+        textColor = const Color(0xFF704214);
+        break;
+
+      default:
+        dotColor = const Color(0xFF3478F6);
+        backgroundColor = const Color(0xFFF7FAFF);
+        textColor = const Color(0xFF243B70);
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 13,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(
+          color: borderColor,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 3),
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: dotColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+
+          const SizedBox(width: 10),
+
+          Expanded(
+            child: Text(
+              item["message"],
+              style: TextStyle(
+                fontSize: 11,
+                height: 1.4,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class PredefinedIndentCard extends StatelessWidget {
+  const PredefinedIndentCard({super.key});
+
+  static const Color primaryColor = Color(0xFF3D7BFF);
+  static const Color borderColor = Color(0xFFE6EAF2);
+  static const Color textColor = Color(0xFF172033);
+  static const Color mutedColor = Color(0xFF8490A5);
+
+  // Column widths (shared by the column header and every row)
+  static const double _stockWidth = 84;
+  static const double _indentWidth = 66;
+
+  final List<Map<String, dynamic>> materials = const [
+    {
+      "name": "Cement",
+      "date": "25-09-2026",
+      "work": "Civil Works",
+      "available": "500",
+      "required": "120",
+      "indent": "100",
+      "unit": "Bag",
+      "priority": "High",
+    },
+    {
+      "name": "Steel",
+      "date": "24-09-2026",
+      "work": "Structural",
+      "available": "10",
+      "required": "3",
+      "indent": "2",
+      "unit": "Ton",
+      "priority": "High",
+    },
+    {
+      "name": "Bricks",
+      "date": "23-09-2026",
+      "work": "Masonry",
+      "available": "20,000",
+      "required": "4,500",
+      "indent": "5,000",
+      "unit": "Nos",
+      "priority": "Medium",
+    },
+    {
+      "name": "M-Sand",
+      "date": "22-09-2026",
+      "work": "Civil Works",
+      "available": "80",
+      "required": "15",
+      "indent": "20",
+      "unit": "Ton",
+      "priority": "Medium",
+    },
+    {
+      "name": "Electrical Items",
+      "date": "21-09-2026",
+      "work": "MEP",
+      "available": "150",
+      "required": "25",
+      "indent": "50",
+      "unit": "Nos",
+      "priority": "Low",
+    },
+  ];
+
+  Color getPriorityColor(String priority) {
+    switch (priority) {
+      case "High":
+        return const Color(0xFFE5484D);
+      case "Medium":
+        return const Color(0xFFF2A100);
+      default:
+        return const Color(0xFF1FA971);
+    }
+  }
+
+  IconData getPriorityIcon(String priority) {
+    switch (priority) {
+      case "High":
+        return Icons.keyboard_double_arrow_up_rounded;
+      case "Medium":
+        return Icons.drag_handle_rounded;
+      default:
+        return Icons.keyboard_double_arrow_down_rounded;
+    }
+  }
+
+  // "20,000" -> 20000
+  double _toNum(String value) {
+    return double.tryParse(value.replaceAll(",", "")) ?? 0;
+  }
+
+  // Required / Available (0.0 to 1.0) for the mini bar
+  double getUsage(Map<String, dynamic> item) {
+    final double available = _toNum(item["available"]);
+    final double required = _toNum(item["required"]);
+    if (available == 0) return 0;
+    return (required / available).clamp(0.0, 1.0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final int highCount =
+        materials.where((e) => e["priority"] == "High").length;
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: borderColor),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0F101828),
+            blurRadius: 12,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEAF0FF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.inventory_2_outlined,
+                    color: primaryColor,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Predefined Indent",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: textColor,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        "Material planning & quantity overview",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 10, color: mutedColor),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _headerPill("${materials.length} Items", primaryColor),
+                const SizedBox(width: 6),
+                _headerPill("$highCount High", const Color(0xFFE5484D)),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1, color: borderColor),
+
+          // Column header strip
+          Container(
+            color: const Color(0xFFF6F8FB),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+            child: Row(
+              children: [
+                const SizedBox(width: 46), // priority tile + gap
+                const Expanded(child: _ColumnLabel("Material")),
+                const SizedBox(
+                  width: _stockWidth,
+                  child: _ColumnLabel("Req / Avail", align: TextAlign.center),
+                ),
+                const SizedBox(
+                  width: _indentWidth,
+                  child: _ColumnLabel("Indent", align: TextAlign.right),
+                ),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1, color: borderColor),
+
+          // Rows
+          ...materials.asMap().entries.map((entry) {
+            final bool isLast = entry.key == materials.length - 1;
+            return Column(
+              children: [
+                _materialItem(entry.value),
+                if (!isLast)
+                  const Divider(
+                    height: 1,
+                    indent: 14,
+                    endIndent: 14,
+                    color: Color(0xFFEDF0F5),
+                  ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _headerPill(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  Widget _materialItem(Map<String, dynamic> item) {
+    final String priority = item["priority"];
+    final Color priorityColor = getPriorityColor(priority);
+    final double usage = getUsage(item);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: Row(
+        children: [
+          // Priority tile (icon + label)
+          Container(
+            width: 36,
+            height: 38,
+            decoration: BoxDecoration(
+              color: priorityColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(getPriorityIcon(priority), size: 16, color: priorityColor),
+                const SizedBox(height: 1),
+                Text(
+                  priority,
+                  style: TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w800,
+                    color: priorityColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+
+          // Name + unit chip + date / work
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.apartment_outlined,
-                      size: 13,
-                      color: Color(0xFF8994A7),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      task["block"],
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Color(0xFF536176),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    const Icon(
-                      Icons.groups_outlined,
-                      size: 13,
-                      color: Color(0xFF8994A7),
-                    ),
-                    const SizedBox(width: 4),
-
-                    Expanded(
+                    Flexible(
                       child: Text(
-                        task["team"],
+                        item["name"],
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 10,
-                          color: Color(0xFF536176),
-                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: textColor,
                         ),
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 3),
+                Text(
+                  item["date"],
+                  maxLines: 1,
+                  style: const TextStyle(fontSize: 10, color: mutedColor),
+                ),
+                Text(
+                  item["work"],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 10, color: mutedColor),
+                ),
               ],
             ),
           ),
-        ),
-      ],
+
+          // Required / Available + mini bar
+          SizedBox(
+            width: _stockWidth,
+            child: Column(
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: item["required"],
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: textColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: " / ${item["available"]}",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: mutedColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: LinearProgressIndicator(
+                      value: usage,
+                      minHeight: 4,
+                      backgroundColor: priorityColor.withOpacity(0.12),
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(priorityColor),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Indent qty
+          SizedBox(
+            width: _indentWidth,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: _indentBox(item["indent"], item["unit"]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _indentBox(String value, String unit) {
+    return Container(
+      constraints: const BoxConstraints(minWidth: 52),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: primaryColor.withOpacity(0.09),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: primaryColor,
+              ),
+            ),
+          ),
+          Text(
+            unit,
+            style: const TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: primaryColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
+class _ColumnLabel extends StatelessWidget {
+  final String text;
+  final TextAlign align;
+
+  const _ColumnLabel(this.text, {this.align = TextAlign.left});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      textAlign: align,
+      style: const TextStyle(
+        fontSize: 10,
+        fontWeight: FontWeight.w700,
+        color: PredefinedIndentCard.mutedColor,
+      ),
+    );
+  }
+}
+
+
+
