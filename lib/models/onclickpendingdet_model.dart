@@ -64,13 +64,14 @@ class OnclickPendingDetResult {
   List<MaterialTransferRequestDets>? materialTransferRequestDets;
   List<MMatRenWorkElement>?mMatRenWorkElement;
   List<MachineryReqOrdDetLink>?machineryReqOrdDetLink;
-
+  List<SubContractMachineryDailyWorkdetLink>? subContractMachineryDailyWorkdetLink;
   OnclickPendingDetResult({
     this.mMatReqMasLink,
     this.mMatPurOrdLink,
     this.materialTransferRequestDets,
     this.mMatRenWorkElement,
     this.machineryReqOrdDetLink,
+    this.subContractMachineryDailyWorkdetLink,
 
   });
 
@@ -105,6 +106,11 @@ class OnclickPendingDetResult {
           : List<MachineryReqOrdDetLink>.from(
           json["machineryReqOrdDetLink"]
               .map((x) => MachineryReqOrdDetLink.fromJson(x))),
+      subContractMachineryDailyWorkdetLink: json["subContractMachineryDailyWorkdetLink"] == null
+          ? []
+          : List<SubContractMachineryDailyWorkdetLink>.from(
+          json["subContractMachineryDailyWorkdetLink"]
+              .map((x) => SubContractMachineryDailyWorkdetLink.fromJson(x))),
     );
   }
 
@@ -114,6 +120,7 @@ class OnclickPendingDetResult {
     "materialTransferRequestDets": List<dynamic>.from(materialTransferRequestDets!.map((x) => x.toJson())),
     "mMatRenWork": List<dynamic>.from(mMatRenWorkElement!.map((x) =>  x.toJson())),
     "machineryReqOrdDetLink": List<dynamic>.from(machineryReqOrdDetLink!.map((x) =>  x.toJson())),
+    "subContractMachineryDailyWorkdetLink": List<dynamic>.from(subContractMachineryDailyWorkdetLink!.map((x) =>  x.toJson())),
   };
 }
 
@@ -734,5 +741,73 @@ class MachineryReqOrdDetLink {
     "machineryName": materialName,
     "stockQty": stockQty,
     "balQty": balQty,
+  };
+}
+
+class SubContractMachineryDailyWorkdetLink {
+  int? id;
+  int? subContractDailyWorkMasId;
+  int? subcontractMachineryWorkOrderDetId;
+  String? itemDesc;
+  int? scaleId;
+  double? qty;
+  double? rate;
+  double? amount;
+  String? billStatus;
+  String? workRemarks;
+  double? startReading;
+  double? endReading;
+  double? totalReading;
+  String? scaleName;
+
+  SubContractMachineryDailyWorkdetLink({
+    this.id,
+    this.subContractDailyWorkMasId,
+    this.subcontractMachineryWorkOrderDetId,
+    this.itemDesc,
+    this.scaleId,
+    this.qty,
+    this.rate,
+    this.amount,
+    this.billStatus,
+    this.workRemarks,
+    this.startReading,
+    this.endReading,
+    this.totalReading,
+    this.scaleName,
+  });
+
+  factory SubContractMachineryDailyWorkdetLink.fromJson(Map<String, dynamic> json) => SubContractMachineryDailyWorkdetLink(
+    id: json["id"],
+    subContractDailyWorkMasId: json["subContractDailyWorkMasId"],
+    subcontractMachineryWorkOrderDetId: json["subcontractMachineryWorkOrderDetId"],
+    itemDesc: json["itemDesc"],
+    scaleId: json["scaleId"],
+    qty: json["qty"],
+    rate: json["rate"],
+    amount: json["amount"],
+    billStatus: json["billStatus"],
+    workRemarks: json["workRemarks"],
+    startReading: json["startReading"],
+    endReading: json["endReading"],
+    totalReading: json["totalReading"],
+    scaleName: json["scaleName"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "subContractDailyWorkMasId": subContractDailyWorkMasId,
+    "subcontractMachineryWorkOrderDetId": subcontractMachineryWorkOrderDetId,
+    "itemDesc": itemDesc,
+    "scaleId": scaleId,
+    "qty": qty,
+    "rate": rate,
+    "amount": amount,
+    "billStatus": billStatus,
+    "workRemarks": workRemarks,
+    "startReading": startReading,
+    "endReading": endReading,
+    "totalReading": totalReading,
+    "scaleName": scaleName,
   };
 }

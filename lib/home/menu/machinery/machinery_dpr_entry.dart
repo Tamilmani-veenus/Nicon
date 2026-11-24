@@ -58,38 +58,40 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
         siteController.Sitename.text = "--SELECT--";
         dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
         dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
-
-        // machineryIndentController.preparedByController.text =
-        //     loginController.EmpName();
-        // machineryIndentController.reqTypeController.text = "Machinery Items";
-        // machineryIndentController.reqType.value = "M";
-        // bottomsheetControllers.searchcontroller.text = "";
       }
 
-      // else {
-      //   for (var element in machineryIndentController
-      //       .machineryEditListApiValue) {
-      //     machineryIndentController.reqId = element.id;
-      //     machineryIndentController.autoYearWiseNoController.text =
-      //         element.reqOrdNo;
-      //     machineryIndentController.requestDateController.text =
-      //         element.reqOrdDate;
-      //     machineryIndentController.dueDateController.text = element.reqDueDate;
-      //     projectController.selectedProjectId.value = element.projectId;
-      //     siteController.selectedsiteId.value = element.siteId;
-      //     projectController.projectname.text = element.projectName;
-      //     siteController.Sitename.text = element.siteName;
-      //     machineryIndentController.preparedByController.text =
-      //         element.createdByName;
-      //     machineryIndentController.reqTypeController.text =
-      //     element.requestType.toString().trim() == "M"
-      //         ? "Machinery Items"
-      //         : "-";
-      //     machineryIndentController.reqType.value =
-      //         element.requestType.toString();
-      //     machineryIndentController.remarksController.text = element.reqRemarks;
-      //   }
-      // }
+      else {
+        for (var result in machineryDPRController.macReqEditList) {
+          machineryDPRController.reqId = result['id'] ?? 0;
+          machineryDPRController.autoYearWiseNoController.text =
+              (result['workNo'] ?? "").toString();
+
+          machineryDPRController.requestDateController.text =
+              (result['workDate'] ?? "").toString();
+
+          machineryDPRController.refNoController.text =
+              (result['refNo'] ?? "").toString();
+
+          machineryDPRController.remarksController.text =
+              (result['remarks'] ?? "").toString();
+
+          machineryDPRController.preparedByController.text =
+              (result['createdName'] ?? loginController.EmpName()).toString();
+
+          projectController.projectname.text =
+              (result['projectName'] ?? "--SELECT--").toString();
+          projectController.selectedProjectId.value = result['projectId'] ?? 0;
+
+          siteController.Sitename.text =
+              (result['siteName'] ?? "--SELECT--").toString();
+          siteController.selectedsiteId.value = result['siteId'] ?? 0;
+
+          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text =
+              (result['subcontractorName'] ?? "--SELECT--").toString();
+          dailyWrkDone_DPR_Controller.TypeSubcontId.value =
+              result['subContractorId'] ?? 0;
+        }
+      }
 
       if (!mounted) return;
 
@@ -131,114 +133,94 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    // Visibility(
-                    //   visible:machineryIndentController.saveButton.value !=
-                    //       RequestConstant.APPROVAL
-                    //       && machineryIndentController.saveButton.value !=
-                    //           RequestConstant.PREAPPROVAL
-                    //       &&
-                    //       machineryIndentController.saveButton.value !=
-                    //           RequestConstant.VERIFY
-                    //       && machineryIndentController.saveButton.value !=
-                    //           RequestConstant.RESUBMIT
-                    //       ? true
-                    //       : false,
-                    //   child: Expanded(
-                    //     child: InkWell(
-                    //       child: Container(
-                    //         margin: const EdgeInsets.only(left: 20, right: 20),
-                    //         height:
-                    //         BaseUtitiles.getheightofPercentage(context, 4),
-                    //         decoration: BoxDecoration(
-                    //           borderRadius:
-                    //           const BorderRadius.all(Radius.circular(10)),
-                    //           color: Colors.white,
-                    //         ),
-                    //         alignment: Alignment.center,
-                    //         child: Text(
-                    //           "Reset",
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: RequestConstant.Lable_Font_SIZE,
-                    //               color: Theme
-                    //                   .of(context)
-                    //                   .primaryColor
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       onTap: () {
-                    //         setState(() {
-                    //           ResetAlert(context);
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    // Expanded(
-                    //   child: InkWell(
-                    //     child: Container(
-                    //         margin: const EdgeInsets.only(left: 20, right: 20),
-                    //         height:
-                    //         BaseUtitiles.getheightofPercentage(context, 4),
-                    //         decoration: BoxDecoration(
-                    //             borderRadius:
-                    //             const BorderRadius.all(Radius.circular(10)),
-                    //             color: Theme
-                    //                 .of(context)
-                    //                 .primaryColor
-                    //
-                    //         ),
-                    //         alignment: Alignment.center,
-                    //         child: Obx(() =>
-                    //             Text(
-                    //               machineryIndentController.saveButton.value,
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.bold,
-                    //                   fontSize: RequestConstant.Lable_Font_SIZE,
-                    //                   color: Colors.white
-                    //               ),
-                    //             ))),
-                    //     onTap: () async {
-                    //       if (_formKey.currentState!.validate()) {
-                    //         _formKey.currentState!.save();
-                    //
-                    //         if (mrn_request_controller
-                    //             .Material_itemview_GetDbList
-                    //             .isEmpty) {
-                    //           BaseUtitiles.showToast(
-                    //             "Please select items",
-                    //           );
-                    //           return;
-                    //         }
-                    //
-                    //         bool hasInvalid = false;
-                    //         for (int i = 0; i < mrn_request_controller
-                    //             .Material_itemview_GetDbList.length; i++) {
-                    //           final controller = mrn_request_controller
-                    //               .Addwork_qtyControllers[i];
-                    //           final text = controller.text.trim();
-                    //
-                    //           if (text.isEmpty) {
-                    //             hasInvalid = true;
-                    //             break;
-                    //           }
-                    //
-                    //           final value = double.tryParse(text);
-                    //           if (value == null || value <= 0) {
-                    //             hasInvalid = true;
-                    //             break;
-                    //           }
-                    //         }
-                    //         if (hasInvalid) {
-                    //           BaseUtitiles.showToast(
-                    //               "Qty Should Not be Zero or Empty");
-                    //         } else {
-                    //           SubmitAlert(context);
-                    //         }
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
+                    if(machineryDPRController.saveButton.value == RequestConstant.SUBMIT) Expanded(
+                      child: InkWell(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          height:
+                          BaseUtitiles.getheightofPercentage(context, 4),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Reset",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                            ResetAlert(context);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            height:
+                            BaseUtitiles.getheightofPercentage(context, 4),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor
+
+                            ),
+                            alignment: Alignment.center,
+                            child: Obx(() =>
+                                Text(
+                                  machineryDPRController.saveButton.value,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: RequestConstant.Lable_Font_SIZE,
+                                      color: Colors.white
+                                  ),
+                                ))),
+                        onTap: () {
+                          final list = machineryDPRController.macReqEtyDetList.value;
+
+                          bool isReadingEmpty = list.any(
+                                (item) => item.startReading == 0.0 || item.endReading == 0.0,
+                          );
+
+                          bool isInvalid = list.any(
+                                (item) => (item.startReading ?? 0.0) > (item.endReading ?? 0.0),
+                          );
+
+                          bool isQtyInvalid = list.any(
+                                (item) => (item.enteredQty ?? 0.0) <= 0.0,
+                          );
+
+                          if (isQtyInvalid) {
+                            BaseUtitiles.showToast("Qty must be greater than zero.");
+                            return;
+                          }
+                          if (isReadingEmpty) {
+                            BaseUtitiles.showToast("Start Reading and End Reading cannot be empty.");
+                            return;
+                          }
+                          if (isInvalid) {
+                            BaseUtitiles.showToast("End Reading cannot be less than Start Reading.");
+                            return;
+                          }
+
+
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            SubmitAlert(context);
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -321,7 +303,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                               .text,
                           controller: machineryDPRController
                               .requestDateController,
-                          selectable: true,
+                          selectable:  machineryDPRController.saveButton.value == RequestConstant.SUBMIT,
                           initialDate: DateTime.tryParse(
                             machineryDPRController.requestDateController
                                 .text,
@@ -707,13 +689,13 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.zero,
-            itemCount: machineryDPRController.macReqEtyDetList.value.length,
+            itemCount: machineryDPRController.macReqEtyDetList.length,
             itemBuilder: (BuildContext context, int index) {
               // machineryDPRController.textControllersInitiate();
 
               return MachineryDPRItemCard(
                 context: context,
-                item: machineryDPRController.macReqEtyDetList.value[index],
+                item: machineryDPRController.macReqEtyDetList[index],
                 onChanged: () {
                   machineryDPRController.macReqEtyDetList.refresh();
                 },
@@ -724,6 +706,151 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
       ],
     );
   }
+
+  Future ResetAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: const Text('Are you sure to Reset?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    //color of divider
+                    width: 5,
+                    //width space of divider
+                    thickness: 2,
+                    //thickness of divier line
+                    indent: 15,
+                    //Spacing at the top of divider.
+                    endIndent: 15, //Spacing at the bottom of divider.
+                  ),
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          machineryDPRController.deleteDetTableDatas();
+                          machineryDPRController.macReqEditList.value=[];
+                          await autoYearWiseNoController.AutoYearWiseNo("MACHINERY DPR");
+                          machineryDPRController.autoYearWiseNoController.text = autoYearWiseNoController.MachineryDPR_autoYrWise.value;
+                          machineryDPRController.requestDateController.text =
+                              CommonDateUtils.formatApiDate(DateTime.now());
+                          machineryDPRController.reqId = 0;
+                          machineryDPRController.refNoController.text = "";
+                          machineryDPRController.remarksController.text = "";
+                          machineryDPRController.preparedByController.text = loginController.EmpName();
+                          projectController.projectname.text = "--SELECT--";
+                          projectController.selectedProjectId.value = 0;
+                          siteController.selectedsiteId.value = 0;
+                          siteController.Sitename.text = "--SELECT--";
+                          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
+                          dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
+                          bottomsheetControllers.searchcontroller.text = "";
+                          Navigator.pop(context);
+                        },
+                        child: Text("Reset",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future SubmitAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: Text( 'Are you sure to ${machineryDPRController.saveButton.value}?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: RequestConstant.Lable_Font_SIZE,
+                        ),
+                      ),
+                    ),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    width: 5,
+                    thickness: 2,
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                  Expanded(
+                    child: StatefulBuilder(
+                      builder: (context, setState) => TextButton(
+                        onPressed: () async {
+                          if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            await machineryDPRController.getMachineryDPRDetLocalDatas();
+                            await machineryDPRController.SaveEntryScreen(
+                              context,
+                              machineryDPRController.reqId,
+                                projectController.selectedProjectId.value,
+                                siteController.selectedsiteId.value,
+                                dailyWrkDone_DPR_Controller.TypeSubcontId.value,
+                                loginController.EmpId()
+                            );
+                          }
+                        },
+                        child: Text(
+                          machineryDPRController.saveButton.value,
+                          style: TextStyle(
+                            color:  Theme.of(context).primaryColor,
+                            // Change color when disabled
+                            fontWeight: FontWeight.bold,
+                            fontSize: RequestConstant.Lable_Font_SIZE,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   Widget MachineryDPRItemCard({
     required BuildContext context,
@@ -872,7 +999,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                           context, 4),
                       alignment: Alignment.center,
                       child: readOnlyField(
-                        "₹${amount.toStringAsFixed(2)}",
+                        amount.toStringAsFixed(2),
                       ),
                     ),
                   ),
@@ -986,7 +1113,9 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                       margin: const EdgeInsets.only(right: 8),
                       height: BaseUtitiles.getheightofPercentage(context, 4),
                       alignment: Alignment.center,
-                      child: readOnlyField(formatValue(totalReading)),
+                      child: readOnlyField(
+                        formatValue(totalReading > 0 ? totalReading : 0),
+                      ),
                     ),
                   ),
 
@@ -1014,9 +1143,9 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                       margin: const EdgeInsets.only(left: 8),
                       height: BaseUtitiles.getheightofPercentage(context, 4),
                       child: DprInputField.text(
-                        value: item.remarks ?? '',
+                        value: item.workRemarks ?? '',
                         onChanged: (v) {
-                          item.remarks = v;
+                          item.workRemarks = v;
                           onChanged();
                         },
                         onSave: () => machineryDPRController.saveItem(item),
@@ -1099,12 +1228,20 @@ class _DprInputFieldState extends State<DprInputField> {
   @override
   void didUpdateWidget(covariant DprInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Sync when value changes from outside (but never while the user is typing)
+
     if (!_focusNode.hasFocus && _controller.text != _initialText) {
-      _controller.text = _initialText;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _focusNode.hasFocus) return;
+
+        if (_controller.text != _initialText) {
+          _controller.value = TextEditingValue(
+            text: _initialText,
+            selection: TextSelection.collapsed(offset: _initialText.length),
+          );
+        }
+      });
     }
   }
-
   void _scheduleSave() {
     _pendingSave = true;
     _debounce?.cancel();

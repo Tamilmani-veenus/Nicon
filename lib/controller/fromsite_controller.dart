@@ -19,7 +19,7 @@ class FromSiteController extends GetxController{
   RxInt selectedsiteId = 0.obs;
   RxString selectedsitedropdownName = "".obs;
 
-  final ProjectController projectcontroller = Get.put(ProjectController());
+  final ProjectController projectcontroller = Get.find<ProjectController>();
   FromProjectController fromprojectController=Get.put(FromProjectController());
 
 

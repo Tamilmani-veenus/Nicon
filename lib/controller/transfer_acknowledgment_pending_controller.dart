@@ -30,7 +30,7 @@ class TransferAcknowledgmentPendingController extends GetxController{
 
   LoginController loginController=Get.put(LoginController());
   PendingListController pendingListController=Get.put(PendingListController());
-  FromSiteController fromsiteController = Get.put(FromSiteController());
+  FromSiteController fromsiteController = Get.find<FromSiteController>();
 
   List<TextEditingController> transferQtyListController = [];
   List<TextEditingController> ackQtyListController = [];

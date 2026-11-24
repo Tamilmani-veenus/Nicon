@@ -858,8 +858,9 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
               visible: commonController.addMode.value == 1 ? true : false,
               child: FloatingActionButton.extended(
                 onPressed: () async {
-                  machineryDPRController.saveButton.value =
-                      RequestConstant.SUBMIT;
+                  machineryDPRController.saveButton.value = RequestConstant.SUBMIT;
+                  await machineryDPRController.deleteDetTableDatas();
+                  machineryDPRController.macReqEtyDetList.value=[];
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1489,23 +1490,15 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                                                     ),
                                                                     onTap:
                                                                         () async {
-                                                                      // mrn_request_controller
-                                                                      //     .delete_MaterialIntent_itemlist_Table();
-                                                                      // mrn_request_controller
-                                                                      //     .Material_itemview_GetDbList
-                                                                      //     .clear();
-                                                                      // mrn_request_controller
-                                                                      //     .getRequestDetList
-                                                                      //     .clear();
-                                                                      // FocusScope.of(
-                                                                      //     context)
-                                                                      //     .unfocus();
-                                                                      // await machineryIndentController.machineryIndentEdit(
-                                                                      //     machineryIndentController.macReqEtyList[
-                                                                      //     index]
-                                                                      //         .id,
-                                                                      //     widget.heading,
-                                                                      //     context,"Edit");
+                                                                      FocusScope.of(
+                                                                          context)
+                                                                          .unfocus();
+                                                                      await machineryDPRController.MaterialIntentList_EditApi(
+                                                                          machineryDPRController.macReqEtyList[
+                                                                          index]
+                                                                              ["id"],
+                                                                          widget.heading,"Edit",
+                                                                          context);
                                                                     }),
                                                               ),
                                                               Container(

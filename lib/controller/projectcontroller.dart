@@ -28,7 +28,7 @@ class ProjectController extends GetxController{
   RxString selectedProjectNameAll = "".obs;
 
 
-  LoginController loginController=Get.put(LoginController());
+  LoginController loginController=Get.find<LoginController>();
 
 
   Future getProjectList() async {

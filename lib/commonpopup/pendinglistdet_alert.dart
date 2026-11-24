@@ -4268,7 +4268,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                       child: Container(
                           margin: EdgeInsets.only( bottom: 10),
                           child: Text(widget.ReqNo.toString(),
-                            style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold,
+                            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,
                             ),)),
                     ),
                   ],
@@ -4302,7 +4302,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                     margin: EdgeInsets.only(left: 10, right: 5, bottom: 5, top:5 ),
                     child: Column(
                       children: [
-                        Row(
+                        widget.heading!="MACHINERY DPR"?Row(
                           children: [
                             Text("Material" + ":   ",
                               style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
@@ -4310,6 +4310,18 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                             Expanded(
                                 flex: 2,
                                 child: Text(pendingListController.onclickPendingListDet[index].materialName.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )),
+                          ],
+                        ):
+                        Row(
+                          children: [
+                            Text("Item Desc" + ":   ",
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(pendingListController.onclickPendingListDet[index].itemDesc.toString(),
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )),
                           ],
@@ -4322,7 +4334,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                             ),
                             Expanded(
                                 flex: 3,
-                                child: Text(pendingListController.onclickPendingListDet[index].reqQty.toString())),
+                                child: Text(widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].reqQty.toString():pendingListController.onclickPendingListDet[index].qty.toString())),
                             const Expanded(
                                 flex: 2,
                                 child: Text("Scale:",
@@ -4342,7 +4354,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text(pendingListController.onclickPendingListDet[index].remarks.toString())),
+                                child: Text(widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].remarks.toString():pendingListController.onclickPendingListDet[index].workRemarks.toString())),
                           ],
                         ),
                       ],

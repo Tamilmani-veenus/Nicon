@@ -35,17 +35,18 @@ class AuthendicationProvider {
       return res;
 
 
-    }  catch (error) {
+    } catch (error, stackTrace) {
       print("Error == $error");
+      print("STACK TRACE == $stackTrace");
+
       if (from == "session") {
-        // splash screen: wait 5 seconds, then show the same error toast
         await Future.delayed(const Duration(seconds: 5));
         BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       } else {
-        // normal login flow: unchanged
         Navigator.pop(context);
         BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       }
+
       return null;
     }
   }
