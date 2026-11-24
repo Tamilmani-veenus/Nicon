@@ -8,7 +8,7 @@ class ApiConfig {
 
   static const String LIVE_ENDPOINT_2 = "http://122.173.84.247:8080/";
 
-  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "ERPNEW/";
+  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "VishaalAPI/";
 
   static String APIURL = "";
   static String WebURL = "";
@@ -20,7 +20,7 @@ class ApiConfig {
 
     if (liveEndpoint != null) {
 
-      APIURL = "${liveEndpoint}ERPNEW/";
+      APIURL = "${liveEndpoint}VishaalAPI/";
       WebURL = "${liveEndpoint}erpnewui/";
 
     } else {

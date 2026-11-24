@@ -10,8 +10,7 @@ import '../../../controller/auto_yrwise_no_controller.dart';
 import '../../../controller/bottomsheet_Controllers.dart';
 import '../../../controller/dailywrk_done_dpr_controller.dart';
 import '../../../controller/logincontroller.dart';
-import '../../../controller/machinery_dpr_controller.d'
-    'art';
+import '../../../controller/machinery_dpr_controller.dart';
 import '../../../controller/projectcontroller.dart';
 import '../../../controller/sitecontroller.dart';
 import '../../../controller/subcontcontroller.dart';
