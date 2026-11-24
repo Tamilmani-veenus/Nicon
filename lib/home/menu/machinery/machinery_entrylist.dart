@@ -5,6 +5,7 @@ import '../../../app_theme/app_colors.dart';
 import '../../../constants/ui_constant/icons_const.dart';
 import '../../../controller/comman_controller.dart';
 import '../../../controller/logincontroller.dart';
+import '../../../controller/machinery_bill_generation_controller.dart';
 import '../../../controller/machinery_dpr_controller.dart';
 import '../../../controller/machinery_indent_controller.dart';
 import '../../../controller/mrn_request_indent_controller.dart';
@@ -12,6 +13,7 @@ import '../../../controller/punch_in_controller.dart';
 import '../../../utilities/baseutitiles.dart';
 import '../../../utilities/requestconstant.dart';
 import 'machinery_Indent_entry.dart';
+import 'machinery_bill_entry.dart';
 import 'machinery_dpr_entry.dart';
 
 class MachineryIndentEntryList extends StatefulWidget {
@@ -823,6 +825,7 @@ class MachineryDPREntryList extends StatefulWidget {
 
 class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
   MachineryDPRController machineryDPRController = Get.put(MachineryDPRController());
+  MachineryBillGenController machineryBillController = Get.put(MachineryBillGenController());
   MRN_Request_Controller mrn_request_controller = Get.put(MRN_Request_Controller());
   CommanController commonController = Get.put(CommanController());
   TextEditingController editingController = TextEditingController();
@@ -859,17 +862,34 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
               visible: commonController.addMode.value == 1 ? true : false,
               child: FloatingActionButton.extended(
                 onPressed: () async {
-                  machineryDPRController.saveButton.value = RequestConstant.SUBMIT;
-                  await machineryDPRController.deleteDetTableDatas();
-                  machineryDPRController.macReqEtyDetList.value=[];
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MachineryDPREntry(
-                        heading: widget.heading
+                  if(widget.mobileMenuName=="Machinery DPR") {
+                    machineryDPRController.saveButton.value =
+                        RequestConstant.SUBMIT;
+                    await machineryDPRController.deleteDetTableDatas();
+                    machineryDPRController.macReqEtyDetList.value = [];
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MachineryDPREntry(
+                                heading: widget.heading
+                            ),
                       ),
-                    ),
-                  );
+                    );
+                  }else{
+                    machineryBillController.saveButton.value = RequestConstant.SUBMIT;
+                    // await machineryDPRController.deleteDetTableDatas();
+                    // machineryDPRController.macReqEtyDetList.value = [];
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MachineryBillEntry(
+                                heading: widget.heading
+                            ),
+                      ),
+                    );
+                  }
                 },
                 label: Text(
                   "Add",
