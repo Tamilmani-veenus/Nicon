@@ -59,10 +59,10 @@ class MachineryIndentProvider {
     }
   }
 
-  static Future<bool> machineryListDeleteAPI(int reqId,type) async {
+  static Future<bool> machineryListDeleteAPI(int reqId,type,{isEdit}) async {
     try {
       final response = await ApiManager.deleteAPICall(
-          type=="macDPR"?"${ApiConstant.DELETE_MACHINERY_DPRLIST_API}?id=$reqId": "${ApiConstant.DELETE_MACHINERY_ENTRYLIST_API}/$reqId");
+          type=="Machinery DPR"?"${ApiConstant.DELETE_MACHINERY_DPRLIST_API}?id=$reqId":type=="Machinery Bill Generation"? "${ApiConstant.DELETE_MACHINERY_BILLLIST_API}?id=$reqId&isList=$isEdit":"${ApiConstant.DELETE_MACHINERY_ENTRYLIST_API}/$reqId");
 
       final Map<String, dynamic> decoded = jsonDecode(response);
 
@@ -87,10 +87,9 @@ class MachineryIndentProvider {
 
 class MachineryDPRProvider {
 
-  static Future getMachineryDPREntryList(String frdate, String todate) async {
+  static Future getMachineryDPREntryList(String frdate, String todate,mobileMenuName) async {
     try {
-      var value = await ApiManager.getAPICall("${ApiConstant
-          .GETMAC_DPR_ENTRY_LIST}?Frdate=$frdate&Todate=$todate");
+      var value = await ApiManager.getAPICall("${mobileMenuName=="Machinery DPR"?ApiConstant.GETMAC_DPR_ENTRY_LIST:ApiConstant.GETMAC_BILL_ENTRY_LIST}?Frdate=$frdate&Todate=$todate");
       return jsonDecode(value);
     } catch (error) {
       print(error);

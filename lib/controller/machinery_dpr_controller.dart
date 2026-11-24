@@ -43,12 +43,12 @@ class MachineryDPRController extends GetxController {
 
   PendingListController pendingListController = Get.put(PendingListController());
 
-  Future getMacDPREntryList() async {
+  Future getMacDPREntryList(mobileMenuName) async {
     mainEtyList.value=[];
     macReqEtyList.value=[];
     await ClickUtils.run(() async {
       var response = await MachineryDPRProvider.getMachineryDPREntryList(
-        macDPRListFrDate.text, macDPRListToDate.text);
+        macDPRListFrDate.text, macDPRListToDate.text,mobileMenuName);
     if (response != null) {
       if (response["success"] == true) {
         if (response["result"]!.isNotEmpty) {
@@ -98,11 +98,11 @@ class MachineryDPRController extends GetxController {
     });
   }
 
-  Future<bool> machineryDPRListDeleteApi(int reqId) async {
-    return MachineryIndentProvider.machineryListDeleteAPI(reqId,"macDPR");
+  Future<bool> machineryListDeleteApi(int reqId,mobileMenuName,isEdit) async {
+    return MachineryIndentProvider.machineryListDeleteAPI(reqId,mobileMenuName,isEdit: isEdit);
   }
 
-  Future DeleteAlert(BuildContext context, int index) async {
+  Future DeleteAlert(BuildContext context, int index, mobileMenuName,isEdit) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -136,7 +136,7 @@ class MachineryDPRController extends GetxController {
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          bool result = await machineryDPRListDeleteApi(macReqEtyList.value[index]["id"]);
+                          bool result = await machineryListDeleteApi(macReqEtyList.value[index]["id"],mobileMenuName,isEdit);
                           if (result) {
                             macReqEtyList.removeAt(index);
                             Navigator.of(context).pop();
@@ -301,7 +301,7 @@ class MachineryDPRController extends GetxController {
       if (list["success"] == true) {
         if (saveButton.value == RequestConstant.SUBMIT || saveButton.value == RequestConstant.RESUBMIT) {
           BaseUtitiles.showToast(list["message"]);
-          await getMacDPREntryList();
+          await getMacDPREntryList("Machinery DPR");
           BaseUtitiles.popMultiple(context, count: 3);
         } else if (saveButton.value == RequestConstant.APPROVAL) {
           BaseUtitiles.showToast(list["message"]);

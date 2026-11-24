@@ -341,8 +341,11 @@ class Menu_Controller extends GetxController {
         break;
 
       case "Machinery DPR":
-        await _go(context, MachineryDPREntryList
-          (heading: menuName));
+        await _go(context, MachineryDPREntryList(heading: menuName, mobileMenuName: value));
+        break;
+
+      case "Machinery Bill Generation":
+        await _go(context, MachineryDPREntryList(heading: menuName,mobileMenuName: value));
         break;
 
       case "Repair Consumption":
