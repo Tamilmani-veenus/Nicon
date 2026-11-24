@@ -814,7 +814,8 @@ class _MachineryIndentEntryListState extends State<MachineryIndentEntryList> {
 
 class MachineryDPREntryList extends StatefulWidget {
   final String heading;
-  const MachineryDPREntryList({Key? key,required this.heading}) : super(key: key);
+  final String mobileMenuName;
+  const MachineryDPREntryList({Key? key,required this.heading, required this.mobileMenuName}) : super(key: key);
 
   @override
   State<MachineryDPREntryList> createState() => _MachineryDPREntryListState();
@@ -836,7 +837,7 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
         lastDayOfMonth.toString().substring(0, 10);
     machineryDPRController.macDPRListToDate.text =
         currentDate.toString().substring(0, 10);
-    machineryDPRController.getMacDPREntryList();
+    machineryDPRController.getMacDPREntryList(widget.mobileMenuName);
   }
 
   @override
@@ -1069,7 +1070,7 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                 editingController.text = "";
                               });
 
-                              await machineryDPRController.getMacDPREntryList();
+                              await machineryDPRController.getMacDPREntryList(widget.mobileMenuName);
                             },
                             child: Center(
                                 child: Padding(
@@ -1300,9 +1301,10 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                       Expanded(
                                           flex: 8,
                                           child: Text(
-                                            machineryDPRController.macReqEtyList
+                                            widget.mobileMenuName=="Machinery DPR"?machineryDPRController.macReqEtyList
                                                 .value[index]["subcontractorName"]
-                                                .toString(),
+                                            : machineryDPRController.macReqEtyList
+                                                .value[index]["subContractorName"],
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -1322,7 +1324,7 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                       Expanded(
                                           flex: 3,
                                           child: Text(
-                                            "Total Amount",
+                                            widget.mobileMenuName=="Machinery DPR"? "Total Amount" :"Net Amount",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
@@ -1330,8 +1332,7 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                           )),
                                       Expanded(
                                           flex: 8,
-                                          child: Text("₹ ${machineryDPRController.macReqEtyList
-                                              .value[index]["totalAmount"]}",
+                                          child: Text("₹ ${widget.mobileMenuName=="Machinery DPR"? machineryDPRController.macReqEtyList.value[index]["totalAmount"]:machineryDPRController.macReqEtyList.value[index]["netPayAmount"]}",
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -1556,6 +1557,8 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                                                       machineryDPRController.DeleteAlert(
                                                                         context,
                                                                         index,
+                                                                          widget.mobileMenuName,
+                                                                        true
                                                                       );
                                                                     }),
                                                               ),

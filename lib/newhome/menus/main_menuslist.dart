@@ -111,7 +111,6 @@ class _MainManusListState extends State<MainManusList> {
                   menuController.formName.value = item.menuName!;
                   menuController.formMenuId.value = item.menuId!;
 
-                  print("XXXXXXXXXXXX...${item.menuId}");
                   await commanController.getControllEntryListRights();
                 };
               },
@@ -198,6 +197,9 @@ class _MainManusListState extends State<MainManusList> {
 
       case "Machinery DPR":
         return Icons.construction;
+
+      case "Machinery Bill Generation":
+        return Icons.request_quote_rounded;
 
     // Repair
       case "Repair Consumption":

@@ -213,7 +213,7 @@ class ReqTrackResult {
     material: json["material"],
     unit: json["unit"],
     reqQty: json["reqQty"],
-    mrnDate: json["mrnDate"],
+    mrnDate: json["mrnDate"] ?? json["mrnCreatedDate"],
     mrnTime: json["mrnTime"],
     mrnPreparedBy: json["mrnPreparedBy"],
     mrnApproveType: json["mrnApproveType"],
@@ -396,245 +396,212 @@ class SiteModel {
 
 class TransferModel {
   String? reqordno;
-  String? reqorddate;
+
+  // MRN
+  String? mrnCreatedDate;
+  String? mrnCreatedTime;
   String? mrnPreparedby;
-  String? indentVerifydate;
   String? mrnVerifydate;
   String? mrnVerifyTime;
   String? mrnVerifiedBy;
-  String? indentPreApproveDate;
+  String? mrnVerifyStatus;
+  String? mrnPreApproveStatus;
+  String? mrnApproveStatus;
   String? mrnPreApproveDate;
   String? mrnPreApproveTime;
   String? mrnPreApprovedby;
-  String? indentApproveDate;
   String? mrnApprovedDate;
   String? mrnApprovedTime;
   String? mrnApprovedBy;
-  String? purchaseOrdNo;
-  String? purchaseOrdDate;
-  String? poPreparedby;
-  String? purchaseApprovedDate;
-  String? poApprovedDate;
-  String? poApprovedTime;
-  String? poApprovedBy;
-  String? inwardno;
-  String? invoicedate;
-  String? invoiceno;
-  String? inwPreparedby;
-  String? billNo;
-  String? billEntryDate;
-  String? billApproveBy;
-  String? purBillApproveDate;
-  String? billApprovedDt;
-  String? billApprovedTime;
-  String? billcreatedByName;
-  String? billApprovedBYName;
-  String? transferId;
-  String? matReqMasId;
-  String? transferNo;
-  String? transferApproveStatus;
-  String? transApproveDateTime;
-  String? transferApprovedDt;
-  String? transferApprovedTime;
-  String? transferApprovedBy;
-  String? transferCreatedBy;
-  String? transCreatedDateTime;
-  String? transferCreatedDt;
-  String? transferCreatedTime;
-  String? transferCreateBy;
-  String? transferApproveName;
+  String? mrnApproveType;
+
+  // Quote
   String? quoteNo;
-  String? quoteCreatedBy;
-  String? quoteApprovedBy;
-  String? quoteApproveDateTime;
+  String? quoteCreatedName;
+  String? quoteCreatedDate;
+  String? quoteCreatedTime;
+  String? quoteVerifyByName;
+  String? quoteVerifyDate;
+  String? quoteVerifyTime;
+  String? quoteVerifyStatus;
+  String? quoteApproveName;
   String? quoteApprovedDt;
   String? quoteApprovedTime;
   String? quoteApproveStatus;
-  String? quoteCreatedName;
-  String? quoteApproveName;
+
+  // PO
+  String? purchaseOrdNo;
+  String? poCreatedDate;
+  String? poTime;
+  String? poPreparedby;
+  String? poVerifyById;
+  String? poVerifyDate;
+  String? poVerifyTime;
+  String? poVerifyStatus;
+  String? poApprovedDate;
+  String? poApprovedTime;
+  String? poApprovedBy;
+  String? poApproveStatus;
+
+  // Inward / GRN
+  String? grnCreatedDate;
+  String? grnCreatedTime;
+  String? inwardno; // not in your sample, see note below
+  String? inwardDate; // not in your sample, see note below
+  String? inwPreparedby; // not in your sample, see note below
+  String? invoiceno; // not in your sample, see note below
 
   TransferModel({
     this.reqordno,
-    this.reqorddate,
+    this.mrnCreatedDate,
+    this.mrnCreatedTime,
     this.mrnPreparedby,
-    this.indentVerifydate,
     this.mrnVerifydate,
     this.mrnVerifyTime,
     this.mrnVerifiedBy,
-    this.indentPreApproveDate,
+    this.mrnVerifyStatus,
+    this.mrnPreApproveStatus,
+    this.mrnApproveStatus,
     this.mrnPreApproveDate,
     this.mrnPreApproveTime,
     this.mrnPreApprovedby,
-    this.indentApproveDate,
     this.mrnApprovedDate,
     this.mrnApprovedTime,
     this.mrnApprovedBy,
-    this.purchaseOrdNo,
-    this.purchaseOrdDate,
-    this.poPreparedby,
-    this.purchaseApprovedDate,
-    this.poApprovedDate,
-    this.poApprovedTime,
-    this.poApprovedBy,
-    this.inwardno,
-    this.invoicedate,
-    this.invoiceno,
-    this.inwPreparedby,
-    this.billNo,
-    this.billEntryDate,
-    this.billApproveBy,
-    this.purBillApproveDate,
-    this.billApprovedDt,
-    this.billApprovedTime,
-    this.billcreatedByName,
-    this.billApprovedBYName,
-    this.transferId,
-    this.matReqMasId,
-    this.transferNo,
-    this.transferApproveStatus,
-    this.transApproveDateTime,
-    this.transferApprovedDt,
-    this.transferApprovedTime,
-    this.transferApprovedBy,
-    this.transferCreatedBy,
-    this.transCreatedDateTime,
-    this.transferCreatedDt,
-    this.transferCreatedTime,
-    this.transferCreateBy,
-    this.transferApproveName,
+    this.mrnApproveType,
     this.quoteNo,
-    this.quoteCreatedBy,
-    this.quoteApprovedBy,
-    this.quoteApproveDateTime,
+    this.quoteCreatedName,
+    this.quoteCreatedDate,
+    this.quoteCreatedTime,
+    this.quoteVerifyByName,
+    this.quoteVerifyDate,
+    this.quoteVerifyTime,
+    this.quoteVerifyStatus,
+    this.quoteApproveName,
     this.quoteApprovedDt,
     this.quoteApprovedTime,
     this.quoteApproveStatus,
-    this.quoteCreatedName,
-    this.quoteApproveName,
+    this.purchaseOrdNo,
+    this.poCreatedDate,
+    this.poTime,
+    this.poPreparedby,
+    this.poVerifyById,
+    this.poVerifyDate,
+    this.poVerifyTime,
+    this.poVerifyStatus,
+    this.poApprovedDate,
+    this.poApprovedTime,
+    this.poApprovedBy,
+    this.poApproveStatus,
+    this.grnCreatedDate,
+    this.grnCreatedTime,
+    this.inwardno,
+    this.inwardDate,
+    this.inwPreparedby,
+    this.invoiceno,
   });
 
   factory TransferModel.fromJson(Map<String, dynamic> json) {
     return TransferModel(
       reqordno: json['reqordno'],
-      reqorddate: json['reqorddate'],
+      mrnCreatedDate: json['mrnCreatedDate'],
+      mrnCreatedTime: json['mrnCreatedTime'],
       mrnPreparedby: json['mrnPreparedby'],
-      indentVerifydate: json['indentVerifydate'],
       mrnVerifydate: json['mrnVerifydate'],
       mrnVerifyTime: json['mrnVerifyTime'],
       mrnVerifiedBy: json['mrnVerifiedBy'],
-      indentPreApproveDate: json['indentPreApproveDate'],
+      mrnVerifyStatus: json['mrnVerifyStatus'],
+      mrnPreApproveStatus: json['mrnPreApproveStatus'],
+      mrnApproveStatus: json['mrnApproveStatus'],
       mrnPreApproveDate: json['mrnPreApproveDate'],
       mrnPreApproveTime: json['mrnPreApproveTime'],
       mrnPreApprovedby: json['mrnPreApprovedby'],
-      indentApproveDate: json['indentApproveDate'],
       mrnApprovedDate: json['mrnApprovedDate'],
       mrnApprovedTime: json['mrnApprovedTime'],
       mrnApprovedBy: json['mrnApprovedBy'],
-      purchaseOrdNo: json['purchaseOrdNo'],
-      purchaseOrdDate: json['purchaseOrdDate'],
-      poPreparedby: json['poPreparedby'],
-      purchaseApprovedDate: json['purchaseApprovedDate'],
-      poApprovedDate: json['poApprovedDate'],
-      poApprovedTime: json['poApprovedTime'],
-      poApprovedBy: json['poApprovedBy'],
-      inwardno: json['inwardno'],
-      invoicedate: json['invoicedate'],
-      invoiceno: json['invoiceno'],
-      inwPreparedby: json['inwPreparedby'],
-      billNo: json['billNo'],
-      billEntryDate: json['billEntryDate'],
-      billApproveBy: json['billApproveBy'],
-      purBillApproveDate: json['purBillApproveDate'],
-      billApprovedDt: json['billApprovedDt'],
-      billApprovedTime: json['billApprovedTime'],
-      billcreatedByName: json['billcreatedByName'],
-      billApprovedBYName: json['billApprovedBYName'],
-      transferId: json['transferId']?.toString(),
-      matReqMasId: json['matReqMasId']?.toString(),
-      transferNo: json['transferNo'],
-      transferApproveStatus: json['transferApproveStatus'],
-      transApproveDateTime: json['transApproveDateTime'],
-      transferApprovedDt: json['transferApprovedDt'],
-      transferApprovedTime: json['transferApprovedTime'],
-      transferApprovedBy: json['transferApprovedBy'],
-      transferCreatedBy: json['transferCreatedBy'],
-      transCreatedDateTime: json['transCreatedDateTime'],
-      transferCreatedDt: json['transferCreatedDt'],
-      transferCreatedTime: json['transferCreatedTime'],
-      transferCreateBy: json['transferCreateBy'],
-      transferApproveName: json['transferApproveName'],
+      mrnApproveType: json['mrnApproveType'],
       quoteNo: json['quoteNo'],
-      quoteCreatedBy: json['quoteCreatedBy'],
-      quoteApprovedBy: json['quoteApprovedBy'],
-      quoteApproveDateTime: json['quoteApproveDateTime'],
+      quoteCreatedName: json['quoteCreatedName'],
+      quoteCreatedDate: json['quoteCreatedDate'],
+      quoteCreatedTime: json['quoteCreatedTime'],
+      quoteVerifyByName: json['quoteVerifyByName'],
+      quoteVerifyDate: json['quoteVerifyDate'],
+      quoteVerifyTime: json['quoteVerifyTime'],
+      quoteVerifyStatus: json['quoteVerifyStatus'],
+      quoteApproveName: json['quoteApproveName'],
       quoteApprovedDt: json['quoteApprovedDt'],
       quoteApprovedTime: json['quoteApprovedTime'],
       quoteApproveStatus: json['quoteApproveStatus'],
-      quoteCreatedName: json['quoteCreatedName'],
-      quoteApproveName: json['quoteApproveName'],
+      purchaseOrdNo: json['purchaseOrdNo'],
+      poCreatedDate: json['poCreatedDate'],
+      poTime: json['poTime'],
+      poPreparedby: json['poPreparedby'],
+      poVerifyById: json['poVerifyById'],
+      poVerifyDate: json['poVerifyDate'],
+      poVerifyTime: json['poVerifyTime'],
+      poVerifyStatus: json['poVerifyStatus'],
+      poApprovedDate: json['poApprovedDate'],
+      poApprovedTime: json['poApprovedTime'],
+      poApprovedBy: json['poApprovedBy'],
+      poApproveStatus: json['poApproveStatus'],
+      grnCreatedDate: json['grnCreatedDate'],
+      grnCreatedTime: json['grnCreatedTime'],
+      inwardno: json['inwardno'],
+      inwardDate: json['inwardDate'],
+      inwPreparedby: json['inwPreparedby'],
+      invoiceno: json['invoiceno'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'reqordno': reqordno,
-      'reqorddate': reqorddate,
+      'mrnCreatedDate': mrnCreatedDate,
+      'mrnCreatedTime': mrnCreatedTime,
       'mrnPreparedby': mrnPreparedby,
-      'indentVerifydate': indentVerifydate,
       'mrnVerifydate': mrnVerifydate,
       'mrnVerifyTime': mrnVerifyTime,
       'mrnVerifiedBy': mrnVerifiedBy,
-      'indentPreApproveDate': indentPreApproveDate,
+      'mrnVerifyStatus': mrnVerifyStatus,
+      'mrnPreApproveStatus': mrnPreApproveStatus,
+      'mrnApproveStatus': mrnApproveStatus,
       'mrnPreApproveDate': mrnPreApproveDate,
       'mrnPreApproveTime': mrnPreApproveTime,
       'mrnPreApprovedby': mrnPreApprovedby,
-      'indentApproveDate': indentApproveDate,
       'mrnApprovedDate': mrnApprovedDate,
       'mrnApprovedTime': mrnApprovedTime,
       'mrnApprovedBy': mrnApprovedBy,
-      'purchaseOrdNo': purchaseOrdNo,
-      'purchaseOrdDate': purchaseOrdDate,
-      'poPreparedby': poPreparedby,
-      'purchaseApprovedDate': purchaseApprovedDate,
-      'poApprovedDate': poApprovedDate,
-      'poApprovedTime': poApprovedTime,
-      'poApprovedBy': poApprovedBy,
-      'inwardno': inwardno,
-      'invoicedate': invoicedate,
-      'invoiceno': invoiceno,
-      'inwPreparedby': inwPreparedby,
-      'billNo': billNo,
-      'billEntryDate': billEntryDate,
-      'billApproveBy': billApproveBy,
-      'purBillApproveDate': purBillApproveDate,
-      'billApprovedDt': billApprovedDt,
-      'billApprovedTime': billApprovedTime,
-      'billcreatedByName': billcreatedByName,
-      'billApprovedBYName': billApprovedBYName,
-      'transferId': transferId,
-      'matReqMasId': matReqMasId,
-      'transferNo': transferNo,
-      'transferApproveStatus': transferApproveStatus,
-      'transApproveDateTime': transApproveDateTime,
-      'transferApprovedDt': transferApprovedDt,
-      'transferApprovedTime': transferApprovedTime,
-      'transferApprovedBy': transferApprovedBy,
-      'transferCreatedBy': transferCreatedBy,
-      'transCreatedDateTime': transCreatedDateTime,
-      'transferCreatedDt': transferCreatedDt,
-      'transferCreatedTime': transferCreatedTime,
-      'transferCreateBy': transferCreateBy,
-      'transferApproveName': transferApproveName,
+      'mrnApproveType': mrnApproveType,
       'quoteNo': quoteNo,
-      'quoteCreatedBy': quoteCreatedBy,
-      'quoteApprovedBy': quoteApprovedBy,
-      'quoteApproveDateTime': quoteApproveDateTime,
+      'quoteCreatedName': quoteCreatedName,
+      'quoteCreatedDate': quoteCreatedDate,
+      'quoteCreatedTime': quoteCreatedTime,
+      'quoteVerifyByName': quoteVerifyByName,
+      'quoteVerifyDate': quoteVerifyDate,
+      'quoteVerifyTime': quoteVerifyTime,
+      'quoteVerifyStatus': quoteVerifyStatus,
+      'quoteApproveName': quoteApproveName,
       'quoteApprovedDt': quoteApprovedDt,
       'quoteApprovedTime': quoteApprovedTime,
       'quoteApproveStatus': quoteApproveStatus,
-      'quoteCreatedName': quoteCreatedName,
-      'quoteApproveName': quoteApproveName,
+      'purchaseOrdNo': purchaseOrdNo,
+      'poCreatedDate': poCreatedDate,
+      'poTime': poTime,
+      'poPreparedby': poPreparedby,
+      'poVerifyById': poVerifyById,
+      'poVerifyDate': poVerifyDate,
+      'poVerifyTime': poVerifyTime,
+      'poVerifyStatus': poVerifyStatus,
+      'poApprovedDate': poApprovedDate,
+      'poApprovedTime': poApprovedTime,
+      'poApprovedBy': poApprovedBy,
+      'poApproveStatus': poApproveStatus,
+      'grnCreatedDate': grnCreatedDate,
+      'grnCreatedTime': grnCreatedTime,
+      'inwardno': inwardno,
+      'inwardDate': inwardDate,
+      'inwPreparedby': inwPreparedby,
+      'invoiceno': invoiceno,
     };
   }
 }
-

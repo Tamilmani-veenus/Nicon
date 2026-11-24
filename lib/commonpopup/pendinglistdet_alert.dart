@@ -2035,7 +2035,6 @@ class _PendingList_PoPopupState extends State<PendingList_PoPopup> {
         padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 15)),
         itemCount: pendingListController.onclickPendingListDet.length,
         itemBuilder: (BuildContext context, int index) {
-          print("XXXXXXXXXXXX...${pendingListController.onclickPendingListDet[index].stockQty}");
           return Container(
             margin: EdgeInsets.only(left: 3, right: 3),
             child: Card(

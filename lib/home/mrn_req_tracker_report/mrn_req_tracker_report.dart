@@ -556,7 +556,10 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
                             await mrn_request_controller.getCheckApprovalLevel();
                             showDialog(
                               context: context,
-                              builder: (_) => MrnReqTrackerAbstractPopup(transfer: transfer),
+                              builder: (_) => MrnReqTrackerPopup.fromTransfer(
+                                transfer: transfer,
+                                approvalLevelList: mrn_request_controller.checkApprovalLevelData,
+                              ),
                             );
                           },
                           child: Container(
@@ -629,10 +632,12 @@ class _MRN_ReqTracker_ReportState extends State<MRN_ReqTracker_Report> {
               onTap: () async {
                 await mrn_request_controller.getCheckApprovalLevel();
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return mrnReqTrackerPopup(list: siteController.mrnReqTrackerListValue[index], approvalLevelList:mrn_request_controller.checkApprovalLevelData);
-                    });
+                  context: context,
+                  builder: (_) => MrnReqTrackerPopup.fromTrack(
+                    list: siteController.mrnReqTrackerListValue[index],
+                    approvalLevelList: mrn_request_controller.checkApprovalLevelData,
+                  ),
+                );
               },
               child: Container(
                 margin: EdgeInsets.only(left: 3, right: 3, top: 5, bottom: 5),

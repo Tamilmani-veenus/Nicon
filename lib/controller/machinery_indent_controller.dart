@@ -105,7 +105,6 @@ class MachineryIndentController extends GetxController {
                     child: TextButton(
                         onPressed: () async {
                           bool result = await machineryEntryListDeleteApi(macReqEtyList.value[index].id);
-                          // Material_EntryList_DeleteApi(MrnReqEtyList.value[index].reqMasId);
                           if (result) {
                             macReqEtyList.removeAt(index);
                             Navigator.of(context).pop();
