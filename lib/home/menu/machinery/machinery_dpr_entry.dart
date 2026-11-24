@@ -205,7 +205,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                             return;
                           }
                           if (isReadingEmpty) {
-                            BaseUtitiles.showToast("Start Reading and End Reading cannot be empty.");
+                            BaseUtitiles.showToast("Please enter Start Reading and End Reading.");
                             return;
                           }
                           if (isInvalid) {
@@ -746,7 +746,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
                     child: TextButton(
                         onPressed: () async {
                           machineryDPRController.deleteDetTableDatas();
-                          machineryDPRController.macReqEditList.value=[];
+                          machineryDPRController.macReqEtyDetList.value=[];
                           await autoYearWiseNoController.AutoYearWiseNo("MACHINERY DPR");
                           machineryDPRController.autoYearWiseNoController.text = autoYearWiseNoController.MachineryDPR_autoYrWise.value;
                           machineryDPRController.requestDateController.text =

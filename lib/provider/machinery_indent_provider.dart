@@ -125,7 +125,7 @@ class MachineryDPRProvider {
       final bool isUpdate = reqId != 0;
 
       final String url = isUpdate
-          ? ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_UPDATE_API
+          ? '${ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_UPDATE_API}?id=$reqId'
           : ApiConstant.SUBCONTRACT_MACHINERY_DAILYWORK_SAVE_API;
 
       debugPrint("Machinery Daily Work ${isUpdate ? 'UPDATE' : 'SAVE'} API: $url");

@@ -327,7 +327,7 @@ class MachineryDPRController extends GetxController {
 
       if ((item.enteredAmount ?? 0) > 0) {
         var list = SubContractMachineryDailyWorkDetSaveModel(
-          id: item.apiId,
+          id: id!=0?item.apiId:0,
           subContractDailyWorkMasId: id,
           subcontractMachineryWorkOrderDetId: item.machineryReqDetid,
           scaleId: item.unit,
