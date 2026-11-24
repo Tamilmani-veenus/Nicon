@@ -179,6 +179,7 @@ class Menu_Controller extends GetxController {
   Future<void> navigateToMenu(
       String value,
       String menuName,
+      int menuId,
       BuildContext context,
       ) async {
     switch (value) {
@@ -220,7 +221,7 @@ class Menu_Controller extends GetxController {
         break;
 
       case "Inward":
-        await _go(context, Inward_ListScreen(heading: menuName));
+        await _go(context, Inward_ListScreen(heading: menuName,menuId: menuId,));
         break;
 
       case "Transfer Between Projects":
@@ -248,7 +249,7 @@ class Menu_Controller extends GetxController {
     // ==========================================================
 
       case "SubContractor Attendance":
-        await _go(context, SubAttendanceSiteEntryList(heading: menuName));
+        await _go(context, SubAttendanceSiteEntryList(heading: menuName,menuId: menuId,));
         break;
 
       case "Company NMR Attendance":
@@ -328,7 +329,7 @@ class Menu_Controller extends GetxController {
     // ==========================================================
 
       case "Staff L & P Slip":
-        await _go(context, Requisitionslip_EntryList(heading: menuName));
+        await _go(context, Requisitionslip_EntryList(heading: menuName,menuId: menuId,));
         break;
 
     // ==========================================================

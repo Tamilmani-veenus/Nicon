@@ -78,7 +78,9 @@ class _PendingList_ScreenState extends State<PendingList_Screen> {
                       SizedBox(height: 10),
                       InkWell(
                           onTap: () async {
-                            await pendingListController.getSubcontractor_ExpensesList(pendingListController.pendingList_datas.value[index].mobilemenuname!, context,entryTypeName: pendingListController.pendingList_datas.value[index].entrytype!);
+                            await pendingListController.getSubcontractor_ExpensesList(
+                                pendingListController.pendingList_datas.value[index].mobilemenuname!,
+                                context,entryTypeName: pendingListController.pendingList_datas.value[index].entrytype!,menuId: pendingListController.pendingList_datas.value[index].menuId);
                           },
                           child: Container(
                               height: BaseUtitiles.getheightofPercentage(context, 5),

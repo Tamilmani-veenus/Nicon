@@ -44,7 +44,9 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
     var duration = Duration(seconds: 0);
     Future.delayed(duration, () async {
 
-      if (repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT || repairWorkOrderController.saveButton.value == RequestConstant.VERIFY || repairWorkOrderController.saveButton.value == RequestConstant.APPROVAL) {
+      if (repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT
+          || repairWorkOrderController.saveButton.value == RequestConstant.VERIFY
+          || repairWorkOrderController.saveButton.value == RequestConstant.APPROVAL) {
         repairWorkOrderController.repair_workOrd_editListApi.forEach((element) {
           repairWorkOrderController.workid = element.id!;
           repairWorkOrderController.autoYearWiseNoController.text = element.workOrderNo.toString();
@@ -436,14 +438,14 @@ class _RepairWorkOrderEntryScreenState extends State<RepairWorkOrderEntryScreen>
                                     vertical: 8, horizontal: 8),
                                 child: Icon(Icons.task_alt,color: Theme.of(context).primaryColor,)),
                           ),
-                          // validator: (value) {
-                          //   if (value!.isEmpty ||
-                          //       value == "--Select--" ||
-                          //       value == "--SELECT--") {
-                          //     return '\u26A0 ${RequestConstant.VALIDATE}';
-                          //   }
-                          //   return null;
-                          // },
+                          validator: (value) {
+                            if (value!.isEmpty ||
+                                value == "--Select--" ||
+                                value == "--SELECT--") {
+                              return '\u26A0 ${RequestConstant.VALIDATE}';
+                            }
+                            return null;
+                          },
                           onTap: () async {
                             if(repairWorkOrderController.saveButton.value == RequestConstant.RESUBMIT
                                 || repairWorkOrderController.saveButton.value == RequestConstant.VERIFY

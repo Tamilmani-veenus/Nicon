@@ -104,12 +104,14 @@ class _MainManusListState extends State<MainManusList> {
                   menuController.navigateToMenu(
                     item.menuName!,
                     item.dynamicMenuName!,
+                    item.menuId,
                     context,
                   );
 
                   menuController.formName.value = item.menuName!;
                   menuController.formMenuId.value = item.menuId!;
 
+                  print("XXXXXXXXXXXX...${item.menuId}");
                   await commanController.getControllEntryListRights();
                 };
               },
@@ -202,7 +204,7 @@ class _MainManusListState extends State<MainManusList> {
         return Icons.build_circle_outlined;
 
       case "Repair Work Order":
-        return Icons.home_repair_service;
+        return FontAwesomeIcons.screwdriverWrench;
 
       default:
         return Icons.apps_rounded;
@@ -228,6 +230,7 @@ class _MainManusListState extends State<MainManusList> {
       "Labour Creation",
       "Staff Voucher",
       "Cash Book/Staff",
+      "Repair Work Order"
     };
     return fontAwesomeMenus.contains(name) ? 20 : 25;
   }

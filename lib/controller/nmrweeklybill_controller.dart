@@ -929,12 +929,12 @@ class NMRWklyController extends GetxController {
     if (response != null) {
       if (response.success == true) {
         if(response.result!.isNotEmpty) {
-          if(response.result![0].reccount==response.result![0].appCount){
-             submit_getNmrItemList_Site();
-          }
-          else{
+          if(response.result![0].reccount != response.result![0].appCount){
             NmritemList.value=[];
           }
+          else{
+          }
+          await submit_getNmrItemList_Site();
         }
         else {
           BaseUtitiles.showToast("No Data Found");

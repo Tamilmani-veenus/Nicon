@@ -21,14 +21,14 @@ class ApiConfig {
     if (liveEndpoint != null) {
 
       APIURL = "${liveEndpoint}ERPNEW/";
-      WebURL = "${liveEndpoint}erpnewUi2/";
+      WebURL = "${liveEndpoint}erpnewui/";
 
     } else {
 
       APIURL = DEFAULT_BASE_URL;
       WebURL = DEFAULT_BASE_URL.replaceAll(
         "ERPNEW/",
-        "erpnewUi2/",
+        "erpnewui/",
       );
     }
 

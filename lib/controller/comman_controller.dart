@@ -38,9 +38,9 @@ class CommanController extends GetxController {
   }
 
 
-  Future getDateCount() async {
+  Future getDateCount(menuId) async {
     datePickerResponse.value = [];
-    final response = await CommonProvider.getDateCount(menuController.formMenuId.value);
+    final response = await CommonProvider.getDateCount(menuId);
 
     if (response != null ) {
       if(response.success == true) {

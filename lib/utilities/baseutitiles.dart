@@ -508,6 +508,8 @@ class BaseUtitiles {
             item.workOrderNo.toString().toUpperCase().contains(value) ||
             item.subContractorName.toString().toLowerCase().contains(value) ||
             item.subContractorName.toString().toUpperCase().contains(value) ||
+            item.supplierName.toString().toLowerCase().contains(value) ||
+            item.supplierName.toString().toUpperCase().contains(value) ||
             item.projectName.toString().toLowerCase().contains(value) ||
             item.projectName.toString().toUpperCase().contains(value) ||
             item.netAmount.toString().toLowerCase().contains(value) ||
@@ -961,8 +963,6 @@ class BaseUtitiles {
             item.subcontractName.toString().toLowerCase().contains(value) ||
             item.subcontractName.toString().toUpperCase().contains(value) ||
 
-
-
             item.PurchaseOrdDate.toString().contains(value) ||
             item.ProjectName.toString().toLowerCase().contains(value) ||
             item.ProjectName.toString().toUpperCase().contains(value)  ||
@@ -978,7 +978,8 @@ class BaseUtitiles {
             item.supplierName.toString().toUpperCase().contains(value) ||
             item.netPayAmount.toString().contains(value)  ||
             item.preparebyname.toString().contains(value) ||
-
+            item.netamount.toString().contains(value)  ||
+            item.netamount.toString().contains(value) ||
             item.manPowerNo.toString().contains(value)
         )
         {
@@ -1356,6 +1357,25 @@ class BaseUtitiles {
     }
     else {
       return  list;
+    }
+  }
+
+  static consumptionNoPopupAlert(String value, list) {
+    dummyListData.value.clear();
+
+    if (value.isNotEmpty) {
+      list.forEach((item) {
+        if (item["consumptionNo"]
+            .toString()
+            .toLowerCase()
+            .contains(value.toLowerCase())) {
+          dummyListData.value.add(item);
+        }
+      });
+
+      return dummyListData.value;
+    } else {
+      return list;
     }
   }
 
@@ -1993,6 +2013,8 @@ class CommonDatePermissionUtils {
       userType: userType,
     );
 
-    return DateTime.now().subtract(Duration(days: days));
+    return days > 0
+        ? DateTime.now().subtract(Duration(days: days))
+        : DateTime(2000);
   }
 }

@@ -1594,8 +1594,10 @@ class BottomsheetControllers {
                     },
                     textInputAction: TextInputAction.search,
                     onChanged: (value) {
-                      list = BaseUtitiles.supplierNamePopupAlert(
-                          value, repairWorkOrderController.consumptionNoList.value);
+                      list = BaseUtitiles.consumptionNoPopupAlert(
+                        value,
+                        repairWorkOrderController.consumptionNoList.value,
+                      );
                     },
                   ),
                 ),

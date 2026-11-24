@@ -598,7 +598,7 @@ class DailyEntriesController extends GetxController {
         attendId);
   }
 
-  Future subContEntryList_EditApi(int attendId, status,String MenuName, BuildContext context,
+  Future subContEntryList_EditApi(int attendId, status,String MenuName, BuildContext context,int menuId,
       {String? type}) async {
     await ClickUtils.run(() async {
     var response =
@@ -613,7 +613,7 @@ class DailyEntriesController extends GetxController {
           await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => SubattendanceSiteEntry(heading: MenuName,)));
+                  builder: (context) => SubattendanceSiteEntry(heading: MenuName,menuId: menuId,)));
         } else {
           BaseUtitiles.showToast("No Data Found");
         }
