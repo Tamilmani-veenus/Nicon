@@ -34,6 +34,7 @@ class AutoYearWiseNoController extends GetxController {
   RxString RepairConsum_autoYrWise = "".obs;
   RxString RepairWorkOrder_autoYrWise = "".obs;
   RxString MachineryDPR_autoYrWise = "".obs;
+  RxString MachineryBill_autoYrWise = "".obs;
 
 
   Future AutoYearWiseNo(Url) async {
@@ -155,6 +156,10 @@ class AutoYearWiseNoController extends GetxController {
         else if (Url == "MACHINERY DPR") {
           MachineryDPR_autoYrWise.value = value["entryAutoNo"];
           return MachineryDPR_autoYrWise.value;
+        }
+        else if (Url == "MACHINERY BILL") {
+          MachineryBill_autoYrWise.value = value["entryAutoNo"];
+          return MachineryBill_autoYrWise.value;
         }
       }
         else {

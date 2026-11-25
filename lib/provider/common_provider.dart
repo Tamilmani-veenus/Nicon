@@ -111,7 +111,8 @@ class CommonProvider {
   static Future<WorkOrderNoResponse?> getWorkOrderNoList(int pId, int sId, int subId, {String? fromDate, String? toDate,String? type}) async {
     try{
       final value = await ApiManager.getAPICall(type=="BILL DIRECT"?
-      "${ApiConstant.GETWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId":
+      "${ApiConstant.GETWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId":type=="MachineryBill"?
+      "${ApiConstant.GETMACWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId":
       "${ApiConstant.GETBOQWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId&fromDate=$fromDate&toDate=$toDate");
       print("AdvEntryList:" + value);
       return workOrderNoResponseFromJson(value);
@@ -476,6 +477,10 @@ class CommonProvider {
       else if (Url == "MACHINERY DPR") {
         response = await ApiManager.getAPICall(
             "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=WorkNo&tableName=SubContractMachineryDailyWorkMas&formName=SubConMachineryDailyWorkDone");
+      }
+      else if (Url == "MACHINERY BILL") {
+        response = await ApiManager.getAPICall(
+            "${ApiConstant.GETAUTONO_YEAR_WISE}?projectId=0&fieldName=WorkNo&tableName=SubcontractorMachineryWorkQtyMas&formName=SubContractorMachineryBill");
       }
       final data = json.decode(response);
       return data;

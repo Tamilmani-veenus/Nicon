@@ -851,7 +851,6 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
     );
   }
 
-
   Widget MachineryDPRItemCard({
     required BuildContext context,
     required MachineryDPRDetLocal item,
@@ -1302,3 +1301,6 @@ class _DprInputFieldState extends State<DprInputField> {
     );
   }
 }
+
+
+

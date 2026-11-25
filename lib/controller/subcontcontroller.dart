@@ -129,7 +129,7 @@ class SubcontractorController extends GetxController {
 
   Future getWorkOrderNoList(type, int pid, int sid, int subid, {String? fromDate, String? toDate}) async {
     getdpDnWrkOrderValue.value.clear();
-    final value = await await CommonProvider.getWorkOrderNoList(pid, sid,subid,fromDate: fromDate,toDate: toDate,type: type);
+    final value = await CommonProvider.getWorkOrderNoList(pid, sid,subid,fromDate: fromDate,toDate: toDate,type: type);
     if (value != null) {
       if(value.success==true){
         if(value.result!.isNotEmpty){

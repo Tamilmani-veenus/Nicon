@@ -8,7 +8,7 @@ class ApiConfig {
 
   static const String LIVE_ENDPOINT_2 = "http://122.173.84.247:8080/";
 
-  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "VishaalAPI/";
+  static const String DEFAULT_BASE_URL = LIVE_ENDPOINT_1 + "ERPNEW/";
 
   static String APIURL = "";
   static String WebURL = "";
@@ -20,7 +20,7 @@ class ApiConfig {
 
     if (liveEndpoint != null) {
 
-      APIURL = "${liveEndpoint}VishaalAPI/";
+      APIURL = "${liveEndpoint}ERPNEW/";
       WebURL = "${liveEndpoint}erpnewui/";
 
     } else {
@@ -149,6 +149,7 @@ class ApiConstant {
   static String get GETCOMPANYLISTRPT => BASE_URL_CORE + "api/GenericMaster/GetCompany";
   static String get GETWRKORDERNOLIST => BASE_URL_CORE + "api/SubContractorWorkQty/GetWorkOrderNoDd";
   static String get GETBOQWRKORDERNOLIST => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetWorkOrderNoDd";
+  static String get GETMACWRKORDERNOLIST => BASE_URL_CORE + "api/SubContractorMachineryBill/GetMachineryWorkOrderNoDd";
   static String get GETINVOICENOLIST => BASE_URL_CORE + "api/SubContractorNMRBill/GetBillNo";
   static String get SITEDROPDWONLISTAPI => BASE_URL_CORE + "api/GenericMaster/GetProjectWiseSiteList";
   static String get GET_GRN_LIST => BASE_URL_CORE + "api/MaterialReturn/GetStocks";
