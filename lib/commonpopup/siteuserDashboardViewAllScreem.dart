@@ -1749,3 +1749,385 @@ class _LabourAllocationViewAllScreenState
   }
 }
 
+
+
+class UpcomingTasksViewAllScreen extends StatelessWidget {
+  const UpcomingTasksViewAllScreen({super.key});
+
+  static const Color primaryColor = Color(0xFF2864F0);
+  static const Color borderColor = Color(0xFFDCE1E9);
+
+  final List<Map<String, dynamic>> tasks = const [
+    {
+      "day": "04",
+      "month": "OCT",
+      "year": "2026",
+      "title": "Slab Work Concreting",
+      "block": "Block B",
+      "team": "Civil Team A",
+      "priority": "High",
+      "status": "Planned",
+    },
+    {
+      "day": "05",
+      "month": "OCT",
+      "year": "2026",
+      "title": "Rebar Inspection & Testing",
+      "block": "Block A",
+      "team": "Quality Inspector",
+      "priority": "High",
+      "status": "Planned",
+    },
+    {
+      "day": "06",
+      "month": "OCT",
+      "year": "2026",
+      "title": "Plumbing Shaft Pressure Test",
+      "block": "Block C",
+      "team": "MEP Subcontractor",
+      "priority": "Medium",
+      "status": "In Progress",
+    },
+    {
+      "day": "07",
+      "month": "OCT",
+      "year": "2026",
+      "title": "External Scaffolding Erection",
+      "block": "Block B",
+      "team": "Scaffold Crew",
+      "priority": "Medium",
+      "status": "Planned",
+    },
+    {
+      "day": "08",
+      "month": "OCT",
+      "year": "2026",
+      "title": "Electrical Conduit Inspection",
+      "block": "Block A",
+      "team": "Electrical Team",
+      "priority": "High",
+      "status": "Planned",
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FB),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          surfaceTintColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 18,
+              color: Color(0xFF172033),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            "Upcoming Site Tasks",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF172033),
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
+            // Summary Header
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_month_outlined,
+                    size: 18,
+                    color: primaryColor,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      "Site Execution Tasks & Milestones",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF344054),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEAF0FF),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      "5 Tasks",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // Task List
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(12),
+                itemCount: tasks.length,
+                separatorBuilder: (_, __) =>
+                const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  return _taskCard(tasks[index]);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _taskCard(Map<String, dynamic> task) {
+    final String priority = task["priority"];
+    final String status = task["status"];
+
+    final Color priorityColor = priority == "High"
+        ? const Color(0xFFD94848)
+        : const Color(0xFFD98716);
+
+    final Color priorityBg = priority == "High"
+        ? const Color(0xFFFFEEEE)
+        : const Color(0xFFFFF5E5);
+
+    final Color statusColor = status == "In Progress"
+        ? const Color(0xFFD98716)
+        : const Color(0xFF3478F6);
+
+    final Color statusBg = status == "In Progress"
+        ? const Color(0xFFFFF5E5)
+        : const Color(0xFFEFF5FF);
+
+    final String initials = task["team"]
+        .toString()
+        .split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) => word[0])
+        .take(2)
+        .join()
+        .toUpperCase();
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Date + Work Title
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFF),
+                  borderRadius: BorderRadius.circular(9),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      task["month"],
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        color: primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      task["day"],
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF172033),
+                      ),
+                    ),
+                    // Text(
+                    //   task["year"],
+                    //   style: const TextStyle(
+                    //     fontSize: 8,
+                    //     color: Color(0xFF8994A7),
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 11),
+
+              Expanded(
+                child: Text(
+                  task["title"],
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF172033),
+                  ),
+                ),
+              ),
+              _badge(
+                status,
+                statusColor,
+                statusBg,
+                showDot: true,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+          const Divider(height: 1, color: Color(0xFFEDF0F4)),
+          const SizedBox(height: 8),
+
+          // Block and Team
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Icon(
+                Icons.apartment_outlined,
+                size: 14,
+                color: Color(0xFF8994A7),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                task["block"],
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF536176),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 17,
+                height: 17,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFEAF0FF),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  initials,
+                  style: const TextStyle(
+                    fontSize: 7,
+                    fontWeight: FontWeight.w800,
+                    color: primaryColor,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: Text(
+                  task["team"],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF536176),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  const Text(
+                    "Priority",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFF8994A7),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 7),
+                  _badge(
+                    priority,
+                    priorityColor,
+                    priorityBg,
+                  ),
+
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _badge(
+      String label,
+      Color color,
+      Color background, {
+        bool showDot = false,
+      }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 9,
+        vertical: 5,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showDot) ...[
+            Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 5),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
