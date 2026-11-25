@@ -878,8 +878,8 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                     );
                   }else{
                     machineryBillController.saveButton.value = RequestConstant.SUBMIT;
-                    // await machineryDPRController.deleteDetTableDatas();
-                    // machineryDPRController.macReqEtyDetList.value = [];
+                    await machineryDPRController.deleteDetTableDatas();
+                    machineryBillController.getMacBillDetValue.value = [];
                     Navigator.push(
                       context,
                       MaterialPageRoute(

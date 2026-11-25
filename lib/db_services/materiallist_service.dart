@@ -1,5 +1,6 @@
 import '../db_helper/db_manager.dart';
 import '../db_model/materiallist_model.dart';
+import '../models/machineryBill_model.dart';
 import '../models/machinerydpr_model.dart';
 
 class MateriallistService{
@@ -77,6 +78,46 @@ class MachineryDPRDetLocalService {
     for (var element in machineryDPRDetLocalTableModel) {
       await _dbManager.Update_MachineryDPRTable(
           'MachineryDPRDetLocal', element.MachineryDPRDetLocalModelMap());
+    }
+  }
+}
+
+class MachineryBillDetLocalService {
+  late DBManager _dbManager;
+
+  MachineryBillDetLocalService() {
+    _dbManager = DBManager();
+  }
+
+  MachineryBillDetLocal_table_Save(
+      List<MachineryBillDetLocal> machineryBillDetLocalTableModel) async {
+    for (var element in machineryBillDetLocalTableModel) {
+      await _dbManager.insertData(
+          'MachineryBillDetLocal', element.MachineryBillDetLocalModelMap());
+    }
+  }
+
+  MachineryBillDetLocal_table_readAll() async {
+    return _dbManager.readData('MachineryBillDetLocal');
+  }
+
+  MachineryBillDetLocal_deleteById(
+      List<MachineryBillDetLocal> machineryBillDetLocalTableModel) async {
+    for (var element in machineryBillDetLocalTableModel) {
+      await _dbManager.deleteMaterialById(
+          'MachineryBillDetLocal', element.MachineryBillDetLocalModelMap());
+    }
+  }
+
+  MachineryBillDetLocal_table_delete() async {
+    return await _dbManager.delete('MachineryBillDetLocal');
+  }
+
+  MachineryBillDetLocal_table_Update(
+      List<MachineryBillDetLocal> machineryBillDetLocalTableModel) async {
+    for (var element in machineryBillDetLocalTableModel) {
+      await _dbManager.Update_MachineryDPRTable(
+          'MachineryBillDetLocal', element.MachineryBillDetLocalModelMap());
     }
   }
 }

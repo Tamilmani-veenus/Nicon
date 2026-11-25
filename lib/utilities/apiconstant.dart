@@ -157,6 +157,7 @@ class ApiConstant {
   static String get GET_MATRETURN_UNIT => BASE_URL_CORE + "api/GenericMaster/GetScaleName";
   static String get GET_GRN_MATERIALDETAILS_LIST => BASE_URL_CORE + "api/MaterialReturn/MaterialRetDropdown";
   static String get GET_MATRETURN_EDIT_LIST => BASE_URL_CORE + "api/MaterialReturn/GetMaterialReturnMasById";
+  static String get GET_MAC_BILL_DET_LIST => BASE_URL_CORE + "api/SubContractorMachineryBill/LoadDprBasedWorkOrderId";
 
   static String get TOSITEDROPDWONLISTAPI => BASE_URL_CORE + "api/GenericMaster/GetToSitesByFrSiteDd";
   static String get GETMRNREPORTSLISTAPI => BASE_URL_CORE + "api/MaterialReqOrdMas/GetAllMRNReportViewListMas";
@@ -202,6 +203,7 @@ class ApiConstant {
   static String get GET_DIRECTBILL_ADVANCE_BALANCE => BASE_URL_CORE + "api/SubContractorNMRBill/GetSubContractorAdvanceAmount";
   static String get GET_SUBCONT_ADD_LESS => BASE_URL_CORE + "api/SubContractorNMRBill/GetSubContractorAddLessSetUp";
   static String get GET_WRKORDER_ADD_LESS => BASE_URL_CORE + "api/SubContractorWorkQty/GetWorkOrderAddLess";
+  static String get GET_MAC_BILL_ADD_LESS => BASE_URL_CORE + "api/SubContractorMachineryBill/GetMachineryWorkOrderAddLess";
   static String get GET_DIRECTBILL_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorWorkQty/GetAllSubContractorWorkQty";
   static String get GET_BOQBILL_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorWorkQtyBOQ/GetAllSubContractorWorkQty";
   static String get GET_MANPOWER_ENTRY_LIST => BASE_URL_CORE + "api/ManPower/GetAllManPower";
