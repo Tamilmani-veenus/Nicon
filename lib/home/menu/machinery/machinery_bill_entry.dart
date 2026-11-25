@@ -15,6 +15,7 @@ import '../../../models/machineryBill_model.dart';
 import '../../../utilities/baseutitiles.dart';
 import '../../../utilities/common_date_fields.dart';
 import '../../../utilities/requestconstant.dart';
+import 'machinery_bill_calculations.dart';
 import 'machinery_dpr_entry.dart';
 
 class MachineryBillEntry extends StatefulWidget {
@@ -55,6 +56,7 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
         dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
         dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
         machineryBillGenController.wrkOrderNoController.text = "--SELECT--";
+        machineryBillGenController.workOrderId.value = 0;
       }
 
       // else {
@@ -109,6 +111,8 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
         .of(context)
         .size
         .height * 50 / 100;
+
+
     return Form(
       key: _formKey,
       child: GestureDetector(
@@ -123,104 +127,72 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
           top: false,
           child: Scaffold(
               backgroundColor: Setmybackground,
-              // bottomNavigationBar: Container(
-              //   height: BaseUtitiles.getheightofPercentage(context, 4),
-              //   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: <Widget>[
-              //       if(machineryDPRController.saveButton.value == RequestConstant.SUBMIT) Expanded(
-              //         child: InkWell(
-              //           child: Container(
-              //             margin: const EdgeInsets.only(left: 20, right: 20),
-              //             height:
-              //             BaseUtitiles.getheightofPercentage(context, 4),
-              //             decoration: BoxDecoration(
-              //               borderRadius:
-              //               const BorderRadius.all(Radius.circular(10)),
-              //               color: Colors.white,
-              //             ),
-              //             alignment: Alignment.center,
-              //             child: Text(
-              //               "Reset",
-              //               style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   fontSize: RequestConstant.Lable_Font_SIZE,
-              //                   color: Theme
-              //                       .of(context)
-              //                       .primaryColor
-              //               ),
-              //             ),
-              //           ),
-              //           onTap: () {
-              //             ResetAlert(context);
-              //           },
-              //         ),
-              //       ),
-              //       Expanded(
-              //         child: InkWell(
-              //           child: Container(
-              //               margin: const EdgeInsets.only(left: 20, right: 20),
-              //               height:
-              //               BaseUtitiles.getheightofPercentage(context, 4),
-              //               decoration: BoxDecoration(
-              //                   borderRadius:
-              //                   const BorderRadius.all(Radius.circular(10)),
-              //                   color: Theme
-              //                       .of(context)
-              //                       .primaryColor
-              //
-              //               ),
-              //               alignment: Alignment.center,
-              //               child: Obx(() =>
-              //                   Text(
-              //                     machineryDPRController.saveButton.value,
-              //                     style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                         fontSize: RequestConstant.Lable_Font_SIZE,
-              //                         color: Colors.white
-              //                     ),
-              //                   ))),
-              //           onTap: () {
-              //             final list = machineryDPRController.macReqEtyDetList.value;
-              //
-              //             bool isReadingEmpty = list.any(
-              //                   (item) => item.startReading == 0.0 || item.endReading == 0.0,
-              //             );
-              //
-              //             bool isInvalid = list.any(
-              //                   (item) => (item.startReading ?? 0.0) > (item.endReading ?? 0.0),
-              //             );
-              //
-              //             bool isQtyInvalid = list.any(
-              //                   (item) => (item.enteredQty ?? 0.0) <= 0.0,
-              //             );
-              //
-              //             if (isQtyInvalid) {
-              //               BaseUtitiles.showToast("Qty must be greater than zero.");
-              //               return;
-              //             }
-              //             if (isReadingEmpty) {
-              //               BaseUtitiles.showToast("Please enter Start Reading and End Reading.");
-              //               return;
-              //             }
-              //             if (isInvalid) {
-              //               BaseUtitiles.showToast("End Reading cannot be less than Start Reading.");
-              //               return;
-              //             }
-              //
-              //
-              //             if (_formKey.currentState!.validate()) {
-              //               _formKey.currentState!.save();
-              //               SubmitAlert(context);
-              //             }
-              //           },
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              bottomNavigationBar: Container(
+                height: BaseUtitiles.getheightofPercentage(context, 4),
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    if(machineryBillGenController.saveButton.value == RequestConstant.SUBMIT) Expanded(
+                      child: InkWell(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          height:
+                          BaseUtitiles.getheightofPercentage(context, 4),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Reset",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE,
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          ResetAlert(context);
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        child: Container(
+                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            height:
+                            BaseUtitiles.getheightofPercentage(context, 4),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                                color: Theme
+                                    .of(context)
+                                    .primaryColor
+
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                                  "Next",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: RequestConstant.Lable_Font_SIZE,
+                                      color: Colors.white
+                                  ),
+                                )),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MachineryBillCalculations()));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               body: Stack(
                   children: [
                     SingleChildScrollView(
@@ -473,7 +445,6 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                               ),
                             ),
                           ),
-
                           CommonDateFields(
                             date1: CommonDateFieldConfig(
                               title: "Payment Wk Date",
@@ -498,7 +469,6 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                               },
                             ),
                           ),
-
                           Container(
                             margin: EdgeInsets.only(top: 5, left: 10, right: 10),
                             child: Card(
@@ -551,7 +521,6 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                               ),
                             ),
                           ),
-
                           Container(
                             margin:
                             const EdgeInsets.only(top: 2, left: 10, right: 10),
@@ -589,7 +558,6 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                               ),
                             ),
                           ),
-
                           Container(
                             margin:
                             const EdgeInsets.only(top: 2, left: 10, right: 10),
@@ -980,5 +948,56 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
     );
   }
 
+  Future ResetAlert(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Alert!'),
+        content: const Text('Are you sure to Reset?'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  ),
+                  VerticalDivider(
+                    color: Colors.grey.shade400,
+                    width: 5,
+                    thickness: 2,
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () async {
+                          await machineryBillGenController.resetForm();
+                          Navigator.pop(context);
+                        },
+                        child: Text("Reset",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
 }

@@ -467,7 +467,9 @@ class BottomsheetControllers {
                             if(type == "MachineryBill"){
                               machineryBillGenController.wrkOrderNoController.text = list[index].workOrderNo.toString();
                               machineryBillGenController.workOrderId.value = list[index].workOrderId;
+                              await machineryBillGenController.deleteDetTableDatas();
                               await machineryBillGenController.getMacBillDetList(machineryBillGenController.workOrderId.value);
+                              await machineryBillGenController.getBillAddLessList();
                             }else {
                               subcontractorController.WorkOrderNo.text =
                               type == "BILL BOQ"
