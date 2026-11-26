@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class MachineryBillDetLocal {
   int? localId;
+  int? reqDetId;
   List<int>? detId;
   String? itemDiscription;
   String? unit;
@@ -17,6 +18,7 @@ class MachineryBillDetLocal {
   MachineryBillDetLocalModelMap() {
     var mapping = Map<String, dynamic>();
     mapping['localId'] = localId;
+    mapping['reqDetId'] = reqDetId;
     mapping['detId'] = jsonEncode(detId ?? []);
     mapping['itemDiscription'] = itemDiscription;
     mapping['unit'] = unit;

@@ -21556,7 +21556,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                       : "approve",
                                 );
                               }else{
-                                await machineryDPRController.MaterialIntentList_EditApi(
+                                await machineryDPRController.MaterialDPRList_EditApi(
                                     pendingListController
                                         .mainlist
                                         .value[index]

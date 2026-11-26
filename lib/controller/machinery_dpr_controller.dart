@@ -66,7 +66,7 @@ class MachineryDPRController extends GetxController {
   });
         }
 
-  Future MaterialIntentList_EditApi(int reqId,String MenuName, type , context) async {
+  Future MaterialDPRList_EditApi(int reqId,String MenuName, type , context) async {
     macReqEditList.value=[];
     await ClickUtils.run(() async {
       final value = await MachineryDPRProvider.getMachineryDPREditList(reqId);
@@ -90,7 +90,7 @@ class MachineryDPRController extends GetxController {
             BaseUtitiles.showToast("No Data Found");
           }
         } else {
-          BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
+          BaseUtitiles.showToast(value["message"] ?? 'Something went wrong..');
         }
       } else {
         BaseUtitiles.showToast('Something went wrong..');

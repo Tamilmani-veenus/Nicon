@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../apimanager/apimanager.dart';
 import '../models/machinary_dpr_save_model.dart';
+import '../models/machiner_bill_edit_model.dart';
 import '../models/machinery_edit_model.dart';
 import '../models/machinery_indent_list_model.dart';
 import '../utilities/apiconstant.dart';
@@ -222,6 +223,41 @@ class MachineryDPRProvider {
       return jsonDecode(responseBody);
     } catch (error) {
       print("Machinery Daily Work Save Error == $error");
+      return null;
+    }
+  }
+
+}
+
+class MachineryBillProvider {
+
+  static Future<dynamic> SaveMachineryBillAPI(String body, reqId, context) async {
+
+    try {
+      var response;
+      if(reqId==0){
+        response = await ApiManager.postAPICall(ApiConstant.MACHINERY_BILL_SAVE, body);
+      }
+      else {
+        response = await ApiManager.putUpdateAPIButton("${ApiConstant.MACHINERY_BILL_UPDATE}?id=$reqId", body);
+      }
+      print("eeeee...${response}");
+      return jsonDecode(response);
+    }
+    catch (error) {
+      print("Error == $error");
+      return null;
+    }
+  }
+
+  static Future<MachineryBillEdit?> getMachineryBillEditList(reqId,status) async {
+    try {
+      var value = await ApiManager.getAPICall("${ApiConstant
+          .GETMAC_BILL_EDIT_LIST}?id=$reqId&isEdit=$status");
+      return machineryBillEditFromJson(value);
+    } catch (error,e) {
+      print(error);
+      print(e);
       return null;
     }
   }

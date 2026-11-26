@@ -193,18 +193,11 @@ class SubContractorMachineryWorkQtydetLink {
   int? subContractorWorkQtyMasId;
   int? siteId;
   String? workType;
-  int? dbrWorkDetId;
   String? itemDescription;
   int? unit;
   double? qty;
   double? rate;
   double? amount;
-  double? actualQty;
-  double? actualAmount;
-  double? totalQty;
-  double? balanceBillQty;
-  double? currentBillQty;
-  double? balanceQty;
   double? startReading;
   double? endReading;
   double? totalReading;
@@ -214,18 +207,11 @@ class SubContractorMachineryWorkQtydetLink {
     this.subContractorWorkQtyMasId,
     this.siteId,
     this.workType,
-    this.dbrWorkDetId,
     this.itemDescription,
     this.unit,
     this.qty,
     this.rate,
     this.amount,
-    this.actualQty,
-    this.actualAmount,
-    this.totalQty,
-    this.balanceBillQty,
-    this.currentBillQty,
-    this.balanceQty,
     this.startReading,
     this.endReading,
     this.totalReading,
@@ -236,18 +222,11 @@ class SubContractorMachineryWorkQtydetLink {
     subContractorWorkQtyMasId: json["subContractorWorkQtyMasId"],
     siteId: json["siteId"],
     workType: json["workType"],
-    dbrWorkDetId: json["dbrWorkDetId"],
     itemDescription: json["itemDescription"],
     unit: json["unit"],
     qty: json["qty"],
     rate: json["rate"],
     amount: json["amount"],
-    actualQty: json["actualQty"],
-    actualAmount: json["actualAmount"],
-    totalQty: json["totalQty"],
-    balanceBillQty: json["balanceBillQty"],
-    currentBillQty: json["currentBillQty"],
-    balanceQty: json["balanceQty"],
     startReading: json["startReading"],
     endReading: json["endReading"],
     totalReading: json["totalReading"],
@@ -258,18 +237,11 @@ class SubContractorMachineryWorkQtydetLink {
     "subContractorWorkQtyMasId": subContractorWorkQtyMasId,
     "siteId": siteId,
     "workType": workType,
-    "dbrWorkDetId": dbrWorkDetId,
     "itemDescription": itemDescription,
     "unit": unit,
     "qty": qty,
     "rate": rate,
     "amount": amount,
-    "actualQty": actualQty,
-    "actualAmount": actualAmount,
-    "totalQty": totalQty,
-    "balanceBillQty": balanceBillQty,
-    "currentBillQty": currentBillQty,
-    "balanceQty": balanceQty,
     "startReading": startReading,
     "endReading": endReading,
     "totalReading": totalReading,
