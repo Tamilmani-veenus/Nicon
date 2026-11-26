@@ -25,12 +25,10 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
   @override
   void initState() {
     super.initState();
-    var duration = const Duration(seconds: 0);
-    Future.delayed(duration, () async {
 
-      if (machineryBillGenController.saveButton.value == RequestConstant.SUBMIT) {
-        // await billGenerationBoqController.deductionPaymentCalculation();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      machineryBillGenController.refreshBill();
+      machineryBillGenController.calculate();
     });
   }
 

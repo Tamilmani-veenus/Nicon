@@ -186,8 +186,13 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                                   ),
                                 )),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MachineryBillCalculations()));
-                        },
+                          if(machineryBillGenController.getMacBillDetValue.isEmpty) {
+                            BaseUtitiles.showToast("Please select a Work Order");
+                          }else{
+                            Navigator.push(context, MaterialPageRoute(builder: (
+                                context) => const MachineryBillCalculations()));
+                          }
+                          },
                       ),
                     ),
                   ],

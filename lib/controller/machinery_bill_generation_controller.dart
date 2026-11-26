@@ -10,6 +10,7 @@ import 'package:nicon/controller/sitecontroller.dart';
 import 'package:nicon/controller/subcontcontroller.dart';
 import '../db_services/materiallist_service.dart';
 import '../models/machineryBill_model.dart';
+import '../models/machinery_bill_save_model.dart';
 import '../provider/common_provider.dart';
 import '../provider/directbill_generat_provider.dart';
 import '../utilities/baseutitiles.dart';
@@ -40,14 +41,14 @@ class MachineryBillGenController extends GetxController {
   final finalBillAmount = TextEditingController(text: "0.00");
   final netPayAmount    = TextEditingController(text: "0.00");
 
-  ProjectController projectController = Get.put(ProjectController());
-  SiteController siteController = Get.put(SiteController());
-  SubcontractorController subcontractorController = Get.put(SubcontractorController());
-  BillGenerationBoqController billGenerationBoqController = Get.put(BillGenerationBoqController());
-  DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller = Get.put(DailyWrkDone_DPR_Controller());
-  BottomsheetControllers bottomsheetControllers = Get.put(BottomsheetControllers());
-  LoginController loginController = Get.put(LoginController());
-  AutoYearWiseNoController autoYearWiseController = Get.put(AutoYearWiseNoController());
+  late ProjectController projectController;
+  late SiteController siteController;
+  late SubcontractorController subcontractorController;
+  late BillGenerationBoqController billGenerationBoqController;
+  late DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller;
+  late BottomsheetControllers bottomsheetControllers;
+  late LoginController loginController;
+  late AutoYearWiseNoController autoYearWiseController;
 
   RxString saveButton = RequestConstant.SUBMIT.obs;
   var machineryBillDetLocalService = MachineryBillDetLocalService();
@@ -55,9 +56,34 @@ class MachineryBillGenController extends GetxController {
 
   RxList getdpDnWrkOrderValue = [].obs;
   RxList<MachineryBillDetLocal> getMacBillDetValue = <MachineryBillDetLocal>[].obs;
-  RxList billDet_Calculation = [].obs;
+  RxList<SubContractorMachineryBillAddLessSetupLink> getDetAddLessList = <SubContractorMachineryBillAddLessSetupLink>[].obs;
+  RxList<SubContractorMachineryWorkQtydetLink> getRequestDetList = <SubContractorMachineryWorkQtydetLink>[].obs;
+  RxList<SubContractorMachineryWorkBillDetailslink> getWorkBillDetailsList = <SubContractorMachineryWorkBillDetailslink>[].obs;
 
   RxInt workOrderId = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    putController(() => ProjectController());
+    putController(() => SiteController());
+    putController(() => SubcontractorController());
+    putController(() => BillGenerationBoqController());
+    putController(() => DailyWrkDone_DPR_Controller());
+    putController(() => BottomsheetControllers());
+    putController(() => LoginController());
+    putController(() => AutoYearWiseNoController());
+
+    projectController = Get.find();
+    siteController = Get.find();
+    subcontractorController = Get.find();
+    billGenerationBoqController = Get.find();
+    dailyWrkDone_DPR_Controller = Get.find();
+    bottomsheetControllers = Get.find();
+    loginController = Get.find();
+    autoYearWiseController = Get.find();
+  }
 
   double _val(TextEditingController c) {
     final t = c.text.trim();
@@ -203,29 +229,21 @@ class MachineryBillGenController extends GetxController {
   }
 
   Future getBillAddLessList() async {
-    billDet_Calculation.value=[];
     final value = await DirectBillGenerateProvider.getBillDirectCalculation_List(
       pId: projectController.selectedProjectId.value,
       siteId: siteController.selectedsiteId.value,
-      subId: subcontractorController.selectedSubcontId.value,
+      subId: dailyWrkDone_DPR_Controller.TypeSubcontId.value,
       wrkOrdId: workOrderId.value,
       type: "MachineryBill"
     );
     if (value != null) {
       if (value.success == true) {
         if (value.result!.isNotEmpty) {
-          billDet_Calculation.value = value.result!;
+          billGenerationBoqController.billDet_Calculation.value = value.result!;
           await billGenerationBoqController.DirectBillCal_itemlistTable_Delete();
           await billGenerationBoqController.directBillCalculationSave();
           await billGenerationBoqController.getDirectBillCalDatas();
           calculate();
-          // if (saveButton.value == RequestConstant.RESUBMIT ||
-          //     saveButton.value == RequestConstant.VERIFY ||
-          //     saveButton.value == RequestConstant.APPROVAL) {
-          //   setBaseNetPay();
-          //   await preloadEditAddLessData(
-          //       bill_editListApiDatas[0].subContractorBillAddLessSetupS);
-          // }
         }
       }
     }
@@ -243,6 +261,7 @@ class MachineryBillGenController extends GetxController {
       machineryBillDetLocalModel.detId = element.detId ?? [];
       machineryBillDetLocalModel.itemDiscription = element.itemDiscription;
       machineryBillDetLocalModel.unit = element.unit?.trim();
+      machineryBillDetLocalModel.unitId = element.unitId;
       machineryBillDetLocalModel.rate = element.rate ?? 0.0;
       machineryBillDetLocalModel.qty = element.qty ?? 0.0;
       machineryBillDetLocalModel.amt = element.amt ?? 0.0;
@@ -274,6 +293,7 @@ class MachineryBillGenController extends GetxController {
       List<int>.from(jsonDecode(user['detId'] ?? '[]'));
       machineryBillDetLocal.itemDiscription = user['itemDiscription'];
       machineryBillDetLocal.unit = user['unit'];
+      machineryBillDetLocal.unitId = user['unitId'];
       machineryBillDetLocal.rate =
           double.tryParse(user['rate'].toString()) ?? 0.0;
       machineryBillDetLocal.qty =
@@ -334,7 +354,133 @@ class MachineryBillGenController extends GetxController {
     wrkOrderNoController.text = "--SELECT--";
     workOrderId.value = 0;
 
-bottomsheetControllers.searchcontroller.text = "";
+    bottomsheetControllers.searchcontroller.text = "";
+  }
+
+  Future SaveMachineryBillScreen(BuildContext context, int id) async {
+    await Future.delayed(const Duration(seconds: 0));
+    String body = machineryBillSaveToJson(MachineryBillSave(
+        id: id,
+        workNo: autoYearWiseNoController.text,
+        workDate: requestDateController.text,
+        projectId: projectController.selectedProjectId.value,
+        siteId: siteController.selectedsiteId.value,
+        subContractorId: dailyWrkDone_DPR_Controller.TypeSubcontId.value,
+        workOrderId: workOrderId.value,
+        netBillAmount: double.tryParse(netBillAmount.text),
+        finalBillAmount: double.tryParse(finalBillAmount.text),
+        netPayAmount: double.tryParse(netPayAmount.text),
+        roundOff: double.tryParse(roundOff.text),
+        billAmount: double.tryParse(billAmount.text),
+        creditAmount: double.tryParse(creditAmount.text),
+        creditRemarks: creditRemarks.text,
+        debitAmount: double.tryParse(debitAmount.text),
+        debitRemarks: debitRemarks.text,
+        paymentDate: paymentWKDateController.text,
+        remarks: remarksController.text,
+        createdBy: saveButton.value == RequestConstant.SUBMIT ? int.parse(loginController.EmpId()) : 0,
+        verifyBy: saveButton.value == RequestConstant.SUBMIT ? int.parse(loginController.EmpId()) : 0,
+        verifyStatus: saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.APPROVAL ? "Y":"N",
+        approvedBy: saveButton.value == RequestConstant.SUBMIT ? int.parse(loginController.EmpId()) : 0,
+        approveStatus: saveButton.value == RequestConstant.APPROVAL ? "Y":"N",
+        workOrderNo: wrkOrderNoController.text,
+        subContractorMachineryWorkQtydetLink:  getRequestDet(id),
+        subContractorMachineryBillAddLessSetupLink: getDetAddLess(id, autoYearWiseNoController.text),
+        subContractorMachineryWorkBillDetailslink: getBillDetails(id)
+    ));
+
+    // final list = await MachineryIndentProvider.SaveMachineryIntentAPI(body, id, saveButton.value, context);
+    // final decodedJson = jsonDecode(body);
+    //
+    // const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    // final prettyJson = encoder.convert(decodedJson);
+    //
+    // debugPrint(prettyJson, wrapWidth: 1024);
+    // if (list != null) {
+    //   if (list["success"] == true) {
+    //     if (saveButton.value == RequestConstant.VERIFY
+    //         || saveButton.value == RequestConstant.PREAPPROVAL
+    //         || saveButton.value == RequestConstant.APPROVAL) {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await pendingListController.getPendingList();
+    //       BaseUtitiles.popMultiple(context, count: 3);
+    //     } else {
+    //       BaseUtitiles.showToast(list["message"]);
+    //       await getMacIndentEntryList();
+    //       mrn_request_controller.delete_MaterialIntent_itemlist_Table();
+    //       mrn_request_controller.Material_itemview_GetDbList.clear();
+    //       BaseUtitiles.popMultiple(context, count: 3);
+    //     }
+    //   } else {
+    //     BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+    //     BaseUtitiles.popMultiple(context, count: 1);
+    //   }
+    // } else {
+    //   BaseUtitiles.showToast("Something went wrong..");
+    //   BaseUtitiles.popMultiple(context, count: 1);
+    // }
+  }
+
+  List<SubContractorMachineryWorkQtydetLink>? getRequestDet(masId) {
+    getRequestDetList.value=[];
+    for (var element in getMacBillDetValue) {
+        var list = SubContractorMachineryWorkQtydetLink(
+          id: 0,
+          subContractorWorkQtyMasId: masId,
+          siteId: siteController.selectedsiteId.value,
+          workType: "",
+          dbrWorkDetId: 0,
+          itemDescription: element.itemDiscription,
+          unit: element.unitId,
+          qty: element.qty,
+          rate: element.rate,
+          amount: element.amt,
+          startReading: element.startReading ,
+          endReading:  element.endReading,
+          totalReading:  element.totalReading
+        );
+        getRequestDetList.add(list);
+    }
+    return getRequestDetList;
+  }
+
+  List<SubContractorMachineryBillAddLessSetupLink>? getDetAddLess(int id, workNo) {
+    getDetAddLessList.value=[];
+    for (var element in billGenerationBoqController.directBillGen_ItemReadList) {
+      if (element.percentValue! > 0) {
+        var list = SubContractorMachineryBillAddLessSetupLink(
+          id: element.reqDetId,
+          subContractorWorkQtyMasId: id,
+          workNo: workNo,
+          addLessId: element.addLessId,
+          percentValue: element.percentValue,
+          amount: element.amount,
+        );
+        getDetAddLessList.add(list);
+      }
+    }
+    return getDetAddLessList;
+  }
+
+  List<SubContractorMachineryWorkBillDetailslink>? getBillDetails(masId) {
+    getWorkBillDetailsList.clear();
+    if (getMacBillDetValue.any(
+          (element) => element.detId == null || element.detId!.isEmpty,
+    )) {
+      return getWorkBillDetailsList;
+    }
+    for (var element in getMacBillDetValue) {
+      for (var detId in element.detId!) {
+        getWorkBillDetailsList.add(
+          SubContractorMachineryWorkBillDetailslink(
+            id: 0,
+            subcontractorWorkQtyMasId: masId,
+            subContractDailyWorkDetId: detId,
+          ),
+        );
+      }
+    }
+    return getWorkBillDetailsList;
   }
 
 }

@@ -91,8 +91,7 @@ class BottomsheetControllers {
   Get.put(MRN_Request_Controller());
   LoginController loginController = Get.put(LoginController());
   RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
-  MachineryBillGenController machineryBillGenController = Get.put(MachineryBillGenController());
-
+  MachineryBillGenController get machineryBillGenController => Get.find<MachineryBillGenController>();
   final searchcontroller = TextEditingController();
   var list;
 

@@ -36,6 +36,7 @@ class Datum {
   List<int>? detId;
   String? itemDiscription;
   String? unit;
+  int? unitId;
   double? rate;
   double? qty;
   double? amt;
@@ -48,6 +49,7 @@ class Datum {
     this.detId,
     this.itemDiscription,
     this.unit,
+    this.unitId,
     this.rate,
     this.qty,
     this.amt,
@@ -61,6 +63,7 @@ class Datum {
     detId: List<int>.from(json["detId"].map((x) => x)),
     itemDiscription: json["itemDiscription"],
     unit: json["unit"],
+    unitId: json["unitId"],
     rate: json["rate"],
     qty: json["qty"],
     amt: json["amt"],
@@ -74,6 +77,7 @@ class Datum {
     "detId": List<dynamic>.from(detId!.map((x) => x)),
     "itemDiscription": itemDiscription,
     "unit": unit,
+    "unitId": unitId,
     "rate": rate,
     "qty": qty,
     "amt": amt,
