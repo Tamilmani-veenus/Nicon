@@ -6,6 +6,7 @@ import '../models/companydropdownlist_model.dart';
 import '../models/datepicker_model.dart';
 import '../models/dpr_headname_model.dart';
 import '../models/invoiceno_billdir_model.dart';
+import '../models/machinery_bill_det_list.dart';
 import '../models/materiallist_model.dart';
 import '../models/materialsubitem_dropdown_model.dart';
 import '../models/materialwise_materialdropdown_model.dart';
@@ -114,8 +115,20 @@ class CommonProvider {
       "${ApiConstant.GETWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId":type=="MachineryBill"?
       "${ApiConstant.GETMACWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId":
       "${ApiConstant.GETBOQWRKORDERNOLIST}?projectId=$pId&siteId=$sId&subcontractorId=$subId&fromDate=$fromDate&toDate=$toDate");
-      print("AdvEntryList:" + value);
+      print("response:" + value);
       return workOrderNoResponseFromJson(value);
+    }
+    catch(e){
+      print("ERROR.....$e");
+      return null;
+    }
+  }
+
+  static Future<MacBillDetModel?> getMachineryBillDetList(int id) async {
+    try{
+      final value = await ApiManager.getAPICall("${ApiConstant.GET_MAC_BILL_DET_LIST}?WorkOrdermasid=$id");
+      print("List:" + value);
+      return macBillDetModelFromJson(value);
     }
     catch(e){
       print("ERROR.....$e");
@@ -127,7 +140,7 @@ class CommonProvider {
     try{
       final value = await ApiManager.getAPICall(
           "${ApiConstant.GETINVOICENOLIST}?fieldName=billNo&tableName=View_SubContractorWorkNMRBill&projectId=$pId&subContractorId=$subId");
-      print("AdvEntryList:" + value);
+      print("response:" + value);
       return invoiceNoResponseFromJson(value);
     }
     catch(e){

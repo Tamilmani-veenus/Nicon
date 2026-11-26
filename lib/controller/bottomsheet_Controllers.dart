@@ -32,6 +32,7 @@ import 'expensencecontroller.dart';
 import 'fromproject_ccontroller.dart';
 import 'fromsite_controller.dart';
 import 'logincontroller.dart';
+import 'machinery_bill_generation_controller.dart';
 import 'man_power_controller.dart';
 import 'material_transreq_controller.dart';
 import 'mrn_request_indent_controller.dart';
@@ -90,6 +91,7 @@ class BottomsheetControllers {
   Get.put(MRN_Request_Controller());
   LoginController loginController = Get.put(LoginController());
   RepairWorkOrderController repairWorkOrderController = Get.put(RepairWorkOrderController());
+  MachineryBillGenController machineryBillGenController = Get.put(MachineryBillGenController());
 
   final searchcontroller = TextEditingController();
   var list;
@@ -462,25 +464,38 @@ class BottomsheetControllers {
                             ),
                           ),
                           onTap: () async {
-                            subcontractorController.WorkOrderNo.text =
-                                type == "BILL BOQ"
-                                    ? list[index].workOrderNoBoq.toString()
-                                    : list[index].workOrderNo.toString();
-                            subcontractorController.selectedWorkOrderId.value =
-                                list[index].workOrderId;
-                            searchcontroller.text = "";
-                            if (type == "BILL DIRECT") {
-                              await billGenerationDirectController
-                                  .getWorkOrderList(
-                                      "ItemListDet", type, todate);
-                              await billGenerationDirectController.DirectBill_CalculationList(type: "WorkOrder");
-                            } else if (type == "BILL BOQ") {
-                              await billGenerationBoqController
-                                  .getWorkOrderList("ItemListDet", todate);
-                              await billGenerationBoqController
-                                  .getNmrAdvance();
-                              await billGenerationBoqController.DirectBill_CalculationList(type: "WorkOrder");
+                            if(type == "MachineryBill"){
+                              machineryBillGenController.wrkOrderNoController.text = list[index].workOrderNo.toString();
+                              machineryBillGenController.workOrderId.value = list[index].workOrderId;
+                              await machineryBillGenController.deleteDetTableDatas();
+                              await machineryBillGenController.getMacBillDetList(machineryBillGenController.workOrderId.value);
+                              await machineryBillGenController.getBillAddLessList();
+                            }else {
+                              subcontractorController.WorkOrderNo.text =
+                              type == "BILL BOQ"
+                                  ? list[index].workOrderNoBoq.toString()
+                                  : list[index].workOrderNo.toString();
+                              subcontractorController.selectedWorkOrderId
+                                  .value =
+                                  list[index].workOrderId;
+                              if (type == "BILL DIRECT") {
+                                await billGenerationDirectController
+                                    .getWorkOrderList(
+                                    "ItemListDet", type, todate);
+                                await billGenerationDirectController
+                                    .DirectBill_CalculationList(
+                                    type: "WorkOrder");
+                              } else if (type == "BILL BOQ") {
+                                await billGenerationBoqController
+                                    .getWorkOrderList("ItemListDet", todate);
+                                await billGenerationBoqController
+                                    .getNmrAdvance();
+                                await billGenerationBoqController
+                                    .DirectBill_CalculationList(
+                                    type: "WorkOrder");
+                              }
                             }
+                            searchcontroller.text = "";
                             Navigator.pop(context);
                           },
                         ),

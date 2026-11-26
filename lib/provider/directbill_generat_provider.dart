@@ -31,7 +31,11 @@ class DirectBillGenerateProvider {
 
   static Future<BillDirectDetCalculations?> getBillDirectCalculation_List({pId,siteId,subId,wrkOrdId,type}) async {
     try{
-      final value = await ApiManager.getAPICall(type=="Subcont"?"${ApiConstant.GET_SUBCONT_ADD_LESS}?subcontractorId=$subId&projectId=$pId":type=="WorkOrder"?"${ApiConstant.GET_WRKORDER_ADD_LESS}?workOrderId=$wrkOrdId&projectId=$pId&siteId=$siteId&subcontractorId=$subId":ApiConstant.GET_DIRECTBILL_CALCULATION_LIST);
+      final value = await ApiManager.getAPICall(
+          type=="Subcont"?"${ApiConstant.GET_SUBCONT_ADD_LESS}?subcontractorId=$subId&projectId=$pId":
+          type=="WorkOrder"?"${ApiConstant.GET_WRKORDER_ADD_LESS}?workOrderId=$wrkOrdId&projectId=$pId&siteId=$siteId&subcontractorId=$subId":
+          type=="MachineryBill"?"${ApiConstant.GET_MAC_BILL_ADD_LESS}?workOrderId=$wrkOrdId&projectId=$pId&siteId=$siteId&subcontractorId=$subId":
+          ApiConstant.GET_DIRECTBILL_CALCULATION_LIST);
       print("AdvEntryList:" + value);
       return billDirectDetCalculationsFromJson(value);
     }
@@ -53,17 +57,6 @@ class DirectBillGenerateProvider {
     }
   }
 
-  static Future<dynamic> subContAddLessSetup(int pId,int subId) async {
-    try {
-      final value = await ApiManager.getAPICall(ApiConstant.GET_SUBCONT_ADD_LESS+"?subcontractorId=$subId&projectId=$pId");
-      print('API Response: ${value}');
-      return jsonDecode(value);
-
-    } catch (error) {
-      print("Error == $error");
-      return null;
-    }
-  }
 
   static Future<BillDirectWorkOrdDet?> getWorkOrderList(int pId,int sId, int subId, int workOrderNo,type,toDate) async {
     try{

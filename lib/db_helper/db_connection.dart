@@ -131,5 +131,9 @@ class DatabaseConnection {
     String machineryDPRDetLocalTable = "CREATE TABLE MachineryDPRDetLocal (localId INTEGER PRIMARY KEY AUTOINCREMENT,apiId INTEGER,projectId INTEGER,projectName TEXT,siteName TEXT,itemDescription TEXT,qty REAL,unit INTEGER,scaleName TEXT,rate REAL,amount REAL,workRemarks TEXT,machineryReqDetid INTEGER,subId INTEGER,startReading REAL,endReading REAL,totalReading REAL,enteredQty REAL,enteredAmount REAL,remarks TEXT,UNIQUE(apiId,subId))";
     await database.execute(machineryDPRDetLocalTable);
 
+    String machineryBillDetTable = "CREATE TABLE MachineryBillDetLocal (localId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, detId TEXT, itemDiscription TEXT, unit TEXT, rate REAL, qty REAL, amt REAL, startReading REAL, endReading REAL, totalReading REAL, remarks TEXT)";
+
+    await database.execute(machineryBillDetTable);
+
   }
 }

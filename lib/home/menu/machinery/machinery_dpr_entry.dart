@@ -872,6 +872,7 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
         decoration: BoxDecoration(
           color: const Color(0xffF3F1FF),
           borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1))
         ),
         child: Text(
           value,
