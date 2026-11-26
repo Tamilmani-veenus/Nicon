@@ -8,6 +8,7 @@ import '../../commonpopup/siteuserDashboardViewAllScreem.dart';
 import '../../controller/logincontroller.dart';
 import '../../utilities/baseutitiles.dart';
 import 'hrDashboard.dart';
+import 'dart:math' as math;
 
 class SiteHomeScreen extends StatefulWidget {
   const SiteHomeScreen({super.key});
@@ -274,6 +275,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
             const KeyInsightsCard(),
             SizedBox(height: 10,),
             PredefinedIndentCard(),
+            SizedBox(height: 10,),
+            const BoqVsDprCard(),
+            SizedBox(height: 10,),
+            const BoqDprMobileChart(),
             SizedBox(height: 100,),
           ],
         ),
@@ -420,7 +425,7 @@ class _LabourAtSiteCardState extends State<LabourAtSiteCard>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2200),
+      duration: const Duration(milliseconds: 500),
     );
 
     _controller.forward();
@@ -489,21 +494,33 @@ class _LabourAtSiteCardState extends State<LabourAtSiteCard>
                 tooltip: "Refresh Animation",
               ),
               const SizedBox(width: 10),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xffE9EDFF),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  "View All",
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Color(0xff344EFF),
-                    fontWeight: FontWeight.w600,
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                      const LabourDistributionViewAll(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE9EDFF),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF315DFF),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -845,6 +862,8 @@ class _LabourAtSiteCardState extends State<LabourAtSiteCard>
     );
   }
 }
+
+
 class ConnectorLinePainter extends CustomPainter {
   final double progress;
   final Color color;
@@ -4186,4 +4205,1478 @@ class _ColumnLabel extends StatelessWidget {
 }
 
 
+
+class BoqVsDprCard extends StatefulWidget {
+  const BoqVsDprCard({super.key});
+
+  @override
+  State<BoqVsDprCard> createState() => _BoqVsDprCardState();
+}
+
+class _BoqVsDprCardState extends State<BoqVsDprCard>
+    with SingleTickerProviderStateMixin {
+  static const Color primaryBlue = Color(0xFF2463FF);
+  static const Color dprGreen = Color(0xFF05BD80);
+  static const Color balanceYellow = Color(0xFFFFE58A);
+  static const Color textColor = Color(0xFF26334A);
+  static const Color subTextColor = Color(0xFF8995A8);
+  static const Color borderColor = Color(0xFFE0E6EF);
+
+  int? selectedIndex;
+
+  final List<Map<String, dynamic>> items = [
+    {
+      'name': 'Foundation',
+      'boq': 500,
+      'dpr': 300,
+      'balance': 200,
+      'progress': 60,
+      'color': primaryBlue,
+    },
+    {
+      'name': 'Structure',
+      'boq': 800,
+      'dpr': 650,
+      'balance': 150,
+      'progress': 81,
+      'color': dprGreen,
+    },
+    {
+      'name': 'Brick Work',
+      'boq': 1000,
+      'dpr': 750,
+      'balance': 250,
+      'progress': 75,
+      'color': dprGreen,
+    },
+    {
+      'name': 'Plastering',
+      'boq': 800,
+      'dpr': 520,
+      'balance': 280,
+      'progress': 65,
+      'color': primaryBlue,
+    },
+    {
+      'name': 'Electrical',
+      'boq': 400,
+      'dpr': 250,
+      'balance': 150,
+      'progress': 63,
+      'color': Colors.redAccent,
+    },
+  ];
+
+
+
+
+  late AnimationController _progressController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _progressController.forward();
+  }
+
+  @override
+  void dispose() {
+    _progressController.dispose();
+    super.dispose();
+  }
+
+// Refresh progress animation
+  void _onRefresh() {
+    _progressController.forward(from: 0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _header(),
+          const SizedBox(height: 10),
+          _summary(),
+          const SizedBox(height: 9),
+
+          // Progress list with tooltip
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                children: List.generate(
+                  items.length,
+                      (index) => _progressItem(index),
+                ),
+              ),
+
+              // Custom tooltip
+              if (selectedIndex != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: IgnorePointer(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: _tooltipCard(selectedIndex!),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+          _footer(),
+        ],
+      ),
+    );
+  }
+
+  // HEADER
+  Widget _header() {
+    return Row(
+      children: [
+        Container(
+          height: 29,
+          width: 29,
+          decoration: BoxDecoration(
+            color: const Color(0xFFEEF4FF),
+            borderRadius: BorderRadius.circular(9),
+          ),
+          child: const Icon(
+            Icons.bar_chart_rounded,
+            color: primaryBlue,
+            size: 19,
+          ),
+        ),
+        const SizedBox(width: 9),
+        const Text(
+          'BOQ vs DPR',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            color: textColor,
+          ),
+        ),
+        const SizedBox(width: 7),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 7,
+            vertical: 3,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE8F8F1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Text(
+            '70% Done',
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF009B68),
+            ),
+          ),
+        ),
+        const Spacer(),
+        GestureDetector(
+          onTap: _onRefresh,
+          child: const Icon(
+            Icons.refresh_rounded,
+            size: 17,
+            color: Color(0xFF8995A8),
+          ),
+        ),
+        const SizedBox(width: 12),
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BoqDprViewAllPage(
+                ),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE9EDFF),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              'View All',
+              style: TextStyle(
+                fontSize: 11,
+                color: Color(0xFF315DFF),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // SUMMARY
+  Widget _summary() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F9FC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        children: [
+          _summaryItem('BOQ PLAN', '3,800', primaryBlue),
+          _summaryItem('DPR DONE', '2,650', dprGreen),
+          _summaryItem('BALANCE', '1,150', Colors.deepOrange),
+          _summaryItem('PROGRESS', '70%', const Color(0xFF009B68)),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryItem(String title, String value, Color color) {
+    return Expanded(
+      child: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            right: BorderSide(color: borderColor),
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 8,
+                color: subTextColor,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.4,
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // PROGRESS ITEM
+  Widget _progressItem(int index) {
+    final item = items[index];
+    final int progress = item['progress'];
+    final bool isSelected = selectedIndex == index;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        setState(() {
+          selectedIndex = isSelected ? null : index;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 6,
+          vertical: 7,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFEAF2FF)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    item['name'],
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: textColor,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Text(
+                  'BOQ-${item['boq']}',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: primaryBlue,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text('|', style: TextStyle(color: borderColor)),
+                const SizedBox(width: 4),
+                Text(
+                  'DPR-${item['dpr']}',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: Color(0xFF009E70),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text('|', style: TextStyle(color: borderColor)),
+                const SizedBox(width: 4),
+                Text(
+                  'Bal-${item['balance']}',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: Colors.deepOrange,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 9),
+
+            // Progress bar and percentage marker
+            SizedBox(
+              height: 19,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final double width = constraints.maxWidth;
+
+                  return AnimatedBuilder(
+                    animation: _progressController,
+                    builder: (context, child) {
+                      final double animatedProgress =
+                          progress * _progressController.value;
+
+                      final double progressWidth =
+                          constraints.maxWidth * animatedProgress / 100;
+
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            top: 4,
+                            left: 0,
+                            right: 0,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                height: 9,
+                                child: Stack(
+                                  children: [
+                                    Container(color: balanceYellow),
+                                    FractionallySizedBox(
+                                      widthFactor: animatedProgress / 100,
+                                      child: Container(color: dprGreen),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Positioned(
+                            left: (progressWidth - 19)
+                                .clamp(0.0, constraints.maxWidth - 42),
+                            top: 0,
+                            child: Container(
+                              width: 39,
+                              height: 17,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: item['color'],
+                                  width: 1.8,
+                                ),
+                              ),
+                              child: Text(
+                                '${animatedProgress.round()}%',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: textColor,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // CUSTOM TOOLTIP
+  Widget _tooltipCard(int index) {
+    final item = items[index];
+
+    return Container(
+      width: 220,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE9FAF5),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(
+          color: const Color(0xFFD1EBE4),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF34465F).withOpacity(0.20),
+            blurRadius: 20,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 7,
+                width: 7,
+                decoration: BoxDecoration(
+                  color: item['color'],
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 7),
+              Expanded(
+                child: Text(
+                  item['name'],
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: textColor,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 3,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Text(
+                  '${item['progress']}%',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: Color(0xFF009B68),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 9),
+
+          Row(
+            children: [
+              _tooltipValue(
+                'BOQ PLAN',
+                '${item['boq']}',
+                'Points',
+                primaryBlue,
+              ),
+              const SizedBox(width: 5),
+              _tooltipValue(
+                'DPR DONE',
+                '${item['dpr']}',
+                'Points',
+                dprGreen,
+              ),
+              const SizedBox(width: 5),
+              _tooltipValue(
+                'BALANCE',
+                '${item['balance']}',
+                'Points',
+                Colors.deepOrange,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tooltipValue(
+      String title,
+      String value,
+      String subtitle,
+      Color color,
+      ) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 3,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: borderColor,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.035),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 7,
+                color: subTextColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 11,
+                color: color,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 7,
+                color: subTextColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // FOOTER
+  Widget _footer() {
+    return Column(
+      children: [
+        const Divider(
+          color: Color(0xFFEDF0F5),
+          height: 1,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            _legend(primaryBlue, 'BOQ'),
+            const SizedBox(width: 9),
+            _legend(dprGreen, 'DPR'),
+            const SizedBox(width: 9),
+            _legend(balanceYellow, 'Balance'),
+            const Spacer(),
+            const Text(
+              'Total Items: ',
+              style: TextStyle(
+                fontSize: 9,
+                color: textColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const Text(
+              '6',
+              style: TextStyle(
+                fontSize: 9,
+                color: primaryBlue,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _legend(Color color, String title) {
+    return Row(
+      children: [
+        Container(
+          height: 10,
+          width: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 9,
+            color: textColor,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+class BoqDprMobileChart extends StatefulWidget {
+  const BoqDprMobileChart({super.key});
+
+  @override
+  State<BoqDprMobileChart> createState() => _BoqDprMobileChartState();
+}
+
+class _BoqDprMobileChartState extends State<BoqDprMobileChart>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  int selectedIndex = -1;
+
+  final List<Map<String, dynamic>> items = [
+    {
+      'name': 'Foundation',
+      'startDate': '01 Aug',
+      'endDate': '30 Sep',
+      'diffDate': '60d',
+      'fixed': '500',
+      'done': '300',
+      'balance': '200',
+      'unit': 'Cum',
+      'progress': 60,
+      'status': 'In Progress',
+      'color': const Color(0xFF397BFF),
+    },
+    {
+      'name': 'Structure',
+      'startDate': '15 Aug',
+      'endDate': '15 Nov',
+      'diffDate': '92d',
+      'fixed': '800',
+      'done': '650',
+      'balance': '150',
+      'unit': 'Cum',
+      'progress': 81,
+      'status': 'On Track',
+      'color': const Color(0xFF10B981),
+    },
+    {
+      'name': 'Electrical',
+      'startDate': '01 Oct',
+      'endDate': '30 Nov',
+      'diffDate': '60d',
+      'fixed': '400',
+      'done': '250',
+      'balance': '150',
+      'unit': 'Points',
+      'progress': 63,
+      'status': 'Delayed',
+      'color': const Color(0xFFF0444D),
+    },
+    {
+      'name': 'Brick Work',
+      'startDate': '01 Sep',
+      'endDate': '31 Oct',
+      'diffDate': '60d',
+      'fixed': '1000',
+      'done': '750',
+      'balance': '250',
+      'unit': 'Sqm',
+      'progress': 75,
+      'status': 'On Track',
+      'color': const Color(0xFF0D9488),
+    },
+    {
+      'name': 'Plumbing',
+      'startDate': '05 Oct',
+      'endDate': '25 Nov',
+      'diffDate': '51d',
+      'fixed': '300',
+      'done': '180',
+      'balance': '120',
+      'unit': 'Rmt',
+      'progress': 60,
+      'status': 'In Progress',
+      'color': const Color(0xFF8B5CF6),
+    },
+    {
+      'name': 'Plastering',
+      'startDate': '15 Sep',
+      'endDate': '15 Nov',
+      'diffDate': '61d',
+      'fixed': '800',
+      'done': '520',
+      'balance': '280',
+      'unit': 'Sqm',
+      'progress': 65,
+      'status': 'In Progress',
+      'color': const Color(0xFFF59E0B),
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2600),
+    );
+
+    _controller.forward();
+  }
+
+  // void _replayAnimation() {
+  //   _controller.forward(from: 0);
+  // }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _replayAnimation() {
+    setState(() {
+      selectedIndex = -1;
+    });
+
+    _controller.forward(from: 0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // final item = items[selectedIndex];
+    final bool isOverall = selectedIndex == -1;
+
+    final selectedItem =
+    isOverall ? null : items[selectedIndex];
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE3E8EF)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.04),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _header(),
+
+          const SizedBox(height: 12),
+          const Divider(height: 1, color: Color(0xFFEEF0F4)),
+          const SizedBox(height: 8),
+
+          // Animated chart and six category selectors
+          SizedBox(
+            height: 250,
+            width: double.infinity,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Stack(
+                      children: [
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: BoqChartPainter(
+                              progress: _controller.value,
+                              colors: items
+                                  .map((e) => e['color'] as Color)
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+
+                        // Left category selectors
+                        _categoryButton(0, 15, 25),
+                        _categoryButton(2, 15, 108),
+                        _categoryButton(4, 15, 191),
+
+                        // Right category selectors
+                        Positioned(
+                          right: 15,
+                          top: 25,
+                          child: _buildButton(1),
+                        ),
+                        Positioned(
+                          right: 15,
+                          top: 108,
+                          child: _buildButton(3),
+                        ),
+                        Positioned(
+                          right: 15,
+                          top: 191,
+                          child: _buildButton(5),
+                        ),
+
+                        // Centre DPR chart
+
+                        Positioned(
+                          left: constraints.maxWidth / 2 - 48,
+                          top: 77,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder: (child, animation) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              key: ValueKey(selectedIndex),
+                              width: 96,
+                              height: 96,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(.06),
+                                    blurRadius: 9,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    isOverall
+                                        ? 'OVERALL DPR'
+                                        : selectedItem!['name'].toString().toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 8,
+                                      letterSpacing: .4,
+                                      color: isOverall
+                                          ? const Color(0xFF8995A8)
+                                          : selectedItem!['color'],
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    isOverall
+                                        ? '70%'
+                                        : '${selectedItem!['progress']}%',
+                                    style: TextStyle(
+                                      fontSize: 27,
+                                      height: 1,
+                                      color: isOverall
+                                          ? const Color(0xFF172033)
+                                          : selectedItem!['color'],
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    isOverall
+                                        ? '2,650 / 3,800 Units'
+                                        : '${selectedItem!['done']} / '
+                                        '${selectedItem!['fixed']} '
+                                        '${selectedItem!['unit']}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Color(0xFF079568),
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // Selected category details
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: isOverall
+                ? const SizedBox.shrink(
+              key: ValueKey('overall'),
+            )
+                : _detailCard(
+              selectedItem!,
+              key: ValueKey(selectedIndex),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+          const Divider(color: Color(0xFFEEF0F4)),
+
+          _bottomSummary(),
+        ],
+      ),
+    );
+  }
+
+  Widget _header() {
+    return Row(
+      children: [
+        Container(
+          height: 32,
+          width: 32,
+          decoration: BoxDecoration(
+            color: const Color(0xFFEEF4FF),
+            borderRadius: BorderRadius.circular(9),
+          ),
+          child: const Icon(
+            Icons.assignment_outlined,
+            color: Color(0xFF397BFF),
+            size: 17,
+          ),
+        ),
+        const SizedBox(width: 9),
+        const Expanded(
+          child: Text(
+            'BOQ Scheduling vs DPR',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF172033),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: _replayAnimation,
+          child: const Padding(
+            padding: EdgeInsets.all(7),
+            child: Icon(
+              Icons.refresh_rounded,
+              size: 18,
+              color: Color(0xFF8995A8),
+            ),
+          ),
+        ),
+        const SizedBox(width: 5),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 7,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE9EDFF),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Text(
+            'View All',
+            style: TextStyle(
+              color: Color(0xFF397BFF),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _categoryButton(int index, double left, double top) {
+    return Positioned(
+      left: left,
+      top: top,
+      child: _buildButton(index),
+    );
+  }
+
+  Widget _buildButton(int index) {
+    final color = items[index]['color'] as Color;
+    final selected = selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex =
+          selectedIndex == index ? -1 : index;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: selected ? color : color.withOpacity(.10),
+          borderRadius: BorderRadius.circular(9),
+          border: Border.all(
+            color: color,
+            width: selected ? 2 : 1,
+          ),
+          boxShadow: selected
+              ? [
+            BoxShadow(
+              color: color.withOpacity(.25),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ]
+              : [],
+        ),
+        child: Center(
+          child: Text(
+            '${index + 1}',
+            style: TextStyle(
+              color: selected ? Colors.white : color,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _dateInfo(
+      String title,
+      String value, {
+        Color valueColor = const Color(0xFF172033),
+      }) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 9,
+              color: Color(0xFF8995A8),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 10,
+              color: valueColor,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailCard(
+      Map<String, dynamic> item, {
+        Key? key,
+      }) {
+    final color = item['color'] as Color;
+
+    return Container(
+      key: key,
+      width: double.infinity,
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: color.withOpacity(.045),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 9,
+                height: 9,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  item['name'],
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF172033),
+                  ),
+                ),
+              ),
+              Text(
+                '${item['progress']}%',
+                style: TextStyle(
+                  color: color,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 9,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: const Color(0xFFE3E8EF),
+              ),
+            ),
+            child: Row(
+              children: [
+                _dateInfo('Start Date', item['startDate']),
+                _dateInfo('End Date', item['endDate']),
+                _dateInfo(
+                  'Diff Date',
+                  item['diffDate'],
+                  valueColor: const Color(0xFF079568),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Row(
+          //   children: [
+          //     _detailValue('Fixed Qty', item['fixed']),
+          //     _detailValue('CQ (Done)', item['done']),
+          //     _detailValue('Balance Qty', item['balance']),
+          //     _detailValue('Unit', item['unit']),
+          //   ],
+          // ),
+          //
+          // const SizedBox(height: 11),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: (item['progress'] as int) / 100,
+              minHeight: 6,
+              backgroundColor: const Color(0xFFE8EBF0),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+            ),
+          ),
+
+          const SizedBox(height: 9),
+
+          Row(
+            children: [
+              const Text(
+                'Work Status',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Color(0xFF8995A8),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 9,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(.10),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  item['status'],
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: color,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailValue(String title, String value) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 9,
+              color: Color(0xFF8995A8),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF172033),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomSummary() {
+    return Wrap(
+      spacing: 13,
+      runSpacing: 8,
+      children: const [
+        _StatusLabel(
+          color: Color(0xFF10B981),
+          text: '2 On Track',
+        ),
+        _StatusLabel(
+          color: Color(0xFFF59E0B),
+          text: '3 In Progress',
+        ),
+        _StatusLabel(
+          color: Color(0xFFF0444D),
+          text: '1 Delayed',
+        ),
+      ],
+    );
+  }
+}
+
+class _StatusLabel extends StatelessWidget {
+  final Color color;
+  final String text;
+
+  const _StatusLabel({
+    required this.color,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 7,
+          width: 7,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: const TextStyle(
+            color: Color(0xFF667085),
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Custom painter for the animated ring and connector lines
+
+class BoqChartPainter extends CustomPainter {
+  final double progress;
+  final List<Color> colors;
+
+  BoqChartPainter({
+    required this.progress,
+    required this.colors,
+  });
+
+  final List<double> angles = [
+    -2.35, // Foundation - Top left
+    -0.79, // Structure - Top right
+    math.pi, // Electrical - Left
+    0, // Brick Work - Right
+    2.35, // Plumbing - Bottom left
+    0.79, // Plastering - Bottom right
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, 125);
+
+    const radius = 58.0;
+    const strokeWidth = 14.0;
+    const segmentSweep = 0.68;
+
+    // Background doughnut ring
+    final backgroundPaint = Paint()
+      ..color = const Color(0xFFF0F3F7)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    canvas.drawCircle(
+      center,
+      radius,
+      backgroundPaint,
+    );
+
+    // Connector positions
+    final leftX = 32.0;
+    final rightX = size.width - 32;
+    final ys = [42.0, 125.0, 208.0];
+
+    // Draw six coloured doughnut segments
+    for (int i = 0; i < 6; i++) {
+      final startTime = i * 0.13;
+      final endTime = startTime + 0.20;
+
+      final animation = ((progress - startTime) /
+          (endTime - startTime))
+          .clamp(0.0, 1.0);
+
+      if (animation <= 0) continue;
+
+      final color = colors[i];
+
+      final arcPaint = Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round;
+
+      // Doughnut segment
+      canvas.drawArc(
+        Rect.fromCircle(
+          center: center,
+          radius: radius,
+        ),
+        angles[i] - segmentSweep / 2,
+        segmentSweep * animation,
+        false,
+        arcPaint,
+      );
+
+      // Connector starts at the segment's outer-middle point
+      final start = Offset(
+        center.dx + radius * math.cos(angles[i]),
+        center.dy + radius * math.sin(angles[i]),
+      );
+
+      final bool isLeft = i == 0 || i == 2 || i == 4;
+      final int row = (i / 2).floor();
+
+      final end = Offset(
+        isLeft ? leftX : rightX,
+        ys[row],
+      );
+
+      final elbowX = isLeft
+          ? end.dx + 19
+          : end.dx - 19;
+
+      final path = Path()
+        ..moveTo(start.dx, start.dy)
+        ..lineTo(elbowX, start.dy)
+        ..lineTo(elbowX, end.dy)
+        ..lineTo(end.dx, end.dy);
+
+      final metrics = path.computeMetrics().first;
+
+      final partialPath = metrics.extractPath(
+        0,
+        metrics.length * animation,
+      );
+
+      final linePaint = Paint()
+        ..color = color
+        ..strokeWidth = 1.6
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+
+      canvas.drawPath(partialPath, linePaint);
+
+      // Small connector endpoint
+      if (animation >= 1) {
+        canvas.drawCircle(
+          end,
+          2.5,
+          Paint()..color = color,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant BoqChartPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.colors != colors;
+  }
+}
 
