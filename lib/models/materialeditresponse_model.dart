@@ -22,7 +22,7 @@ class MaterialeditResponse {
   factory MaterialeditResponse.fromJson(Map<String, dynamic> json) => MaterialeditResponse(
     success: json["success"],
     message: json["message"],
-    result: MaterialEditResult .fromJson(json["result"]),
+    result: json["result"]==null?null:MaterialEditResult.fromJson(json["result"]),
   );
 
   Map<String, dynamic> toJson() => {

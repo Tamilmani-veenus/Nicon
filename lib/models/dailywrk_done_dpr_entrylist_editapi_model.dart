@@ -21,7 +21,7 @@ class DprEditApimodel {
 
   factory DprEditApimodel.fromJson(Map<String, dynamic> json) => DprEditApimodel(
     success: json["success"],
-    result: Result.fromJson(json["result"]),
+    result: json["result"]==null?null:Result.fromJson(json["result"]),
     message: json["message"],
   );
 

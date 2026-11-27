@@ -4333,7 +4333,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                             ),
                             Expanded(
                                 flex: 3,
-                                child: Text(widget.heading!="MACHINERY DPR" && widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].reqQty.toString():pendingListController.onclickPendingListDet[index].qty.toString())),
+                                child: Text(widget.heading!="MACHINERY DPR" && widget.heading!="MACHINERY BILL"?pendingListController.onclickPendingListDet[index].reqQty.toString():pendingListController.onclickPendingListDet[index].qty.toString())),
                             const Expanded(
                                 flex: 2,
                                 child: Text("Scale:",
@@ -4341,12 +4341,12 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                                 )),
                             Expanded(
                                 flex: 4,
-                                child: Text(pendingListController.onclickPendingListDet[index].scaleName.toString())),
+                                child: Text(pendingListController.onclickPendingListDet[index].scaleName.toString().trim())),
                           ],
                         ),
 
                         Divider(),
-                        Row(
+                        widget.heading!="MACHINERY BILL"?Row(
                           children: [
                             Text("Remarks" + ":  ",
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -4355,7 +4355,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                                 flex: 2,
                                 child: Text(widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].remarks.toString():pendingListController.onclickPendingListDet[index].workRemarks.toString())),
                           ],
-                        ),
+                        ):SizedBox(),
                       ],
                     ),
                   ),

@@ -37,7 +37,7 @@ class SuppBillAppGetById {
     return SuppBillAppGetById(
       success: json["success"],
       message: json["message"],
-      result: Result.fromJson(resultJson),
+      result: json["result"]==null?null:Result.fromJson(resultJson),
       materialPurOrdBilldetLink: itemList
           .map((x) => MaterialPurOrdBilldetLink.fromJson(x))
           .toList(),

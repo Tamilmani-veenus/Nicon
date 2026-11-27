@@ -827,8 +827,8 @@ class SubContractorMachineryWorkQtydetLink {
   int? siteId;
   String? workType;
   int? dbrWorkDetId;
-  String? itemDescription;
-  String? unitName;
+  String? itemDesc;
+  String? scaleName;
   int? unit;
   double? qty;
   double? rate;
@@ -843,8 +843,8 @@ class SubContractorMachineryWorkQtydetLink {
     this.siteId,
     this.workType,
     this.dbrWorkDetId,
-    this.itemDescription,
-    this.unitName,
+    this.itemDesc,
+    this.scaleName,
     this.unit,
     this.qty,
     this.rate,
@@ -860,8 +860,8 @@ class SubContractorMachineryWorkQtydetLink {
     siteId: json["siteId"],
     workType: json["workType"],
     dbrWorkDetId: json["dbrWorkDetId"],
-    itemDescription: json["itemDescription"],
-    unitName: json["unitName"],
+    itemDesc: json["itemDescription"],
+    scaleName: json["unitName"],
     unit: json["unit"],
     qty: json["qty"],
     rate: json["rate"],
@@ -877,8 +877,8 @@ class SubContractorMachineryWorkQtydetLink {
     "siteId": siteId,
     "workType": workType,
     "dbrWorkDetId": dbrWorkDetId,
-    "itemDescription": itemDescription,
-    "unitName": unitName,
+    "itemDescription": itemDesc,
+    "unitName": scaleName,
     "unit": unit,
     "qty": qty,
     "rate": rate,

@@ -21,7 +21,7 @@ class DashboardResModel {
 
   factory DashboardResModel.fromJson(Map<String, dynamic> json) => DashboardResModel(
     success: json["success"],
-    result: Result.fromJson(json["result"]),
+      result: json["result"]==null?null:Result.fromJson(json["result"]),
     message: json["message"]
   );
 

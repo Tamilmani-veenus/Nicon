@@ -22,7 +22,7 @@ class MrnpreapprovalModel {
   factory MrnpreapprovalModel.fromJson(Map<String, dynamic> json) => MrnpreapprovalModel(
     success: json["success"],
     message: json["message"],
-    result: Result.fromJson(json["result"]),
+    result: json["result"]==null?null:Result.fromJson(json["result"]),
   );
 
   Map<String, dynamic> toJson() => {

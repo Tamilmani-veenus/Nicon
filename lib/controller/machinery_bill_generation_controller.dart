@@ -322,7 +322,11 @@ class MachineryBillGenController extends GetxController {
              calculate();
             if(type=="Edit"){
               saveButton.value = RequestConstant.RESUBMIT;
-            }else{
+            }
+            else if(type=="Verify"){
+              saveButton.value = RequestConstant.VERIFY;
+            }
+            else{
               saveButton.value = RequestConstant.APPROVAL;
             }
             await Navigator.pushReplacement(

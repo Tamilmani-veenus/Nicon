@@ -288,6 +288,8 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
     setState(() => _isCameraBusy = true);
 
     try {
+      await _controller!.setFlashMode(FlashMode.off);
+
       final image = await _controller!.takePicture();
 
       final appDir = await getApplicationDocumentsDirectory();
