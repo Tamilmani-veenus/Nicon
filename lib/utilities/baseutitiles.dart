@@ -1896,6 +1896,12 @@ class BaseUtitiles {
 
 }
 
+void putController<T>(T Function() create) {
+  if (!Get.isRegistered<T>()) {
+    Get.put<T>(create());
+  }
+}
+
 class ClickUtils {
   static final Set<String> _runningActions = <String>{};
 

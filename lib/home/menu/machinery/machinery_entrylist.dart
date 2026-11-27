@@ -1514,12 +1514,21 @@ class _MachineryDPREntryListState extends State<MachineryDPREntryList> {
                                                                       FocusScope.of(
                                                                           context)
                                                                           .unfocus();
-                                                                      await machineryDPRController.MaterialIntentList_EditApi(
-                                                                          machineryDPRController.macReqEtyList[
-                                                                          index]
-                                                                              ["id"],
-                                                                          widget.heading,"Edit",
-                                                                          context);
+                                                                       if(widget.mobileMenuName=="Machinery DPR") {
+                                                                         await machineryDPRController.MaterialDPRList_EditApi(
+                                                                             machineryDPRController.macReqEtyList[
+                                                                             index]
+                                                                             ["id"],
+                                                                             widget.heading, "Edit",
+                                                                             context);
+                                                                       }else{
+                                                                         await machineryBillController.MaterialBillEditApi(
+                                                                             machineryDPRController.macReqEtyList[
+                                                                             index]
+                                                                             ["id"],
+                                                                             widget.heading, "Edit",
+                                                                             context);
+                                                                       }
                                                                     }),
                                                               ),
                                                               Container(

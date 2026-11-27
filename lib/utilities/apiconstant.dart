@@ -212,6 +212,7 @@ class ApiConstant {
   static String get GETMAC_DPR_ENTRY_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetAllMachineryDailyWorkMas";
   static String get GETMAC_BILL_ENTRY_LIST => BASE_URL_CORE + "api/SubContractorMachineryBill/GetAllSubContractorMachineryWorkQty";
   static String get GETMAC_DPR_EDIT_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetMachineryDPRById";
+  static String get GETMAC_BILL_EDIT_LIST => BASE_URL_CORE + "api/SubContractorMachineryBill/GetSubContractorMachineryWorkQtyById";
   static String get GET_REPAIR_WORKORDER_LIST => BASE_URL_CORE + "api/RepairWorkOrder/GetAllRepairWorkOrders";
   static String get GET_MAC_DPR_DET_LIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetDPRDetLoadMachinery";
 
@@ -487,6 +488,8 @@ class ApiConstant {
   static String get MATERIALREQUEST_SAVE => BASE_URL_CORE + "api/MaterialReqOrdMas/AddReqOrdMas";
   static String get TERMSANDCONDITION_SAVEAPI => BASE_URL_CORE + "api/TermsAndCondition/AddTermsAndConditionSubcontractorWo";
   static String get MACHINERY_REQUEST_SAVE => BASE_URL_CORE + "api/Machinery/AddMachineryReqOrdMas";
+  static String get MACHINERY_BILL_SAVE => BASE_URL_CORE + "api/SubContractorMachineryBill/AddSubContractorMachineryWorkQty";
+  static String get MACHINERY_BILL_UPDATE => BASE_URL_CORE + "api/SubContractorMachineryBill/UpdateSubContractorMachineryWorkQty";
 
   static String get COMPANY_NMR_SAVE_API => BASE_URL_CORE + "api/NMRLabourAttendance/AddOrUpdateNMRLabAttendance";
   static String get CONSUM_SAVE => BASE_URL_CORE + "api/MaterialExpenseMas/AddMaterialExpenses";

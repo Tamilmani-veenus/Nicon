@@ -58,39 +58,58 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
         machineryBillGenController.wrkOrderNoController.text = "--SELECT--";
         machineryBillGenController.workOrderId.value = 0;
       }
+      else {
+        for (var result in machineryBillGenController.macReqEditList) {
 
-      // else {
-      //   for (var result in machineryDPRController.macReqEditList) {
-      //     machineryDPRController.reqId = result['id'] ?? 0;
-      //     machineryDPRController.autoYearWiseNoController.text =
-      //         (result['workNo'] ?? "").toString();
-      //
-      //     machineryDPRController.requestDateController.text =
-      //         (result['workDate'] ?? "").toString();
-      //
-      //     machineryDPRController.refNoController.text =
-      //         (result['refNo'] ?? "").toString();
-      //
-      //     machineryDPRController.remarksController.text =
-      //         (result['remarks'] ?? "").toString();
-      //
-      //     machineryDPRController.preparedByController.text =
-      //         (result['createdName'] ?? loginController.EmpName()).toString();
-      //
-      //     projectController.projectname.text =
-      //         (result['projectName'] ?? "--SELECT--").toString();
-      //     projectController.selectedProjectId.value = result['projectId'] ?? 0;
-      //
-      //     siteController.Sitename.text =
-      //         (result['siteName'] ?? "--SELECT--").toString();
-      //     siteController.selectedsiteId.value = result['siteId'] ?? 0;
-      //
-      //     dailyWrkDone_DPR_Controller.TypeSubcontractorname.text =
-      //         (result['subcontractorName'] ?? "--SELECT--").toString();
-      //     dailyWrkDone_DPR_Controller.TypeSubcontId.value =
-      //         result['subContractorId'] ?? 0;
-      //   }
-      // }
+          // Bill Details
+          machineryBillGenController.autoYearWiseNoController.text =
+              result.workNo ?? "";
+
+          machineryBillGenController.requestDateController.text =
+          result.workDate != null
+              ? CommonDateUtils.formatApiDate(DateTime.parse(result.workDate))
+              : "";
+
+          machineryBillGenController.paymentWKDateController.text =
+          result.paymentDate != null
+              ? CommonDateUtils.formatApiDate(DateTime.parse(result.paymentDate))
+              : "";
+
+          machineryBillGenController.remarksController.text =
+              result.remarks ?? "";
+
+          machineryBillGenController.preparedByController.text =
+              result.createdName ?? "";
+
+          // Project
+          projectController.projectname.text = result.projectName ?? "--SELECT--";
+          projectController.selectedProjectId.value = result.projectId ?? 0;
+
+          // Site
+          siteController.Sitename.text = result.siteName ?? "--SELECT--";
+          siteController.selectedsiteId.value = result.siteId ?? 0;
+
+          // Subcontractor
+          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text =
+              result.subContractorName ?? "--SELECT--";
+
+          dailyWrkDone_DPR_Controller.TypeSubcontId.value =
+              result.subContractorId ?? 0;
+
+          // Work Order
+          machineryBillGenController.wrkOrderNoController.text =
+              result.workOrderNo ?? "--SELECT--";
+
+          machineryBillGenController.workOrderId.value =
+              result.workOrderId ?? 0;
+
+          // Bill Amount
+          machineryBillGenController.netPayAmount.text =
+              (result.netPayAmount ?? 0.0).toString();
+
+        }
+      }
+      await machineryBillGenController.getBillAddLessList();
 
       if (!mounted) return;
 
@@ -186,8 +205,13 @@ class _MachineryBillEntryState extends State<MachineryBillEntry> {
                                   ),
                                 )),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MachineryBillCalculations()));
-                        },
+                          if(machineryBillGenController.getMacBillDetValue.isEmpty) {
+                            BaseUtitiles.showToast("Please select a Work Order");
+                          }else{
+                            Navigator.push(context, MaterialPageRoute(builder: (
+                                context) => const MachineryBillCalculations()));
+                          }
+                          },
                       ),
                     ),
                   ],

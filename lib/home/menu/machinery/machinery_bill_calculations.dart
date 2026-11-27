@@ -25,15 +25,54 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
   @override
   void initState() {
     super.initState();
-    var duration = const Duration(seconds: 0);
-    Future.delayed(duration, () async {
 
-      if (machineryBillGenController.saveButton.value == RequestConstant.SUBMIT) {
-        // await billGenerationBoqController.deductionPaymentCalculation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (machineryBillGenController.saveButton.value ==
+          RequestConstant.SUBMIT) {
+        machineryBillGenController.refreshBill();
+        machineryBillGenController.calculate();
+      } else {
+        for (var result in machineryBillGenController.macReqEditList) {
+          machineryBillGenController.billAmount.text =
+              (result.billAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.creditAmount.text =
+              (result.creditAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.debitAmount.text =
+              (result.debitAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.creditRemarks.text =
+              result.creditRemarks ?? "";
+
+          machineryBillGenController.debitRemarks.text =
+              result.debitRemarks ?? "";
+
+          machineryBillGenController.netBillAmount.text =
+              (result.netBillAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.roundOff.text =
+              (result.roundOff ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.finalBillAmount.text =
+              (result.finalBillAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.netPayAmount.text =
+              (result.netPayAmount ?? 0.0).toStringAsFixed(2);
+
+          machineryBillGenController.setEditAddLessValues(
+            result.subContractorMachineryBillAddLessSetupLink,
+          );
+
+          machineryBillGenController.calculate(showToast: false);
+        }
+      }
+
+      if (mounted) {
+        setState(() {});
       }
     });
   }
-
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -819,43 +858,16 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
                           ),
                         ),
                         onTap: () {
-                          // setState(() {
-                          //   if (_formKey.currentState!.validate()) {
-                          //     _formKey.currentState!.save();
-                          //     if( ((billGenerationBoqController.Creditamt.text != "0" &&
-                          //         billGenerationBoqController.Creditamt.text != "0.0" &&
-                          //         billGenerationBoqController.Creditamt.text != "0.00") &&
-                          //         billGenerationBoqController.CreditRemarksController.text.isEmpty) &&  ((billGenerationBoqController.Debitamt.text != "0" &&
-                          //         billGenerationBoqController.Debitamt.text != "0.0" &&
-                          //         billGenerationBoqController.Debitamt.text != "0.00") &&
-                          //         billGenerationBoqController.DebitRemarksController.text.isEmpty)){
-                          //       Fluttertoast.showToast(msg: "Please enter credit and debit remarks");
-                          //     } else if ((billGenerationBoqController.Creditamt.text != "0" &&
-                          //         billGenerationBoqController.Creditamt.text != "0.0" &&
-                          //         billGenerationBoqController.Creditamt.text != "0.00") &&
-                          //         billGenerationBoqController.CreditRemarksController.text.isEmpty) {
-                          //       Fluttertoast.showToast(msg: "Please enter credit remarks");
-                          //     }
-                          //     else if ((billGenerationBoqController.Debitamt.text != "0" &&
-                          //         billGenerationBoqController.Debitamt.text != "0.0" &&
-                          //         billGenerationBoqController.Debitamt.text != "0.00") &&
-                          //         billGenerationBoqController.DebitRemarksController.text.isEmpty) {
-                          //       Fluttertoast.showToast(msg: "Please enter debit remarks");
-                          //     }
-                          //     else if ((billGenerationBoqController.materialDebitamt.text != "0" &&
-                          //         billGenerationBoqController.materialDebitamt.text != "0.0" &&
-                          //         billGenerationBoqController.materialDebitamt.text != "0.00" &&
-                          //         billGenerationBoqController.materialDebitamt.text != "") &&
-                          //         billGenerationBoqController.materialDebitamt.text.isEmpty) {
-                          //       Fluttertoast.showToast(msg: "Please enter Material Debit remarks");
-                          //     }
-                          //
-                          //     else {
-                          //       SubmitAlert(context);
-                          //     }
-                          //   }
-                          // });
-
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                             if (double.parse(machineryBillGenController.netPayAmount.text) <= 0) {
+                              BaseUtitiles.showToast(
+                                  "Net pay amount must be greater than 0");
+                            }
+                            else {
+                              SubmitAlert(context);
+                            }
+                        };
                         },
                       ),
                     ),
@@ -945,22 +957,12 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
                     child: StatefulBuilder(
                       builder: (context, setState) => TextButton(
                         onPressed:  () async {
-
-                          // if (_formKey.currentState!.validate()) {
-                          //   if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
-                          //     await billGenerationBoqController
-                          //         .SaveButton_DeductionScreen(
-                          //         context,
-                          //         billGenerationBoqController
-                          //             .workid,subcontractorController.selectedWorkOrderId.value);
-                          //   }
-                          // } else if (double.parse(billGenerationBoqController.netpayamt.text) < 0) {
-                          //   BaseUtitiles.showToast(
-                          //       "Net pay amount must be greater than 0");
-                          // } else {
-                          //   BaseUtitiles.showToast(
-                          //       "Please check all details once again");
-                          // }
+                            // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                          await machineryBillGenController.getMachineryBillDetLocalDatas();
+                          await machineryBillGenController.SaveMachineryBillScreen(
+                                  context,
+                              machineryBillGenController.saveButton.value == RequestConstant.SUBMIT?0:machineryBillGenController.macReqEditList[0].id);
+                            // }
                         },
                         child: Text(
                           machineryBillGenController.saveButton.value,
