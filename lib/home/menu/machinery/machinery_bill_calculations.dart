@@ -957,12 +957,12 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
                     child: StatefulBuilder(
                       builder: (context, setState) => TextButton(
                         onPressed:  () async {
-                            // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
                           await machineryBillGenController.getMachineryBillDetLocalDatas();
                           await machineryBillGenController.SaveMachineryBillScreen(
                                   context,
                               machineryBillGenController.saveButton.value == RequestConstant.SUBMIT?0:machineryBillGenController.macReqEditList[0].id);
-                            // }
+                            }
                         },
                         child: Text(
                           machineryBillGenController.saveButton.value,

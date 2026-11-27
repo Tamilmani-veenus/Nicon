@@ -491,33 +491,33 @@ class MachineryBillGenController extends GetxController {
         subContractorMachineryWorkBillDetailslink: getBillDetails(id)
     ));
 
-    // final list = await MachineryBillProvider.SaveMachineryBillAPI(body, id, context);
+    final list = await MachineryBillProvider.SaveMachineryBillAPI(body, id, context);
     final decodedJson = jsonDecode(body);
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final prettyJson = encoder.convert(decodedJson);
 
     debugPrint(prettyJson, wrapWidth: 1024);
-    // if (list != null) {
-    //   if (list["success"] == true) {
-    //     if (saveButton.value == RequestConstant.VERIFY
-    //         || saveButton.value == RequestConstant.PREAPPROVAL
-    //         || saveButton.value == RequestConstant.APPROVAL) {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await pendingListController.getPendingList();
-    //       BaseUtitiles.popMultiple(context, count: 4);
-    //     } else {
-    //       BaseUtitiles.showToast(list["message"]);
-    //       await machineryDPRController.getMacDPREntryList("Machinery Bill Generation");
-    //       BaseUtitiles.popMultiple(context, count: 4);
-    //     }
-    //   } else {
-    //     BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
-    //     BaseUtitiles.popMultiple(context, count: 2);
-    //   }
-    // } else {
-    //   BaseUtitiles.showToast("Something went wrong..");
-    //   BaseUtitiles.popMultiple(context, count: 2);
-    // }
+    if (list != null) {
+      if (list["success"] == true) {
+        if (saveButton.value == RequestConstant.VERIFY
+            || saveButton.value == RequestConstant.PREAPPROVAL
+            || saveButton.value == RequestConstant.APPROVAL) {
+          BaseUtitiles.showToast(list["message"]);
+          await pendingListController.getPendingList();
+          BaseUtitiles.popMultiple(context, count: 4);
+        } else {
+          BaseUtitiles.showToast(list["message"]);
+          await machineryDPRController.getMacDPREntryList("Machinery Bill Generation");
+          BaseUtitiles.popMultiple(context, count: 4);
+        }
+      } else {
+        BaseUtitiles.showToast(list?["message"] ?? "Something went wrong..");
+        BaseUtitiles.popMultiple(context, count: 2);
+      }
+    } else {
+      BaseUtitiles.showToast("Something went wrong..");
+      BaseUtitiles.popMultiple(context, count: 2);
+    }
   }
 
   List<SubContractorMachineryWorkQtydetLink>? getRequestDet(masId) {
