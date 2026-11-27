@@ -2131,3 +2131,1347 @@ class UpcomingTasksViewAllScreen extends StatelessWidget {
   }
 }
 
+
+
+
+class BoqDprViewAllPage extends StatefulWidget {
+  const BoqDprViewAllPage({super.key});
+
+  @override
+  State<BoqDprViewAllPage> createState() =>
+      _BoqDprViewAllPageState();
+}
+
+class _BoqDprViewAllPageState extends State<BoqDprViewAllPage> {
+  static const Color primary = Color(0xFF3D7BFF);
+  static const Color text = Color(0xFF202B3F);
+  static const Color muted = Color(0xFF8995A8);
+  static const Color border = Color(0xFFE8ECF2);
+  static const Color green = Color(0xFF08B982);
+
+  final TextEditingController searchController =
+  TextEditingController();
+
+  String selectedStatus = 'All Statuses';
+  int? expandedIndex;
+
+  final List<Map<String, dynamic>> records = [
+    {
+      'project': 'Skyline Heights Phase-1',
+      'site': 'Sector 62 - Site A',
+      'wo': 'WO/2026/0481',
+      'category': 'Foundation',
+      'fixed': 500,
+      'done': 300,
+      'balance': 200,
+      'unit': 'Cum',
+      'progress': 60,
+      'status': 'In Progress',
+    },
+    {
+      'project': 'Skyline Heights Phase-1',
+      'site': 'Sector 62 - Site A',
+      'wo': 'WO/2026/0482',
+      'category': 'Structure',
+      'fixed': 800,
+      'done': 650,
+      'balance': 150,
+      'unit': 'Cum',
+      'progress': 81,
+      'status': 'On Track',
+    },
+    {
+      'project': 'Grand Palm Residences',
+      'site': 'Block B - West Wing',
+      'wo': 'WO/2026/0495',
+      'category': 'Brick Work',
+      'fixed': 1000,
+      'done': 750,
+      'balance': 250,
+      'unit': 'Sqm',
+      'progress': 75,
+      'status': 'On Track',
+    },
+    {
+      'project': 'Grand Palm Residences',
+      'site': 'Block B - West Wing',
+      'wo': 'WO/2026/0498',
+      'category': 'Plastering',
+      'fixed': 800,
+      'done': 520,
+      'balance': 280,
+      'unit': 'Sqm',
+      'progress': 65,
+      'status': 'In Progress',
+    },
+    {
+      'project': 'Emerald Commercial Hub',
+      'site': 'Tower C - Floor 4',
+      'wo': 'WO/2026/0512',
+      'category': 'Electrical',
+      'fixed': 400,
+      'done': 250,
+      'balance': 150,
+      'unit': 'Points',
+      'progress': 63,
+      'status': 'Delayed',
+    },
+    {
+      'project': 'Emerald Commercial Hub',
+      'site': 'Tower C - Floor 4',
+      'wo': 'WO/2026/0518',
+      'category': 'Plumbing',
+      'fixed': 300,
+      'done': 180,
+      'balance': 120,
+      'unit': 'Rmt',
+      'progress': 60,
+      'status': 'In Progress',
+    },
+  ];
+
+  final List<String> filters = [
+    'All Statuses',
+    'On Track',
+    'In Progress',
+    'Delayed',
+    'Completed',
+  ];
+
+  List<Map<String, dynamic>> get filteredRecords {
+    final query = searchController.text.toLowerCase().trim();
+
+    return records.where((item) {
+      final matchesStatus = selectedStatus == 'All Statuses' ||
+          item['status'] == selectedStatus;
+
+      final matchesSearch =
+          item['project'].toString().toLowerCase().contains(query) ||
+              item['site'].toString().toLowerCase().contains(query) ||
+              item['wo'].toString().toLowerCase().contains(query) ||
+              item['category'].toString().toLowerCase().contains(query);
+
+      return matchesStatus && matchesSearch;
+    }).toList();
+  }
+
+  Color statusColor(String status) {
+    switch (status) {
+      case 'On Track':
+        return const Color(0xFF08A978);
+      case 'In Progress':
+        return const Color(0xFFE59A20);
+      case 'Delayed':
+        return const Color(0xFFE45656);
+      case 'Completed':
+        return const Color(0xFF3976E8);
+      default:
+        return muted;
+    }
+  }
+
+  Color statusBackground(String status) {
+    switch (status) {
+      case 'On Track':
+        return const Color(0xFFE7F8F1);
+      case 'In Progress':
+        return const Color(0xFFFFF4E2);
+      case 'Delayed':
+        return const Color(0xFFFFEBEB);
+      case 'Completed':
+        return const Color(0xFFEAF1FF);
+      default:
+        return const Color(0xFFF0F2F5);
+    }
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final data = filteredRecords;
+
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FB),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new,
+                size: 19, color: text),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'BOQ vs DPR Details',
+            style: TextStyle(
+              color: text,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          centerTitle: false,
+        ),
+        body: Column(
+          children: [
+            _searchSection(),
+            // _filterSection(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 13, 14, 9),
+              child: Row(
+                children: [
+                  const Text(
+                    'Work Order Details',
+                    style: TextStyle(
+                      color: text,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${data.length} Records',
+                    style: const TextStyle(
+                      color: muted,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: data.isEmpty
+                  ? _emptyView()
+                  : ListView.builder(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final item = data[index];
+                  final isExpanded = expandedIndex == index;
+
+                  return _workCard(
+                    item,
+                    index,
+                    isExpanded,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _searchSection() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+      child: Row(
+        children: [
+          // Search field
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              onChanged: (_) => setState(() {
+                expandedIndex = null;
+              }),
+              style: const TextStyle(
+                fontSize: 12,
+                color: text,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Search project, WO, category...',
+                hintStyle: const TextStyle(
+                  color: muted,
+                  fontSize: 10,
+                ),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  size: 19,
+                  color: muted,
+                ),
+                suffixIcon: searchController.text.isNotEmpty
+                    ? IconButton(
+                  icon: const Icon(Icons.close, size: 16),
+                  onPressed: () {
+                    searchController.clear();
+                    setState(() {});
+                  },
+                )
+                    : null,
+                filled: true,
+                fillColor: const Color(0xFFF6F8FB),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 11,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: primary,
+                    width: 1.2,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 9),
+
+          // Status dropdown
+          Container(
+            height: 43,
+            padding: const EdgeInsets.symmetric(horizontal: 9),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6F8FB),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedStatus,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 18,
+                  color: primary,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                dropdownColor: Colors.white,
+                style: const TextStyle(
+                  color: text,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+                items: filters.map((filter) {
+                  return DropdownMenuItem<String>(
+                    value: filter,
+                    child: Text(filter),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedStatus = value;
+                      expandedIndex = null;
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _filterSection() {
+    return Container(
+      color: Colors.white,
+      height: 52,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 13),
+        scrollDirection: Axis.horizontal,
+        itemCount: filters.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final filter = filters[index];
+          final selected = selectedStatus == filter;
+
+          final count = filter == 'All Statuses'
+              ? records.length
+              : records.where((e) => e['status'] == filter).length;
+
+          final color = filter == 'All Statuses'
+              ? primary
+              : statusColor(filter);
+
+          return Center(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedStatus = filter;
+                  expandedIndex = null;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 11,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? color.withOpacity(0.11)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: selected ? color : border,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      filter,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: selected ? color : muted,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '$count',
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: selected ? color : muted,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _workCard(
+      Map<String, dynamic> item,
+      int index,
+      bool isExpanded,
+      ) {
+    final progress = item['progress'] as int;
+    final status = item['status'] as String;
+    final color = statusColor(status);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 11),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(
+          color: isExpanded ? primary.withOpacity(0.45) : border,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.025),
+            blurRadius: 7,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(13),
+        onTap: () {
+          setState(() {
+            expandedIndex = isExpanded ? null : index;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      item['category'],
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  _statusBadge(status),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                item['project'],
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: text,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 12,
+                    color: muted,
+                  ),
+                  const SizedBox(width: 3),
+                  Expanded(
+                    child: Text(
+                      item['site'],
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: muted,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.receipt_long_outlined,
+                    size: 12,
+                    color: primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    item['wo'],
+                    style: const TextStyle(
+                      fontSize: 9,
+                      color: primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 11),
+                child: Divider(height: 1, color: border),
+              ),
+              Row(
+                children: [
+                  _quantity('FIXED QTY', item['fixed'], item['unit']),
+                  _verticalDivider(),
+                  _quantity('CQ DONE', item['done'], item['unit'],
+                      valueColor: green),
+                  _verticalDivider(),
+                  _quantity('BALANCE', item['balance'], item['unit'],
+                      valueColor: const Color(0xFFE59A20)),
+                ],
+              ),
+              const SizedBox(height: 13),
+              Row(
+                children: [
+                  const Text(
+                    'Execution Progress',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: muted,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '$progress%',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: progress == 100 ? green : primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 7),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LinearProgressIndicator(
+                  value: progress / 100,
+                  minHeight: 7,
+                  backgroundColor: const Color(0xFFFFEBC1),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    progress == 100 ? green : const Color(0xFF08B982),
+                  ),
+                ),
+              ),
+              if (isExpanded) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(11),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF6F8FC),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'WORK ORDER SUMMARY',
+                        style: TextStyle(
+                          color: muted,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 9),
+                      _detailRow('Project', item['project']),
+                      _detailRow('Site', item['site']),
+                      _detailRow('Work Order', item['wo']),
+                      _detailRow('Work Category', item['category']),
+                      _detailRow('Unit', item['unit']),
+                      _detailRow('Completion', '$progress%'),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    isExpanded ? 'Show Less' : 'View Details',
+                    style: const TextStyle(
+                      color: primary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(width: 3),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.arrow_forward_ios_rounded,
+                    size: 12,
+                    color: primary,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _statusBadge(String status) {
+    final color = statusColor(status);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 9,
+        vertical: 5,
+      ),
+      decoration: BoxDecoration(
+        color: statusBackground(status),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            status,
+            style: TextStyle(
+              color: color,
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _quantity(
+      String title,
+      int value,
+      String unit, {
+        Color valueColor = text,
+      }) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 8,
+              color: muted,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            value.toString(),
+            style: TextStyle(
+              fontSize: 15,
+              color: valueColor,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            unit,
+            style: const TextStyle(
+              fontSize: 9,
+              color: muted,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _verticalDivider() {
+    return Container(
+      width: 1,
+      height: 36,
+      margin: const EdgeInsets.symmetric(horizontal: 9),
+      color: border,
+    );
+  }
+
+  Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 10,
+                color: muted,
+              ),
+            ),
+          ),
+          const Text(': ',
+              style: TextStyle(fontSize: 10, color: muted)),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 10,
+                color: text,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _emptyView() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.search_off_rounded,
+            size: 42,
+            color: muted.withOpacity(0.5),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'No work orders found',
+            style: TextStyle(
+              fontSize: 13,
+              color: text,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            'Try changing your search or status filter',
+            style: TextStyle(
+              fontSize: 11,
+              color: muted,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LabourDistributionViewAll extends StatefulWidget {
+  const LabourDistributionViewAll({super.key});
+
+  @override
+  State<LabourDistributionViewAll> createState() =>
+      _LabourDistributionViewAllState();
+}
+
+class _LabourDistributionViewAllState
+    extends State<LabourDistributionViewAll> {
+  final TextEditingController searchController =
+  TextEditingController();
+
+  final Color primary = const Color(0xFF397BFF);
+  final Color textColor = const Color(0xFF172033);
+  final Color muted = const Color(0xFF8995A8);
+  final Color borderColor = const Color(0xFFE5E9F0);
+
+  final List<Map<String, dynamic>> labourList = [
+    {
+      'category': 'NMR',
+      'subcontractor': 'Sri Murugan Enterprises',
+      'required': 40,
+      'present': 35,
+      'shortage': 5,
+      'rate': 700,
+      'cost': 24500,
+      'attendance': 88,
+      'color': Color(0xFF397BFF),
+    },
+    {
+      'category': 'MC',
+      'subcontractor': 'Direct Site Team',
+      'required': 20,
+      'present': 18,
+      'shortage': 2,
+      'rate': 800,
+      'cost': 14400,
+      'attendance': 90,
+      'color': Color(0xFF0D9488),
+    },
+    {
+      'category': 'FC',
+      'subcontractor': 'Direct Site Team',
+      'required': 15,
+      'present': 15,
+      'shortage': 0,
+      'rate': 900,
+      'cost': 13500,
+      'attendance': 100,
+      'color': Color(0xFF10B981),
+    },
+    {
+      'category': 'Mason',
+      'subcontractor': 'Star Builders Labour',
+      'required': 12,
+      'present': 8,
+      'shortage': 4,
+      'rate': 1000,
+      'cost': 8000,
+      'attendance': 67,
+      'color': Color(0xFFF59E0B),
+    },
+    {
+      'category': 'Carpenter',
+      'subcontractor': 'Shuttering Works Co',
+      'required': 10,
+      'present': 9,
+      'shortage': 1,
+      'rate': 850,
+      'cost': 7650,
+      'attendance': 90,
+      'color': Color(0xFF8B5CF6),
+    },
+    {
+      'category': 'Electrician',
+      'subcontractor': 'PowerTech MEP',
+      'required': 8,
+      'present': 6,
+      'shortage': 2,
+      'rate': 900,
+      'cost': 5400,
+      'attendance': 75,
+      'color': Color(0xFFE85D75),
+    },
+  ];
+
+  List<Map<String, dynamic>> get filteredList {
+    final query = searchController.text.toLowerCase().trim();
+
+    if (query.isEmpty) return labourList;
+
+    return labourList.where((item) {
+      return item['category']
+          .toString()
+          .toLowerCase()
+          .contains(query) ||
+          item['subcontractor']
+              .toString()
+              .toLowerCase()
+              .contains(query);
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          surfaceTintColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 19,
+              color: Color(0xFF172033),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Labour Distribution',
+            style: TextStyle(
+              color: Color(0xFF172033),
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.fromLTRB(14, 5, 14, 14),
+                child: Column(
+                  children: [
+                    _summaryCard(),
+                    const SizedBox(height: 8),
+                    _searchField(),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(
+                    12, 12, 12, 20,
+                  ),
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 11),
+                      child: _labourCard(filteredList[index]),
+                    );
+                  },
+                ),
+              ),
+
+              _bottomTotal(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _summaryCard() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEEF4FF),
+        borderRadius: BorderRadius.circular(13),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '6 CATEGORIES',
+            style: TextStyle(
+              fontSize: 10,
+              color: Color(0xFF64748B),
+              fontWeight: FontWeight.w700,
+              letterSpacing: .6,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _summaryValue('105', 'Required', textColor),
+              _summaryValue('91', 'Present',
+                  const Color(0xFF079568)),
+              _summaryValue('14', 'Shortage',
+                  const Color(0xFFD97706)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryValue(
+      String value,
+      String label,
+      Color color,
+      ) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFF64748B),
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchField() {
+    return TextField(
+      controller: searchController,
+      onChanged: (_) => setState(() {}),
+      style: const TextStyle(
+        fontSize: 12,
+        color: Color(0xFF172033),
+      ),
+      decoration: InputDecoration(
+        hintText: 'Search category or subcontractor...',
+        hintStyle: const TextStyle(
+          fontSize: 11,
+          color: Color(0xFF8995A8),
+        ),
+        prefixIcon: const Icon(
+          Icons.search_rounded,
+          size: 19,
+          color: Color(0xFF8995A8),
+        ),
+        suffixIcon: searchController.text.isNotEmpty
+            ? IconButton(
+          onPressed: () {
+            searchController.clear();
+            setState(() {});
+          },
+          icon: const Icon(Icons.close, size: 17),
+        )
+            : null,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10,
+        ),
+        filled: true,
+        fillColor: const Color(0xFFF7F8FA),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: primary),
+        ),
+      ),
+    );
+  }
+
+  Widget _labourCard(Map<String, dynamic> item) {
+    final Color color = item['color'];
+    final int attendance = item['attendance'];
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.025),
+            blurRadius: 7,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Category and attendance
+          Row(
+            children: [
+              Container(
+                height: 34,
+                width: 34,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(.10),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: Center(
+                  child: Text(
+                    item['category']
+                        .toString()
+                        .substring(0, 1),
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  item['category'],
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 9,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: attendance >= 90
+                      ? const Color(0xFFE5F8EF)
+                      : attendance >= 75
+                      ? const Color(0xFFFFF5DF)
+                      : const Color(0xFFFFE9E9),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$attendance% Attendance',
+                  style: TextStyle(
+                    color: attendance >= 90
+                        ? const Color(0xFF079568)
+                        : attendance >= 75
+                        ? const Color(0xFFB7791F)
+                        : const Color(0xFFE04444),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+
+          // Subcontractor
+          Row(
+            children: [
+              Icon(
+                Icons.business_outlined,
+                size: 14,
+                color: muted,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  item['subcontractor'],
+                  style: TextStyle(
+                    color: muted,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+          Divider(height: 1, color: borderColor),
+          const SizedBox(height: 8),
+
+          // Workforce details
+          Row(
+            children: [
+              _metric(
+                'Required',
+                '${item['required']}',
+                textColor,
+              ),
+              _metric(
+                'Present',
+                '${item['present']}',
+                const Color(0xFF079568),
+              ),
+              _metric(
+                'Shortage',
+                '${item['shortage']}',
+                item['shortage'] == 0
+                    ? const Color(0xFF079568)
+                    : const Color(0xFFD97706),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+
+          // Wage details
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 11,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF7F8FA),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _wageValue(
+                    'Daily Rate',
+                    '₹${item['rate']}',
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 30,
+                  color: borderColor,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _wageValue(
+                    'Total Cost',
+                    '₹${item['cost']}',
+                    highlight: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metric(
+      String label,
+      String value,
+      Color color,
+      ) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Color(0xFF8995A8),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 15,
+              color: color,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _wageValue(
+      String label,
+      String value, {
+        bool highlight = false,
+      }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFF8995A8),
+            fontSize: 9,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            color: highlight
+                ? primary
+                : textColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _bottomTotal() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: borderColor),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Total Wage Cost',
+            style: TextStyle(
+              fontSize: 12,
+              color: Color(0xFF667085),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            '₹${filteredList.fold<int>(
+              0,
+                  (sum, item) => sum + (item['cost'] as int),
+            )}',
+            style: TextStyle(
+              fontSize: 16,
+              color: primary,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
