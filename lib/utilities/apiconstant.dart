@@ -221,6 +221,7 @@ class ApiConstant {
   static String get GET_WORKORDBOQ_TERMSANDCONDITION => BASE_URL_CORE + "api/TermsAndCondition/GetAllTermsAndConditionSubcontractorWo";
 
   static String get GET_MACHINERY_VERIFYLIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryReqordVerifyPending";
+  static String get GET_MACHINERY_BILL_VERIFYLIST => BASE_URL_CORE + "api/SubContractorMachineryBill/GetSubConMachineryBillVerificationPending";
   static String get GET_MACHINERY_PREAPPROVELIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryTobePreApproval";
   static String get GET_MACHINERY_APPROVELIST => BASE_URL_CORE + "api/Machinery/GetAllMachineryFinalApprovePending";
   static String get GET_MACHINERY_DPR_APPROVELIST => BASE_URL_CORE + "api/SubConMachineryDailyWorkDone/GetToBeApprovedMachineryDPR";

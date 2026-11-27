@@ -4301,7 +4301,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                     margin: EdgeInsets.only(left: 10, right: 5, bottom: 5, top:5 ),
                     child: Column(
                       children: [
-                        widget.heading!="MACHINERY DPR"?Row(
+                        widget.heading!="MACHINERY DPR" && widget.heading!="MACHINERY BILL"?Row(
                           children: [
                             Text("Material" + ":   ",
                               style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
@@ -4333,7 +4333,7 @@ class _MachineryMoreDetailsPopupState extends State<MachineryMoreDetailsPopup> {
                             ),
                             Expanded(
                                 flex: 3,
-                                child: Text(widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].reqQty.toString():pendingListController.onclickPendingListDet[index].qty.toString())),
+                                child: Text(widget.heading!="MACHINERY DPR" && widget.heading!="MACHINERY DPR"?pendingListController.onclickPendingListDet[index].reqQty.toString():pendingListController.onclickPendingListDet[index].qty.toString())),
                             const Expanded(
                                 flex: 2,
                                 child: Text("Scale:",

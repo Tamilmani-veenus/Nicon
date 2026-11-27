@@ -21593,7 +21593,8 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                                   pendingListController.mainlist
                                                       .value[index].reqOrdDate
                                                        ?? pendingListController.mainlist
-                                                      .value[index].workDate,
+                                                      .value[index].workDate ?? pendingListController.mainlist
+                                                      .value[index].entryDate,
                                                   style: TextStyle(
                                                       color: Theme.of(context)
                                                           .primaryColor,
@@ -21608,14 +21609,15 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                             child: Text(
                                               pendingListController.mainlist
                                                   .value[index].reqOrdNo ?? pendingListController.mainlist
-                                                  .value[index].workNo,
+                                                  .value[index].workNo ?? pendingListController.mainlist
+                                                  .value[index].entryNo,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      if(widget.heading!="MACHINERY DPR APPROVAL PENDING")Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                      if(widget.heading!="MACHINERY DPR APPROVAL PENDING" && widget.heading!="MACHINERY BILL VERIFICATION PENDING")Column(crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(height: 10),
                                           Row(
@@ -21707,7 +21709,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                         ],
                                       ),
                                       SizedBox(height: 10),
-                                      (widget.heading!="MACHINERY DPR APPROVAL PENDING")?Row(
+                                      (widget.heading!="MACHINERY DPR APPROVAL PENDING" && widget.heading!="MACHINERY BILL VERIFICATION PENDING")?Row(
                                         children: <Widget>[
                                           Container(
                                             margin: EdgeInsets.only(
@@ -21788,10 +21790,12 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                           Expanded(
                                               flex: 7,
                                               child: Text(
-                                                  widget.heading!="MACHINERY DPR APPROVAL PENDING"?pendingListController.mainlist
-                                                    .value[index].createdByNamebill
-                                                    .toString():pendingListController.mainlist
-                                                      .value[index].prepareby
+                                                  widget.heading=="MACHINERY DPR APPROVAL PENDING"?pendingListController.mainlist
+                                                    .value[index].prepareby
+                                                    .toString():widget.heading=="MACHINERY BILL VERIFICATION PENDING"?pendingListController.mainlist
+                                                      .value[index].preparedName
+                                                      .toString():pendingListController.mainlist
+                                                      .value[index].createdByNamebill
                                                       .toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -21831,7 +21835,7 @@ class _MachineryVerifyApprovalState extends State<MachineryVerifyApproval> {
                                                 onTap: () {
                                                   pendingListController
                                                       .GetDetDetails(
-                                                      widget.heading!="MACHINERY DPR APPROVAL PENDING"?"MACHINERY INDENT":"MACHINERY DPR",
+                                                      widget.heading=="MACHINERY DPR APPROVAL PENDING"?"MACHINERY DPR":widget.heading=="MACHINERY BILL VERIFICATION PENDING"?"MACHINERY BILL":"MACHINERY INDENT",
                                                       pendingListController
                                                           .mainlist
                                                           .value[index]
