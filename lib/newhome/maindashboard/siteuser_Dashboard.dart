@@ -2635,6 +2635,11 @@ class WorkWiseLabourCard extends StatefulWidget {
 
 class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
   bool isExpanded = false;
+  int currentSlide = 0;
+  bool isSecondExpanded = false;
+  bool isThirdExpanded = true;
+
+  final PageController _pageController = PageController();
 
   final List<Map<String, dynamic>> trades = [
     {"name": "MC", "count": 50, "color": const Color(0xFF397BFF)},
@@ -2717,6 +2722,7 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
           const SizedBox(height: 18),
 
           // Main project card
+          if (currentSlide == 0)
           Container(
             decoration: BoxDecoration(
               gradient: const LinearGradient(
@@ -3054,7 +3060,529 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
               ),
             ),
           ),
+          // Second slide - ANUSAMM PROJECT
+          if (currentSlide == 1)
+            _buildAdditionalLabourCard(
+              project: "ANUSAMM PROJECT",
+              work: "Block B – Masonry & Plastering",
+              requiredCount: "110",
+              date: "13 Oct 2026",
+              shift: "Day Shift",
+              supervisor: "Er. R. Karthik",
+              status: "Scheduled",
+              primary: const Color(0xFF009F70),
+              light: const Color(0xFFD2F3E8),
+              expanded: isSecondExpanded,
+              onToggle: () {
+                setState(() {
+                  isSecondExpanded = !isSecondExpanded;
+                });
+              },
+              trades: [
+                {"name": "Mason", "count": 35, "color": const Color(0xFFFFA000)},
+                {"name": "Helper", "count": 60, "color": const Color(0xFF10B981)},
+                {"name": "MC", "count": 15, "color": const Color(0xFF397BFF)},
+                {"name": "FC", "count": 0, "color": const Color(0xFF9657F5)},
+              ],
+            ),
+
+// Third slide - METRO TOWER PROJECT
+          if (currentSlide == 2)
+            _buildAdditionalLabourCard(
+              project: "METRO TOWER PROJECT",
+              work: "Tower 2 – Electrical & Plumbing Rough-in",
+              requiredCount: "90",
+              date: "14 Oct 2026",
+              shift: "Night Shift",
+              supervisor: "Er. Prakash Raj",
+              status: "Urgent",
+              primary: const Color(0xFF873BFF),
+              light: const Color(0xFFE9DCFF),
+              expanded: isThirdExpanded,
+              onToggle: () {
+                setState(() {
+                  isThirdExpanded = !isThirdExpanded;
+                });
+              },
+              trades: [
+                {"name": "Electrician", "count": 40, "color": const Color(0xFF9657F5)},
+                {"name": "Plumber", "count": 25, "color": const Color(0xFF06B6D4)},
+                {"name": "Helper", "count": 20, "color": const Color(0xFF10B981)},
+                {"name": "Supervisor", "count": 5, "color": const Color(0xFFEF4444)},
+              ],
+            ),
+          const SizedBox(height: 13),
+
+// Bottom slider navigation
+          Row(
+            children: [
+              // Slide indicators
+              Row(
+                children: List.generate(3, (index) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.only(right: 5),
+                    width: currentSlide == index ? 24 : 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: currentSlide == index
+                          ? const Color(0xFF2864F0)
+                          : const Color(0xFFCBD5E1),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  );
+                }),
+              ),
+
+              const Spacer(),
+
+              // Page count
+              Text(
+                "${currentSlide + 1} / 3",
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF64748B),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const SizedBox(width: 10),
+
+              // Previous button
+              _sliderButton(
+                icon: Icons.chevron_left,
+                enabled: currentSlide > 0,
+                onTap: () {
+                  if (currentSlide > 0) {
+                    setState(() {
+                      currentSlide--;
+                    });
+                  }
+                },
+              ),
+
+              const SizedBox(width: 5),
+
+              // Next button
+              _sliderButton(
+                icon: Icons.chevron_right,
+                enabled: currentSlide < 2,
+                onTap: () {
+                  if (currentSlide < 2) {
+                    setState(() {
+                      currentSlide++;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAdditionalLabourCard({
+    required String project,
+    required String work,
+    required String requiredCount,
+    required String date,
+    required String shift,
+    required String supervisor,
+    required String status,
+    required Color primary,
+    required Color light,
+    required List<Map<String, dynamic>> trades,
+    required VoidCallback onToggle,
+    bool expanded = false,
+  }) {
+    return Container(
+      key: ValueKey(project),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            light.withOpacity(0.65),
+            light,
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: const Color(0xFFE0E5ED)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              decoration: BoxDecoration(
+                color: primary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Project heading
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            project,
+                            style: TextStyle(
+                              color: primary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: const Color(0xFFE0E5ED),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                size: 6,
+                                color: status == "Urgent"
+                                    ? Colors.orange
+                                    : const Color(0xFF397BFF),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                status,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: status == "Urgent"
+                                      ? Colors.orange.shade800
+                                      : const Color(0xFF397BFF),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Work and required workers
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            work,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF172033),
+                            ),
+                          ),
+                        ),
+
+                        Column(
+                          children: [
+                            Text(
+                              requiredCount,
+                              style: TextStyle(
+                                fontSize: 36,
+                                height: 1,
+                                color: primary,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Text(
+                              "WORKERS REQUIRED",
+                              style: TextStyle(
+                                fontSize: 9,
+                                letterSpacing: 1,
+                                color: Colors.blueGrey.shade300,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    // Requirement details
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: const Color(0xFFDCE1E9),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          _detail("REQUIREMENT DATE", date),
+                          _detail("SHIFT", shift),
+                          _detail("SUPERVISOR", supervisor),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 17),
+
+                    // Trades heading
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${trades.length} TRADES",
+                            style: const TextStyle(
+                              fontSize: 10,
+                              letterSpacing: 0.7,
+                              color: Color(0xFF9AA4B5),
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: onToggle,
+                          behavior: HitTestBehavior.opaque,
+                          child: Row(
+                            children: [
+                              Text(
+                                expanded ? "Show less" : "Show all",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF8994A7),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                expanded
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                                size: 15,
+                                color: const Color(0xFF8994A7),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Expanded table / collapsed chips
+                    if (expanded)
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0xFFDCE1E9),
+                          ),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            Container(
+                              color: const Color(0xFFF7F8FA),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: const Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Labour Category",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Color(0xFF778196),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Required",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Color(0xFF778196),
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            ...trades.map((trade) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        color: trade["color"],
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        trade["name"],
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: Color(0xFF263247),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "${trade["count"]}",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF172033),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+
+                            Container(
+                              color: const Color(0xFFF7F8FA),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 11,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Expanded(
+                                    child: Text(
+                                      "Total",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800,
+                                        color: Color(0xFF172033),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    trades
+                                        .fold<int>(
+                                      0,
+                                          (sum, item) =>
+                                      sum + (item["count"] as int),
+                                    )
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF172033),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Wrap(
+                        spacing: 7,
+                        runSpacing: 7,
+                        children: [
+                          ...trades.take(3).map((trade) {
+                            return _tradeChip(trade);
+                          }),
+                          if (trades.length > 3)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 9,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF1F2F5),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                "+${trades.length - 3} more",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF697386),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+// Slider arrow button
+  Widget _sliderButton({
+    required IconData icon,
+    required bool enabled,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        width: 25,
+        height: 25,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: const Color(0xFFDCE1E9),
+          ),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Icon(
+          icon,
+          size: 17,
+          color: enabled
+              ? const Color(0xFF475569)
+              : const Color(0xFFCBD5E1),
+        ),
       ),
     );
   }

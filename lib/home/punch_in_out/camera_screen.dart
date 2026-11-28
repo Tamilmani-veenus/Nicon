@@ -202,20 +202,47 @@ class _CameraCapturePageState extends State<CameraCapturePage> with WidgetsBindi
   }
 
   Future<void> _checkPermissionAndInitCamera() async {
-    PermissionStatus status = await Permission.camera.status;
-    if (!status.isGranted) {
-      status = await Permission.camera.request();
-    }
+    try {
+      final permissionStatus = await Permission.camera.status;
 
-    if (status.isGranted) {
+      if (permissionStatus.isDenied) {
+        await Permission.camera.request();
+      }
+
+      final cameras = await availableCameras();
+
+      if (cameras.isEmpty) {
+        throw Exception("No camera available");
+      }
+
+      // Temporary camera to trigger iOS permission popup.
+      final tempController = CameraController(
+        cameras.first,
+        ResolutionPreset.low,
+        enableAudio: false,
+      );
+
+      try {
+        await tempController.initialize();
+      } finally {
+        await tempController.dispose();
+      }
+
+      if (!mounted) return;
+
+      // Initialize your actual camera.
       await _initCamera();
-    } else {
+
+    } catch (e, s) {
+      debugPrint("Camera permission error: $e\n$s");
+
       if (mounted) {
         BaseUtitiles.showToast("Camera permission is required");
         Navigator.pop(context);
       }
     }
   }
+
 
   Future<void> _toggleScan() async {
     final turningOn = !_scanMode;
