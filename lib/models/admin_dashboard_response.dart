@@ -31,7 +31,7 @@ class AdminDashboardResponse {
 
   factory AdminDashboardResponse.fromJson(Map<String, dynamic> json) => AdminDashboardResponse(
     success: json["success"],
-    result: Result.fromJson(json["result"]),
+    result: json["result"]==null?null:Result.fromJson(json["result"]),
     poVsbillTable: json["poVsbillTable"]==null?[]:List<PoVsbillTable>.from(json["poVsbillTable"].map((x) => PoVsbillTable.fromJson(x))),
     budgetVsSpend: json["budgetVsSpend"]==null?[]:List<BudgetVsSpend>.from(json["budgetVsSpend"].map((x) => BudgetVsSpend.fromJson(x))),
     projectCompletion: json["projectCompletion"]==null?[]:List<ProjectCompletion>.from(json["projectCompletion"].map((x) => ProjectCompletion.fromJson(x))),

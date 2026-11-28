@@ -65,6 +65,7 @@ class OnclickPendingDetResult {
   List<MMatRenWorkElement>?mMatRenWorkElement;
   List<MachineryReqOrdDetLink>?machineryReqOrdDetLink;
   List<SubContractMachineryDailyWorkdetLink>? subContractMachineryDailyWorkdetLink;
+  List<SubContractorMachineryWorkQtydetLink>? subContractorMachineryWorkQtydetLink;
   OnclickPendingDetResult({
     this.mMatReqMasLink,
     this.mMatPurOrdLink,
@@ -72,6 +73,7 @@ class OnclickPendingDetResult {
     this.mMatRenWorkElement,
     this.machineryReqOrdDetLink,
     this.subContractMachineryDailyWorkdetLink,
+    this.subContractorMachineryWorkQtydetLink,
 
   });
 
@@ -111,6 +113,12 @@ class OnclickPendingDetResult {
           : List<SubContractMachineryDailyWorkdetLink>.from(
           json["subContractMachineryDailyWorkdetLink"]
               .map((x) => SubContractMachineryDailyWorkdetLink.fromJson(x))),
+      subContractorMachineryWorkQtydetLink: json["subContractorMachineryWorkQtydetLink"] == null
+          ? []
+          : List<SubContractorMachineryWorkQtydetLink>.from(
+          json["subContractorMachineryWorkQtydetLink"]
+              .map((x) => SubContractorMachineryWorkQtydetLink.fromJson(x))),
+
     );
   }
 
@@ -121,6 +129,7 @@ class OnclickPendingDetResult {
     "mMatRenWork": List<dynamic>.from(mMatRenWorkElement!.map((x) =>  x.toJson())),
     "machineryReqOrdDetLink": List<dynamic>.from(machineryReqOrdDetLink!.map((x) =>  x.toJson())),
     "subContractMachineryDailyWorkdetLink": List<dynamic>.from(subContractMachineryDailyWorkdetLink!.map((x) =>  x.toJson())),
+    "subContractorMachineryWorkQtydetLink": List<dynamic>.from(subContractorMachineryWorkQtydetLink!.map((x) =>  x.toJson())),
   };
 }
 
@@ -809,5 +818,73 @@ class SubContractMachineryDailyWorkdetLink {
     "endReading": endReading,
     "totalReading": totalReading,
     "scaleName": scaleName,
+  };
+}
+
+class SubContractorMachineryWorkQtydetLink {
+  int? id;
+  int? subContractorWorkQtyMasId;
+  int? siteId;
+  String? workType;
+  int? dbrWorkDetId;
+  String? itemDesc;
+  String? scaleName;
+  int? unit;
+  double? qty;
+  double? rate;
+  double? amount;
+  double? startReading;
+  double? endReading;
+  double? totalReading;
+
+  SubContractorMachineryWorkQtydetLink({
+    this.id,
+    this.subContractorWorkQtyMasId,
+    this.siteId,
+    this.workType,
+    this.dbrWorkDetId,
+    this.itemDesc,
+    this.scaleName,
+    this.unit,
+    this.qty,
+    this.rate,
+    this.amount,
+    this.startReading,
+    this.endReading,
+    this.totalReading,
+  });
+
+  factory SubContractorMachineryWorkQtydetLink.fromJson(Map<String, dynamic> json) => SubContractorMachineryWorkQtydetLink(
+    id: json["id"],
+    subContractorWorkQtyMasId: json["subContractorWorkQtyMasId"],
+    siteId: json["siteId"],
+    workType: json["workType"],
+    dbrWorkDetId: json["dbrWorkDetId"],
+    itemDesc: json["itemDescription"],
+    scaleName: json["unitName"],
+    unit: json["unit"],
+    qty: json["qty"],
+    rate: json["rate"],
+    amount: json["amount"],
+    startReading: json["startReading"],
+    endReading: json["endReading"],
+    totalReading: json["totalReading"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "subContractorWorkQtyMasId": subContractorWorkQtyMasId,
+    "siteId": siteId,
+    "workType": workType,
+    "dbrWorkDetId": dbrWorkDetId,
+    "itemDescription": itemDesc,
+    "unitName": scaleName,
+    "unit": unit,
+    "qty": qty,
+    "rate": rate,
+    "amount": amount,
+    "startReading": startReading,
+    "endReading": endReading,
+    "totalReading": totalReading,
   };
 }

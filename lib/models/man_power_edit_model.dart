@@ -27,7 +27,7 @@ class ManPowerEditModel {
 
   Map<String, dynamic> toJson() => {
     "success": success,
-    "result": result==null?null:result!.toJson(),
+    "result": result!.toJson(),
     "message": message,
   };
 }

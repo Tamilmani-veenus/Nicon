@@ -868,10 +868,12 @@ class _MachineryDPREntryState extends State<MachineryDPREntry> {
     Widget readOnlyField(String value) {
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+        height: BaseUtitiles.getheightofPercentage(context, 4),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          color: const Color(0xffF3F1FF),
-          borderRadius: BorderRadius.circular(8),
+            color: const Color(0xffF3F1FF),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1))
         ),
         child: Text(

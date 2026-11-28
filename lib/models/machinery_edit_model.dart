@@ -22,13 +22,13 @@ class MachineryEditModel {
   factory MachineryEditModel.fromJson(Map<String, dynamic> json) => MachineryEditModel(
     success: json["success"],
     message: json["message"],
-    result: Result.fromJson(json["result"]),
+    result: json["result"]==null?null:Result.fromJson(json["result"]),
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "result": result==null?null:result!.toJson(),
+    "result": result!.toJson(),
   };
 }
 

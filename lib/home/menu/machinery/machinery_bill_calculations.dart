@@ -957,12 +957,12 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
                     child: StatefulBuilder(
                       builder: (context, setState) => TextButton(
                         onPressed:  () async {
-                            // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
                           await machineryBillGenController.getMachineryBillDetLocalDatas();
                           await machineryBillGenController.SaveMachineryBillScreen(
                                   context,
                               machineryBillGenController.saveButton.value == RequestConstant.SUBMIT?0:machineryBillGenController.macReqEditList[0].id);
-                            // }
+                            }
                         },
                         child: Text(
                           machineryBillGenController.saveButton.value,
@@ -1024,82 +1024,11 @@ class _MachineryBillCalculationsState extends State<MachineryBillCalculations> {
                   Expanded(
                     child: TextButton(
                       onPressed: () async {
-                        // // Generate new BOQ number
-                        // await autoYearWiseNoController.AutoYearWiseNo("BILL BOQ");
-                        //
-                        // billGenerationBoqController.autoYearWiseNoController.text =
-                        //     autoYearWiseNoController.BillBoqautoYrsWise.value;
-                        //
-                        // // Current date
-                        // final currentDate = BaseUtitiles.initiateCurrentDateFormat();
-                        //
-                        // // -----------------------------
-                        // // Reset Bill Header
-                        // // -----------------------------
-                        // billGenerationBoqController.billentryDateController.text = currentDate;
-                        // billGenerationBoqController.workid = 0;
-                        //
-                        // // Project
-                        // projectController.projectname.text = "--SELECT--";
-                        // projectController.selectedProjectId.value = 0;
-                        //
-                        // // Site
-                        // siteController.Sitename.text = "--SELECT--";
-                        // siteController.selectedsiteId.value = 0;
-                        //
-                        // // Subcontractor
-                        // dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
-                        // dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
-                        //
-                        // // Work Order
-                        // subcontractorController.WorkOrderNo.text = "--SELECT--";
-                        // subcontractorController.selectedWorkOrderId.value = 0;
-                        //
-                        // billGenerationBoqController.FromdateController.text = currentDate;
-                        // billGenerationBoqController.TodateController.text = currentDate;
-                        // billGenerationBoqController.billInvoiceDateController.text = currentDate;
-                        // billGenerationBoqController.billPaymentWkDateController.text = currentDate;
-                        //
-                        // subcontractorController.InvoiceNo.clear();
-                        //
-                        // billGenerationBoqController.RemarksController.clear();
-                        //
-                        // billGenerationBoqController.to_be_dection_advance = "0.0";
-                        //
-                        // await billGenerationBoqController.billgen_itemlistTable_Delete();
-                        //
-                        // billGenerationBoqController.ItemGetTableListdata.clear();
-                        //
-                        // billGenerationBoqController.billamount.text = "0.0";
-                        // billGenerationBoqController.Creditamt.text = "0.0";
-                        // billGenerationBoqController.Debitamt.text = "0.0";
-                        // billGenerationBoqController.materialDebitamt.text = "0.0";
-                        // billGenerationBoqController.netBillAmt.text = "0.0";
-                        // billGenerationBoqController.finalBillAmt.text = "0.0";
-                        // billGenerationBoqController.netpayamt.text = "0.0";
-                        // billGenerationBoqController.materialDebitRemarks.text = "-";
-                        // billGenerationBoqController.CreditRemarksController.text = "-";
-                        // billGenerationBoqController.DebitRemarksController.text = "-";
-                        // billGenerationBoqController.tobededadv.text =
-                        //     billGenerationBoqController.to_be_dection_advance;
-                        //
-                        // billGenerationBoqController.Advded.text =
-                        //     billGenerationBoqController.to_be_dection_advance;
-                        // billGenerationBoqController.Roundoff.text = "0.0";
-                        // for (final controller
-                        // in billGenerationBoqController.percentControllers) {
-                        //   controller.clear();
-                        // }
-                        // for (final item
-                        // in billGenerationBoqController.directBillGen_ItemReadList) {
-                        //   item.percentValue = 0.0;
-                        //   item.amount = 0.0;
-                        // }
-                        // billGenerationBoqController.directBillGen_ItemReadList.refresh();
-                        // await billGenerationBoqController.deductionPaymentCalculation();
-                        // if (context.mounted) {
-                        //   Navigator.pop(context);
-                        // }
+                        if (context.mounted) {
+                          await machineryBillGenController.resetForm();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
                       },
                       child: Text(
                         "Reset",
