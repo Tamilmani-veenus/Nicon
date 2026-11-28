@@ -188,7 +188,7 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
               itemCount: 6,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing:10,
+                crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 mainAxisExtent: 110,
               ),
@@ -201,6 +201,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "91.4%",
                     "icon": Icons.people_alt_outlined,
                     "color": const Color(0xff3478F6),
+                    "onTap": () {
+                      // Card 1 - Site Labour Attendance & Muster Roll
+                      Get.to(() => const SiteLabourAttendanceScreen());
+                    },
                   },
                   {
                     "title": "Materials Available",
@@ -209,6 +213,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "Good",
                     "icon": Icons.inventory_2_outlined,
                     "color": const Color(0xff10B981),
+                    "onTap": () {
+                      // Card 2 - Material Availability & Inventory Levels
+                      Get.to(() => const MaterialAvailabilityScreen());
+                    },
                   },
                   {
                     "title": "MRN Pending",
@@ -217,6 +225,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "Action",
                     "icon": Icons.receipt_long_outlined,
                     "color": const Color(0xffF59E0B),
+                    "onTap": () {
+                      // Card 3 - Pending MRN Inward Approvals
+                      Get.to(() => const PendingMRNScreen());
+                    },
                   },
                   {
                     "title": "Material Shortage",
@@ -225,6 +237,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "Urgent",
                     "icon": Icons.warning_amber_rounded,
                     "color": const Color(0xffEF4444),
+                    "onTap": () {
+                      // Card 4 - Critical Material Shortage List
+                      Get.to(() => const CriticalMaterialShortageScreen());
+                    },
                   },
                   {
                     "title": "Upcoming Inward",
@@ -233,6 +249,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "Transit",
                     "icon": Icons.move_to_inbox_outlined,
                     "color": const Color(0xffA855F7),
+                    "onTap": () {
+                      // Card 5 - Expected Material Inward Schedule
+                      Get.to(() => const ExpectedMaterialInwardScreen());
+                    },
                   },
                   {
                     "title": "Engineer Leave",
@@ -241,6 +261,10 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                     "status": "Pending: 1",
                     "icon": Icons.calendar_month_outlined,
                     "color": const Color(0xffEAAA08),
+                    "onTap": () {
+                      // Card 6 - Site Engineer Leave Entitlement & Calendar
+                      Get.to(() => const EngineerLeaveScreen());
+                    },
                   },
                 ];
 
@@ -253,6 +277,7 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
                   status: item["status"] as String,
                   icon: item["icon"] as IconData,
                   color: item["color"] as Color,
+                  onTap: item["onTap"] as VoidCallback,
                 );
               },
             ),
@@ -293,108 +318,113 @@ class _SiteHomeScreenState extends State<SiteHomeScreen> {
     required String status,
     required IconData icon,
     required Color color,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      width: 210,
-      // margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.045),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xffE0E5EC),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: 210,
+        // margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.045),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xffE0E5EC),
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  icon,
-                  size: 17,
-                  color: color,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff344054),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const Spacer(),
-
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: Color(0xff101828),
-            ),
-          ),
-
-          const SizedBox(height: 5),
-
-          Container(
-            height: 1,
-            color: color.withOpacity(0.20),
-          ),
-
-          const SizedBox(height: 6),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Color(0xff475467),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 4,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    color: color.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
+                  child: Icon(
+                    icon,
+                    size: 17,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
                   child: Text(
-                    status,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 9,
+                    title,
+                    style: const TextStyle(
+                      fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: color,
+                      color: Color(0xff344054),
                     ),
                   ),
                 ),
+              ],
+            ),
+      
+            const Spacer(),
+      
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff101828),
               ),
-            ],
-          ),
-        ],
+            ),
+      
+            const SizedBox(height: 5),
+      
+            Container(
+              height: 1,
+              color: color.withOpacity(0.20),
+            ),
+      
+            const SizedBox(height: 6),
+      
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Color(0xff475467),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      status,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -2637,7 +2667,7 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
   bool isExpanded = false;
   int currentSlide = 0;
   bool isSecondExpanded = false;
-  bool isThirdExpanded = true;
+  bool isThirdExpanded = false;
 
   final PageController _pageController = PageController();
 
@@ -3086,7 +3116,7 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
               ],
             ),
 
-// Third slide - METRO TOWER PROJECT
+          // Third slide - METRO TOWER PROJECT
           if (currentSlide == 2)
             _buildAdditionalLabourCard(
               project: "METRO TOWER PROJECT",
@@ -3113,7 +3143,7 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
             ),
           const SizedBox(height: 13),
 
-// Bottom slider navigation
+          // Bottom slider navigation
           Row(
             children: [
               // Slide indicators
@@ -3199,10 +3229,11 @@ class _WorkWiseLabourCardState extends State<WorkWiseLabourCard> {
     return Container(
       key: ValueKey(project),
       decoration: BoxDecoration(
+
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            light.withOpacity(0.65),
+            light.withOpacity(0.35),
             light,
           ],
           begin: Alignment.centerLeft,
@@ -4476,6 +4507,21 @@ class PredefinedIndentCard extends StatelessWidget {
                 _headerPill("${materials.length} Items", primaryColor),
                 const SizedBox(width: 6),
                 _headerPill("$highCount High", const Color(0xFFE5484D)),
+                const SizedBox(width: 8),
+
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => const PredefinedIndentViewAllScreen());
+                  },
+                  child: const Text(
+                    "View All",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -3475,3 +3475,938 @@ class _LabourDistributionViewAllState
 }
 
 
+class DashboardDetailScreen extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const DashboardDetailScreen({
+    super.key,
+    required this.title,
+    required this.child,
+  });
+
+  static const Color primaryColor = Color(0xff3478F6);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xffF5F7FB),
+        appBar: AppBar(
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff101828),
+            ),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          foregroundColor: const Color(0xff101828),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(14),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+Widget detailSummaryCard({
+  required String title,
+  required String value,
+  required Color color,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: color.withOpacity(0.07),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withOpacity(0.2)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Color(0xff667085),
+          ),
+        ),
+        const SizedBox(height: 7),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget detailSectionTitle(String title) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 18, bottom: 10),
+    child: Text(
+      title,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: Color(0xff101828),
+      ),
+    ),
+  );
+}
+
+Widget detailDataTable({
+  required List<String> headers,
+  required List<List<String>> rows,
+}) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: DataTable(
+      headingRowColor: MaterialStateProperty.all(
+        const Color(0xffEDF3FF),
+      ),
+      columnSpacing: 20,
+      horizontalMargin: 12,
+      headingRowHeight: 45,
+      dataRowMinHeight: 45,
+      dataRowMaxHeight: 55,
+      columns: headers.map((header) {
+        return DataColumn(
+          label: Text(
+            header,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff344054),
+            ),
+          ),
+        );
+      }).toList(),
+      rows: rows.map((row) {
+        return DataRow(
+          cells: row.map((value) {
+            return DataCell(
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xff475467),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+Widget detailTableContainer(Widget child) {
+  return Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: const Color(0xffE5E9F0)),
+    ),
+    child: child,
+  );
+}
+
+class MaterialAvailabilityScreen extends StatelessWidget {
+  const MaterialAvailabilityScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Material Availability",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Total Materials",
+                  value: "7 Items",
+                  color: const Color(0xff3478F6),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Available",
+                  value: "4 Items",
+                  color: const Color(0xff10B981),
+                ),
+              ),
+            ],
+          ),
+          detailSectionTitle("Material Inventory Levels"),
+          detailTableContainer(
+            detailDataTable(
+              headers: [
+                "Material",
+                "Unit",
+                "Stock",
+                "Required",
+                "Reorder",
+                "Status",
+              ],
+              rows: [
+                ["Cement", "Bag", "420", "500", "100", "Available"],
+                ["Steel", "Ton", "280", "300", "50", "Available"],
+                ["Bricks", "Nos", "6,200", "6,500", "2,000", "Available"],
+                ["Sand", "Ton", "45", "120", "80", "Low Stock"],
+                ["M-Sand", "Ton", "12", "80", "50", "Shortage"],
+                ["Binding Wire", "Kg", "450", "400", "100", "Available"],
+                ["20mm Aggregate", "Ton", "25", "90", "40", "Low Stock"],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SiteLabourAttendanceScreen extends StatelessWidget {
+  const SiteLabourAttendanceScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Site Labour Attendance",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Present Workers",
+                  value: "91",
+                  color: const Color(0xff10B981),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Required Workers",
+                  value: "105",
+                  color: const Color(0xff3478F6),
+                ),
+              ),
+            ],
+          ),
+          detailSectionTitle("Labour Category & Wage Distribution"),
+          detailTableContainer(
+            detailDataTable(
+              headers: [
+                "Category",
+                "Subcontractor",
+                "Required",
+                "Present",
+                "Shortage",
+                "Daily Rate",
+                "Total Cost",
+                "Attendance",
+              ],
+              rows: [
+                ["NMR", "Sri Murugan Enterprises", "40", "35", "5", "₹700", "₹24,500", "88%"],
+                ["MC", "Direct Site Team", "20", "18", "2", "₹800", "₹14,400", "90%"],
+                ["FC", "Direct Site Team", "15", "15", "0", "₹900", "₹13,500", "100%"],
+                ["Mason", "Star Builders Labour", "12", "8", "4", "₹1000", "₹8,000", "67%"],
+                ["Carpenter", "Shuttering Works Co", "10", "9", "1", "₹850", "₹7,650", "90%"],
+                ["Electrician", "PowerTech MEP", "8", "6", "2", "₹900", "₹5,400", "75%"],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PendingMRNScreen extends StatelessWidget {
+  const PendingMRNScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Pending MRN Approvals",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Total Requests",
+                  value: "4",
+                  color: const Color(0xff3478F6),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Pending Approval",
+                  value: "1",
+                  color: const Color(0xffF59E0B),
+                ),
+              ),
+            ],
+          ),
+          detailSectionTitle("Pending MRN Requests"),
+          detailTableContainer(
+            detailDataTable(
+              headers: [
+                "Request No",
+                "Material",
+                "Requested",
+                "Received",
+                "Pending",
+                "Stage",
+                "Ageing",
+                "PO Ref",
+              ],
+              rows: [
+                ["REQ-2026-089", "OPC 53 Grade Cement", "500 Bags", "300", "200", "Partially Received", "3 days", "PO-1025"],
+                ["REQ-2026-092", "Fe 550D TMT Steel 16mm", "10 Tons", "0", "10", "In Transit", "2 days", "PO-1028"],
+                ["REQ-2026-095", "River Sand Fine Grade", "60 Tons", "0", "60", "Pending Approval", "1 day", "—"],
+                ["REQ-2026-098", "Red Clay Bricks Class 1", "5000 Nos", "0", "5000", "Approved", "1 day", "PO-1031"],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CriticalMaterialShortageScreen extends StatelessWidget {
+  const CriticalMaterialShortageScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Critical Material Shortage",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Shortage Items",
+                  value: "5 Items",
+                  color: const Color(0xffEF4444),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Critical Shortage",
+                  value: "1 Item",
+                  color: const Color(0xffF59E0B),
+                ),
+              ),
+            ],
+          ),
+          detailSectionTitle("Critical Material Shortage List"),
+          detailTableContainer(
+            detailDataTable(
+              headers: [
+                "Material",
+                "Unit",
+                "Stock",
+                "Required",
+                "Reorder",
+                "Status",
+              ],
+              rows: [
+                ["Cement", "Bag", "420", "500", "100", "Available"],
+                ["Steel", "Ton", "280", "300", "50", "Available"],
+                ["Bricks", "Nos", "6,200", "6,500", "2,000", "Available"],
+                ["Sand", "Ton", "45", "120", "80", "Low Stock"],
+                ["M-Sand", "Ton", "12", "80", "50", "Shortage"],
+                ["Binding Wire", "Kg", "450", "400", "100", "Available"],
+                ["20mm Aggregate", "Ton", "25", "90", "40", "Low Stock"],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpectedMaterialInwardScreen extends StatelessWidget {
+  const ExpectedMaterialInwardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Expected Material Inward",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: detailSummaryCard(
+                  title: "Total Deliveries",
+                  value: "5",
+                  color: const Color(0xff3478F6),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: detailSummaryCard(
+                  title: "In Transit",
+                  value: "2",
+                  color: const Color(0xffA855F7),
+                ),
+              ),
+            ],
+          ),
+          detailSectionTitle("Expected Material Inward Schedule"),
+          detailTableContainer(
+            detailDataTable(
+              headers: [
+                "Expected Date",
+                "Material",
+                "Supplier",
+                "Quantity",
+                "PO Ref",
+                "Vehicle No",
+                "Status",
+              ],
+              rows: [
+                ["04 Oct 2026", "Cement", "ABC Supplier", "500 Bag", "PO-1025", "TN 09 BX 4412", "In Transit"],
+                ["05 Oct 2026", "Steel", "XYZ Supplier", "10 Ton", "PO-1028", "TN 22 CZ 9021", "Expected"],
+                ["06 Oct 2026", "Bricks", "Local Supplier", "5000 Nos", "PO-1030", "TN 14 D 7714", "Confirmed"],
+                ["07 Oct 2026", "M-Sand", "RMC Supplier", "20 Ton", "PO-1032", "TN 05 AF 3320", "In Transit"],
+                ["08 Oct 2026", "Electrical Items", "Electricals Co.", "50 Nos", "PO-1035", "Courier Express", "Expected"],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EngineerLeaveScreen extends StatelessWidget {
+  const EngineerLeaveScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DashboardDetailScreen(
+      title: "Engineer Leave Details",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xffE5E9F0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Site Engineer",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xff667085),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "R. Karthik (EMP00125)",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff101828),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: detailSummaryCard(
+                        title: "Total Entitlement",
+                        value: "12 Days",
+                        color: const Color(0xff3478F6),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: detailSummaryCard(
+                        title: "Remaining",
+                        value: "8 Days",
+                        color: const Color(0xff10B981),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                detailSummaryCard(
+                  title: "Leave Taken / Pending",
+                  value: "4 Taken / 1 Pending",
+                  color: const Color(0xffF59E0B),
+                ),
+              ],
+            ),
+          ),
+
+          detailSectionTitle("Upcoming Approved Leave"),
+          _leaveInfoCard(
+            icon: Icons.event_available,
+            title: "26 Sep 2026",
+            subtitle: "Casual Leave",
+            status: "Approved",
+            color: const Color(0xff10B981),
+          ),
+
+          detailSectionTitle("Upcoming Public Holiday"),
+          _leaveInfoCard(
+            icon: Icons.celebration_outlined,
+            title: "02 Oct 2026",
+            subtitle: "Gandhi Jayanti",
+            status: "Holiday",
+            color: const Color(0xff3478F6),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _leaveInfoCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String status,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xffE5E9F0)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 38,
+            width: 38,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xff667085),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            status,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class PredefinedIndentViewAllScreen extends StatelessWidget {
+  const PredefinedIndentViewAllScreen({super.key});
+
+  static const Color primaryColor = Color(0xFF3D7BFF);
+  static const Color textColor = Color(0xFF172033);
+  static const Color mutedColor = Color(0xFF8490A5);
+
+  final List<Map<String, dynamic>> materials = const [
+    {
+      "name": "Cement",
+      "date": "25-09-2026",
+      "work": "Civil Works",
+      "available": "500",
+      "required": "120",
+      "indent": "100",
+      "unit": "Bag",
+      "priority": "High",
+    },
+    {
+      "name": "Steel",
+      "date": "24-09-2026",
+      "work": "Structural",
+      "available": "10",
+      "required": "3",
+      "indent": "2",
+      "unit": "Ton",
+      "priority": "High",
+    },
+    {
+      "name": "Bricks",
+      "date": "23-09-2026",
+      "work": "Masonry",
+      "available": "20,000",
+      "required": "4,500",
+      "indent": "5,000",
+      "unit": "Nos",
+      "priority": "Medium",
+    },
+    {
+      "name": "M-Sand",
+      "date": "22-09-2026",
+      "work": "Civil Works",
+      "available": "80",
+      "required": "15",
+      "indent": "20",
+      "unit": "Ton",
+      "priority": "Medium",
+    },
+    {
+      "name": "Electrical Items",
+      "date": "21-09-2026",
+      "work": "MEP",
+      "available": "150",
+      "required": "25",
+      "indent": "50",
+      "unit": "Nos",
+      "priority": "Low",
+    },
+  ];
+
+  Color getPriorityColor(String priority) {
+    switch (priority) {
+      case "High":
+        return const Color(0xFFE5484D);
+      case "Medium":
+        return const Color(0xFFF2A100);
+      default:
+        return const Color(0xFF1FA971);
+    }
+  }
+
+  IconData getPriorityIcon(String priority) {
+    switch (priority) {
+      case "High":
+        return Icons.keyboard_double_arrow_up_rounded;
+      case "Medium":
+        return Icons.drag_handle_rounded;
+      default:
+        return Icons.keyboard_double_arrow_down_rounded;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FB),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          foregroundColor: textColor,
+          title: const Text(
+            "Predefined Site Indents",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
+            // Summary
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: const Color(0xFFE6EAF2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.inventory_2_outlined,
+                    color: primaryColor,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Total Predefined Indents",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: mutedColor,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "Material planning & requisitions",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: textColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    "${materials.length} Items",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // List
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 16),
+                itemCount: materials.length,
+                separatorBuilder: (_, __) =>
+                const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final item = materials[index];
+                  final priorityColor =
+                  getPriorityColor(item["priority"]);
+
+                  return _indentCard(item, priorityColor);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _indentCard(
+      Map<String, dynamic> item,
+      Color priorityColor,
+      ) {
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: const Color(0xFFE6EAF2),
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x08000000),
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Material and Priority
+          Row(
+            children: [
+              Container(
+                height: 36,
+                width: 36,
+                decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.09),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.inventory_2_outlined,
+                  color: primaryColor,
+                  size: 19,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item["name"],
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      "${item["date"]} • ${item["work"]}",
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: mutedColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 9,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: priorityColor.withOpacity(0.09),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      getPriorityIcon(item["priority"]),
+                      color: priorityColor,
+                      size: 13,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      item["priority"],
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: priorityColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+          const Divider(
+            height: 1,
+            color: Color(0xFFEDF0F5),
+          ),
+          const SizedBox(height: 12),
+
+          // Quantities
+          Row(
+            children: [
+              _quantityItem(
+                "Available",
+                item["available"],
+                item["unit"],
+                const Color(0xFF64748B),
+              ),
+              _quantityItem(
+                "Required",
+                item["required"],
+                item["unit"],
+                const Color(0xFF3478F6),
+              ),
+              _quantityItem(
+                "Indent Qty",
+                item["indent"],
+                item["unit"],
+                primaryColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _quantityItem(
+      String title,
+      String value,
+      String unit,
+      Color color,
+      ) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 10,
+              color: mutedColor,
+            ),
+          ),
+          const SizedBox(height: 5),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            unit,
+            style: const TextStyle(
+              fontSize: 9,
+              color: mutedColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
